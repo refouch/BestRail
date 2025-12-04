@@ -6,10 +6,10 @@ def generate_mock_dataset():
     # -----------------------------
     # Stops
     stops = [
-        Stop("A", "Stop A"),
-        Stop("B", "Stop B"),
-        Stop("C", "Stop C"),
-        Stop("D", "Stop D")  # pour tester absence de solution
+        Stop(0, "Stop A"),
+        Stop(1, "Stop B"),
+        Stop(2, "Stop C"),
+        Stop(3, "Stop D")  # pour tester absence de solution
     ]
 
     stops_dict = {stop.id: stop for stop in stops}
