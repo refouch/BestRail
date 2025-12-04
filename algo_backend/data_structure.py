@@ -25,7 +25,7 @@ class Route:
     stop_list: List[str] # all stops the route goes through. Represented the stop_id
     stop_index_list: List[int] = None # TO BE CONSTRUCTED
     index_in_list: int = None
-    trips: List[Trip] = None # TO BE CONSTRUCTED
+    trips: List[Trip] = None # TO BE CONSTRUCTED / CAUTION: trips must be in chronological order!
 
     def add_trip(self,trip: Trip):
         if self.trips is None:
