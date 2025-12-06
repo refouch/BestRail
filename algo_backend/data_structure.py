@@ -60,3 +60,5 @@ def map_stop_to_routes(stop_list, route_list):
     for route in route_list:
         for stop_index in route.stop_index_list:
             stop_to_routes[stop_index].append(route.index_in_list)
+
+    return stop_to_routes

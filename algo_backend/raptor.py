@@ -4,7 +4,7 @@
 ##########################################################
 
 from data_structure import Stop, Route, Trip, map_stop_to_routes
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> Optional[Trip]:
     """Function to determine the first trip that can be caught for a given stop and in the route and a given time
@@ -13,12 +13,15 @@ def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> 
     for trip in route.trips:
         train_leave_time = trip.departure_times[stop_rank]
 
+        print(f'Time at stop: {time_at_stop}')
+        print(f'Train leaves at: {train_leave_time}')
+
         if time_at_stop <= train_leave_time:
             return trip # trip can be caught.
         
     return None
 
-def check_earlier_stops(queue: List[(Route,Stop)], route: Route, stop: Stop) -> Optional[List[(Route,Stop)]]:
+def check_earlier_stops(queue: List[Tuple[Route,Stop]], route: Route, stop: Stop) -> Optional[Tuple[Route,Stop]]:
     """Function to check if there is an earlier stop we can catch on a given route"""
     for i, (route_in_Q, stop_in_Q) in enumerate(queue):
         if route_in_Q.id == route.id:
@@ -43,15 +46,19 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
     stops_to_routes = map_stop_to_routes(stop_list,route_list)
 
     route_queue = list()
-    marked_stops = list()
+    marked_stops = set()
 
     marked_stops.add(source_stop.index_in_list)
 
-    for k in range(1, max_rounds):
+    for k in range(1, max_rounds + 1):
 
+        print(f'Round {k}:\nMarked stops are: {marked_stops}\n')
         route_queue.clear()
 
-        for stop_index in marked_stops:
+        current_marked = marked_stops.copy()
+        marked_stops.clear()
+
+        for stop_index in current_marked:
 
             stop = stop_list[stop_index]
 
@@ -67,29 +74,33 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                 else:
                     route_queue.append((route,stop))
             
-            marked_stops.remove(stop_index)
+        
+        print(f"Current queue is: {[(route.id, stop.id) for route,stop in route_queue]}")
                  
         for route, first_stop in route_queue:
 
+            print(f'Examining route {route.id}')
+
             current_trip = None
 
-            stop_rank = route.stop_list.index(first_stop.id)
+            first_stop_rank = route.stop_list.index(first_stop.id)
 
-            for rank, stop_index in enumerate(route.stop_index_list[stop_rank+1:], start=stop_rank+1):
+            for rank, stop_index in enumerate(route.stop_index_list[first_stop_rank:], start=first_stop_rank):
 
                 stop = stop_list[stop_index]
+                print(f'Examining stop {stop.id}')
 
                 if current_trip is not None:
                     arrival_time = current_trip.arrival_times[rank] 
-                    if arrival_time < min(tau_matrix[stop_index][k],tau_star[target_stop.index_in_list]):
+                    if arrival_time < min(tau_star[stop_index],tau_star[target_stop.index_in_list]):
                         tau_matrix[stop_index][k] = arrival_time
                         tau_star[stop_index] = arrival_time
-                        marked_stops.append(stop_index)
+                        marked_stops.add(stop_index)
 
                 # Can we catch an earlier train
-                time_at_stop = tau_matrix[stop_index][k-1] + stop.min_transfer_time
-
-                current_trip = earliest_trip_at_stop(route,rank,time_at_stop)
+                if current_trip is None or tau_matrix[stop_index][k-1] <= current_trip.departure_times[rank]:
+                    time_at_stop = tau_matrix[stop_index][k-1] + stop.min_transfer_time
+                    current_trip = earliest_trip_at_stop(route,rank,time_at_stop)
 
         # Stopping criterion
         if not marked_stops:
