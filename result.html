@@ -27,19 +27,39 @@
 <!-- Contenu principal -->
 <main class="main_content">
 
+    <!-- Récap de la recherche -->
+    <div class="search_recap_container">
+
+        <div class="search_recap">
+
+            <div class="recap_item">
+                <label>Départ</label>
+                <span class="ville_depart">Paris Gare de Lyon</span>
+            </div>
+
+            <div class="recap_arrow">→</div>
+
+            <div class="recap_item">
+                <label>Arrivée</label>
+                <span class="ville_arrivee">Lyon Part-Dieu</span>
+            </div>
+
+            <div class="recap_item">
+                <label>Date et heure</label>
+                <span class="travel_date">1 Janvier 2026 - 8h00</span>
+            </div>
+                  
+            <button class="modifiy_search_btn" id="modifyBtn">Modifier la recherche</button>
+        </div>
+
+    </div>
+
+    <!-- Wrapper pour les résultats et la carte -->
+    <div class="result_wrapper">
+
     <!-- Résultats de la recherche -->
     <div class="result_container">
-        <h2>Résultats de la recherche</h2>
-
-        <!-- Reprise des informations de la recherche (départ, arrivée, dates) -->
-        <div class="search_recap">
-            <p class="route_info">
-                <span class="ville_depart">Paris Gare de Lyon</span> → <span class="ville_arrivee">Lyon Part-Dieu</span>
-            </p>
-            <p class="date_info">
-                <span class="travel_date">8h</span>
-            </p>
-        </div>
+        <h2>Résultats de la recherche</h2>        
 
         <!-- Liste des trajets -->
         <div class="trajet_list">
@@ -141,6 +161,8 @@
 
         <!-- Conteneur de la carte Leaflet -->
         <div id="map_result"></div>
+
+    </div>
 
     </div>
 

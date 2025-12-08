@@ -8,18 +8,106 @@
 
 .main_content {
     display: flex;
+    flex-direction: column;
     gap: 20px;
     padding: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ========================================
+   RÉCAP DE LA RECHERCHE
+   ======================================== */
+
+/* Container du récap (barre en haut) */
+.search_recap_container {
+    width: 100%;
+    background-color: var(--bg-primary);
+    padding: var(--spacing-xs);
+}
+
+/* Informations de recherche */
+.search_recap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    background-color: var(--primary-color);
+    padding: 0;
+    padding-left: 12px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    border-radius: var(--border-radius);
+}
+
+/* Item contenant une des infos du récap */
+.recap_item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Espacement entre les labels et span*/
+}
+
+.recap_item label {
+    font-size: 0.5rem;
+    color: var(--bg-primary);
+    text-transform: uppercase;
+    padding-left: 4px;
+}
+
+.recap_item span {
+    background-color: var(--bg-primary);
+    padding: 8px 16px; /* Taille des spans */
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--secondary-color);
+    display: inline-block;
+}
+
+.recap_arrow {
+    font-size: 1.5rem;
+    color: var(--bg-primary);
+    font-weight: bold;
+}
+
+.modifiy_search_btn {
+    margin-left: auto; /* Pousse le bouton à droite */
+    margin-right: 12px; 
+    background-color: var(--bg-primary);
+    color: var(--primary-color);
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color var(--transition-normal), transform var(--transition-fast);
+    align-self: center;
+}
+
+.modifiy_search_btn:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+
+/* Wrapper des résultats et de la carte */
+.result_wrapper {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
     max-width: 1400px;
     margin: 0 auto;
 }
+
+
 
 /* ========================================
    CONTENEUR DES RÉSULTATS (40% gauche)
    ======================================== */
 
 .result_container {
-    width: 40%;
+    flex: 1;
+    /*width: 40%;*/
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -30,31 +118,13 @@
     margin-bottom: 10px;
 }
 
-/* Informations de recherche */
-.search_recap {
-    background-color: var(--bg-primary);
-    padding: 15px;
-    border-radius: var(--border-radius);
-}
-
-.route_info {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.date_info {
-    color: var(--text-primary);
-    font-size: 0.9rem;
-}
-
 /* Liste des trajets */
 .trajet_list {
     display: flex;
     flex-direction: column;
     gap: 15px;
     overflow-y: auto;
-    max-height: calc(100vh - 300px); /* Permet le scroll si bcp de résultats */
+    max-height: 600px; /* Permet le scroll si bcp de résultats */
 }
 
 .trajet_list:hover {
@@ -175,7 +245,8 @@
    ======================================== */
 
 .map_container {
-    width: 60%;
+    flex: 1;
+    /*width: 60%;*/
     display: flex;
     flex-direction: column;
     gap: 15px;
