@@ -1,5 +1,3 @@
-// CODE JAVASCRIPT PAGE INDEX
-
 
 // ===================================
 // Formulaire de recherche
@@ -8,7 +6,8 @@
 const formulaire = document.getElementById("search-form");
 
 formulaire.addEventListener("submit", function(event) {
-    event.preventDefault(); // pour empêcher le rechargement automatique de la page
+    // pour empêcher le rechargement automatique de la page
+    event.preventDefault(); 
 
     // Récupération des données du formulaire
     const depart_js = document.getElementById("depart").value;
@@ -28,6 +27,9 @@ formulaire.addEventListener("submit", function(event) {
         date: datetime_js
     };
 
+    console.log("Payload:", payload)
+    console.log("Payload en JSON;", JSON.stringify(payload))
+
     // Affichage d'un indicateur de chargement
     const boutonRecherche = formulaire.querySelector('button[type="submit"]');
     const textOriginal = boutonRecherche.textContent;
@@ -35,7 +37,8 @@ formulaire.addEventListener("submit", function(event) {
     boutonRecherche.disabled = true;
 
     // Envoi de la requête au serveur
-    /*
+    console.log("Envoi de la requête vers le serveur...")
+
     fetch("http://localhost:8000/api/recherche", {
         // Modifier l'URL pour tomber sur le bon endpoint
         method: "POST",
@@ -45,18 +48,44 @@ formulaire.addEventListener("submit", function(event) {
         body: JSON.stringify(payload)
     })
 
-    .then(response => response.json()) //conversion JSON de la réponse
+    // Gestion de la réponse
+    .then(response => {
+        console.log("Statut de la réponse:", response.status);
+        console.log("Réponse OK?", response.ok);
+        return response.json();
+    })
+
+    // Traitement des résultats
     .then(data => {
         console.log("Réponse du serveur: ", data);
-        // on rajouteras ici la suite des instructions à faire
+
+        localStorage.setItem("searchParams", JSON.stringify(payload));
+        localStorage.setItem("searchResults", JSON.stringify(data));
+
+        window.location.href = "result.html";
+
+        // voir les autres instruction à rajouter quand on obtiens les résultats
     })
+
+    // Gestion des erreurs
     .catch(error => {
         console.error("Erreur lors de la requête:", error);
+        console.error("Message d'erreur:", error.message);
+
+        // Restauration du bouton de recherche
+        boutonRecherche.textContent = textOriginal;
+        boutonRecherche.disabled = false;
+
+        // Message d'erreur à l'utilisateur
+        alert("Une erreur s'est produite lors de la recherche. Veuillez réessayer.");
     });
-    */
-   console.log("✅ Si vous voyez ce message, votre code fonctionne !");
+
 });
 
 
 // 
 
+
+
+
+console.log("Script index_code.js chargé !");

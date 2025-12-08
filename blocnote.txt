@@ -1,0 +1,5 @@
+Dans index_code.js :
+    - ajouter un truc pour vérifier que la réponse est ok : if (!response.ok)
+
+
+Faire un truc qui permet de modifier la recherche depuis la page des résultats
