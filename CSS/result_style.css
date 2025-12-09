@@ -89,6 +89,17 @@
     transform: scale(1.05);
 }
 
+/* Style du récap en mode édition */
+
+.recap_input { /* Modifier comme les recap_item span */
+    background-color: var(--bg-primary);
+    padding: 8px 16px; 
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--secondary-color);
+}
+
+
 
 /* Wrapper des résultats et de la carte */
 .result_wrapper {

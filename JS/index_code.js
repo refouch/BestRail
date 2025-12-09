@@ -39,7 +39,7 @@ formulaire.addEventListener("submit", function(event) {
     // Envoi de la requête au serveur
     console.log("Envoi de la requête vers le serveur...")
 
-    fetch("http://localhost:8000/api/recherche", {
+    fetch("http://localhost:8000/search", {
         // Modifier l'URL pour tomber sur le bon endpoint
         method: "POST",
         headers: {
@@ -59,8 +59,8 @@ formulaire.addEventListener("submit", function(event) {
     .then(data => {
         console.log("Réponse du serveur: ", data);
 
-        localStorage.setItem("searchParams", JSON.stringify(payload));
-        localStorage.setItem("searchResults", JSON.stringify(data));
+        sessionStorage.setItem("searchParams", JSON.stringify(payload));
+        sessionStorage.setItem("searchResults", JSON.stringify(data));
 
         window.location.href = "result.html";
 

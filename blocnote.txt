@@ -3,3 +3,10 @@ Dans index_code.js :
 
 
 Faire un truc qui permet de modifier la recherche depuis la page des résultats
+    - mettre un datetime pour l'input de la date
+
+Modifier le JS des résultats pour que les résultats s'affichent même en hors connexion
+
+Améliorer les visuels des cards de trajets
+
+Ajouter les trajets sur la carte Leaflet
