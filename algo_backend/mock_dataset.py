@@ -115,8 +115,8 @@ def build_mock_data():
     route3.add_trip(
         Trip(
             id="R3_T1",
-            departure_times=[10, 12, 13, 16],
-            arrival_times=[485, 490, 495],
+            departure_times=[10, 14, 18, 24],
+            arrival_times=[10, 14, 18, 24],
         )
     )
 

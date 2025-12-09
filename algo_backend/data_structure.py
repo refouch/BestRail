@@ -48,14 +48,14 @@ def map_index(object_list: List[Union[Route,Stop]]):
     for (i, object) in enumerate(object_list):
         object.index_in_list = i
 
-def map_stop_to_routes(stop_list, route_list):
+def map_stop_to_routes(stop_list, route_list) -> List[List[int]]:
     """Function to generate a mapping linking every stop (by index in the list) to the routes traversing it"""
     map_index(stop_list)
     map_index(route_list)
 
     stop_to_routes = [[] for _ in range(len(stop_list))]
 
-    # CAUTION: Construction of stop_index_list still to be implemented !!
+    # CAUTION: Construction of stop_index_list needs to be implemented !!
 
     for route in route_list:
         for stop_index in route.stop_index_list:

@@ -3,7 +3,7 @@
 ### Following this article: https://www.microsoft.com/en-us/research/wp-content/uploads/2012/01/raptor_alenex.pdf
 ##########################################################
 
-from data_structure import Stop, Route, Trip, map_stop_to_routes
+from algo_backend.data_structure import Stop, Route, Trip, map_stop_to_routes
 from typing import Dict, List, Optional, Tuple
 
 def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> Optional[Trip]:
@@ -92,18 +92,21 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
                 if current_trip is not None:
                     arrival_time = current_trip.arrival_times[rank] 
-                    if arrival_time < min(tau_star[stop_index],tau_star[target_stop.index_in_list]):
+                    if arrival_time < tau_star[stop_index]:
                         tau_matrix[stop_index][k] = arrival_time
                         tau_star[stop_index] = arrival_time
                         marked_stops.add(stop_index)
 
                 # Can we catch an earlier train
-                if current_trip is None or tau_matrix[stop_index][k-1] <= current_trip.departure_times[rank]:
-                    time_at_stop = tau_matrix[stop_index][k-1] + stop.min_transfer_time
-                    current_trip = earliest_trip_at_stop(route,rank,time_at_stop)
+                if stop_index == source_stop.index_in_list:
+                    ready_time = departure_time
+                else:
+                    ready_time = tau_matrix[stop_index][k-1] + stop.min_transfer_time
+
+                # Can we board a new trip?
+                if current_trip is None or ready_time <= current_trip.departure_times[rank]:
+                    current_trip = earliest_trip_at_stop(route, rank, ready_time)
 
         # Stopping criterion
         if not marked_stops:
             return tau_matrix
-
-
