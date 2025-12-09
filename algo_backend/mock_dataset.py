@@ -1,137 +1,127 @@
-### AI-generated mock dataset to test the algorithm
+################################################
+### Small mock network to run the unit tests ###
+################################################
 
-from data_structure import Route, Stop, Trip, map_index
+from algo_backend.data_structure import Route, Stop, Trip, map_index
 from typing import List
 
 def build_mock_data():
     """
-    Enhanced RAPTOR test network.
-    
-    Includes:
-    - Branching routes
-    - Multiple possible journeys
-    - Non-reachable stops
-    - Overtaking trips
-    - Several transfer points
-    - Different transfer times
-    
-    Network layout (stops):
+    Generates a small network in order to test the following cases:
+    - Direct path
+    - Multiple possible paths
+    - One path is quikcer than the other
+    - Some stops are unreachable depending on your starting position.
 
-         R1:  S0 -- S1 -- S2 -- S3
-                   |
-         R3:       S6 -- S7
+    To get a clearer idea of the netork, you can draw the routes on a piece of paper:
+    Route 1: A -> B -> C -> D
+    Route 2: A -> E -> F
+    Route 3: H -> E -> F -> D
 
-         R2:       S2 -- S4 -- S5
-
-         R4:  S8 -- S9   (completely isolated, unreachable)
-
-         R5:  S3 -- S10 -- S11  (continuation of R1)
-
+    We thus have: 
+    - Direct path from A -> D
+    - Alternative path A -> F via R2 then F -> D via R3
+        (this path may be quicker !)
+    - No path from nodes B, C, D to other routes (because there is no backward trips)
     """
 
-    # -------- STOPS --------
+    # ===== STOPS =====
     stops: List[Stop] = [
-        Stop("Stop 0",  "S0", 48, 2, 0),
-        Stop("Stop 1",  "S1", 48, 2, 2),
-        Stop("Stop 2",  "S2", 48, 2, 3),
-        Stop("Stop 3",  "S3", 48, 2, 1),
-        Stop("Stop 4",  "S4", 48, 2, 0),
-        Stop("Stop 5",  "S5", 48, 2, 0),
-        Stop("Stop 6",  "S6", 48, 2, 2),
-        Stop("Stop 7",  "S7", 48, 2, 0),
-        Stop("Stop 8",  "S8", 48, 2, 1),
-        Stop("Stop 9",  "S9", 48, 2, 1),
-        Stop("Stop 10", "S10",48, 2, 2),
-        Stop("Stop 11", "S11",48, 2, 0),
+        Stop(name="Stop A", id="A", lat=42.00, lon=42.00, min_transfer_time=2), # lat and lon don't matter here
+        Stop(name="Stop B", id="B", lat=42.00, lon=42.00, min_transfer_time=2), # 2 minutes transfer times
+        Stop(name="Stop C", id="C", lat=42.00, lon=42.00, min_transfer_time=2),
+        Stop(name="Stop D", id="D", lat=42.00, lon=42.00, min_transfer_time=2),
+        Stop(name="Stop E", id="E", lat=42.00, lon=42.00, min_transfer_time=2),
+        Stop(name="Stop F", id="F", lat=42.00, lon=42.00, min_transfer_time=2),
+        Stop(name="Stop G", id="G", lat=42.00, lon=42.00, min_transfer_time=2),
+        Stop(name="Stop H", id="H", lat=42.00, lon=42.00, min_transfer_time=2),        
     ]
 
     map_index(stops)
-    id2idx = {s.id: s.index_in_list for s in stops}
+    id_to_index = {s.id: s.index_in_list for s in stops}
 
-    routes = []
+    # ===== Route 1 =====
+    r1_stop_ids = ["A", "B", "C", "D"]
+    r1_stop_index_list = [id_to_index[sid] for sid in r1_stop_ids]
 
-    # -------- ROUTE R1 (S0 → S3) --------
-    R1_ids = ["S0","S1","S2","S3"]
-    R1_idx = [id2idx[x] for x in R1_ids]
+    route1 = Route(
+        name="Route 1",
+        id="R1",
+        stop_list=r1_stop_ids,
+        stop_index_list=r1_stop_index_list,
+        trips=[]
+    )
 
-    R1 = Route("Route 1", "R1", R1_ids, R1_idx, trips=[])
+    # Trips for R1 -> very slow trips (10mn between each stop)
+    route1.add_trip(
+        Trip(
+            id="R1_T1",
+            departure_times=[10, 20, 30, 40],
+            arrival_times=[10, 20, 30, 40],
+        )
+    )
+    route1.add_trip(
+        Trip(
+            id="R1_T2",
+            departure_times=[20, 30, 40, 50],
+            arrival_times=[20, 30, 40, 50],
+        )
+    )
 
-    # Two trips — second arrives earlier at S3 → overtaking case
-    R1.add_trip(Trip(
-        "R1_T1",  # slow trip
-        departure_times=[480, 485, 490, 500],  # 08:00 → 08:20
-        arrival_times=[480, 485, 490, 500]
-    ))
-    R1.add_trip(Trip(
-        "R1_T2",  # faster trip
-        departure_times=[485, 487, 492, 497],  # 08:05 → 08:17
-        arrival_times=[485, 487, 492, 497]
-    ))
-    routes.append(R1)
+    # ===== Route 2 =====
+    r2_stop_ids = ["A", "E", "F","G"]
+    r2_stop_index_list = [id_to_index[sid] for sid in r2_stop_ids]
 
-    # -------- ROUTE R2 (S2 → S5) --------
-    R2_ids = ["S2","S4","S5"]
-    R2_idx = [id2idx[x] for x in R2_ids]
+    route2 = Route(
+        name="Route 2",
+        id="R2",
+        stop_list=r2_stop_ids,
+        stop_index_list=r2_stop_index_list,
+        trips=[]
+    )
 
-    R2 = Route("Route 2", "R2", R2_ids, R2_idx, trips=[])
+    # R2 trips: very fast train (2 minutes between stops)
+    # Idea: go faster than route 1 by changing at stop F
+    route2.add_trip(
+        Trip(
+            id="R2_T1",
+            departure_times=[10, 12, 14, 16],
+            arrival_times=[10, 12, 14, 16],
+        )
+    )
 
-    R2.add_trip(Trip(
-        "R2_T1",
-        departure_times=[492, 498, 505],   # 08:12 from S2
-        arrival_times=[492, 498, 505],
-    ))
-    R2.add_trip(Trip(
-        "R2_T2",
-        departure_times=[520, 526, 533],   # 08:40 from S2
-        arrival_times=[520, 526, 533],
-    ))
-    routes.append(R2)
+    route2.add_trip(
+        Trip(
+            id="R2_T2",
+            departure_times=[12, 14, 16, 18],
+            arrival_times=[12, 14, 16, 18],
+        )
+    )
 
-    # -------- ROUTE R3 (S1 → S7) --------
-    R3_ids = ["S1","S6","S7"]
-    R3_idx = [id2idx[x] for x in R3_ids]
+    # ===== Route 3 =====
+    r3_stop_ids = ["H", "E", "F","D"]
+    r3_stop_index_list = [id_to_index[sid] for sid in r3_stop_ids]
 
-    R3 = Route("Route 3", "R3", R3_ids, R3_idx, trips=[])
+    route3 = Route(
+        name="Route 3",
+        id="R3",
+        stop_list=r3_stop_ids,
+        stop_index_list=r3_stop_index_list,
+        trips=[]
+    )
 
-    R3.add_trip(Trip(
-        "R3_T1",
-        departure_times=[486, 493, 500],  # 08:06 from S1
-        arrival_times=[486, 493, 500],
-    ))
-    routes.append(R3)
+    # Only one trip: can be caught with R2 by taking the second trip, not the first
+    # Enable to check is the algorithm really finds the best solution (not trivial)
+    route3.add_trip(
+        Trip(
+            id="R3_T1",
+            departure_times=[10, 12, 13, 16],
+            arrival_times=[485, 490, 495],
+        )
+    )
 
-    # -------- ROUTE R4 (S8 → S9) - unreachable isolated route --------
-    R4_ids = ["S8","S9"]
-    R4_idx = [id2idx[x] for x in R4_ids]
-
-    R4 = Route("Route 4", "R4", R4_ids, R4_idx, trips=[])
-
-    R4.add_trip(Trip(
-        "R4_T1",
-        departure_times=[600, 610],
-        arrival_times=[600, 610],
-    ))
-    routes.append(R4)
-
-    # -------- ROUTE R5 (S3 → S11) continuation of R1 --------
-    R5_ids = ["S3","S10","S11"]
-    R5_idx = [id2idx[x] for x in R5_ids]
-
-    R5 = Route("Route 5", "R5", R5_ids, R5_idx, trips=[])
-
-    R5.add_trip(Trip(
-        "R5_T1",
-        departure_times=[501, 510, 520],  # connects nicely after R1_T1
-        arrival_times=[501, 510, 520],
-    ))
-    R5.add_trip(Trip(
-        "R5_T2",
-        departure_times=[498, 508, 518],  # connects perfectly after R1_T2
-        arrival_times=[498, 508, 518],
-    ))
-    routes.append(R5)
-
-    # Index routes
+    # Combine routes and return dataset
+    routes = [route1, route2, route3]
     map_index(routes)
 
     return {
