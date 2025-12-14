@@ -21,8 +21,8 @@ def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> 
         
     return None
 
-def check_earlier_stops(queue: List[Tuple[Route,Stop]], route: Route, stop: Stop) -> Optional[Tuple[Route,Stop]]:
-    """Function to check if there is an earlier stop we can catch on a given route"""
+def check_earlier_stops(queue: List[Tuple[Route,Stop]], route: Route, stop: Stop) -> Optional[List[Tuple[Route,Stop]]]:
+    """Function to check if there is an earlier stop already in the queue"""
     for i, (route_in_Q, stop_in_Q) in enumerate(queue):
         if route_in_Q.id == route.id:
 
@@ -42,6 +42,15 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
     tau_star = [float('inf') for _ in range(num_stops)]
 
     tau_matrix[source_stop.index_in_list][0] = departure_time #τ0(ps) = τ
+    tau_star[source_stop.index_in_list] = departure_time
+
+    parent = [[None] * (max_rounds + 1) for _ in range(num_stops)] # Store parent stop/trip for each better stop in order to backtrack the path
+    parent[source_stop.index_in_list][0] = { # Initialize first stop
+    "prev_stop": None,
+    "route_id": None,
+    "trip_id": None,
+    "board_stop": None, # The stop we boarded the trip in
+}
 
     stops_to_routes = map_stop_to_routes(stop_list,route_list)
 
@@ -91,11 +100,20 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                 print(f'Examining stop {stop.id}')
 
                 if current_trip is not None:
+
                     arrival_time = current_trip.arrival_times[rank] 
+
                     if arrival_time < tau_star[stop_index]:
                         tau_matrix[stop_index][k] = arrival_time
                         tau_star[stop_index] = arrival_time
                         marked_stops.add(stop_index)
+
+                        parent[stop_index][k] = {
+                            "prev_stop": route.stop_index_list[rank - 1] if rank > first_stop_rank else None,
+                            "route_id": route.id,
+                            "trip_id": current_trip.id,
+                            "board_stop": first_stop.index_in_list,
+                        }
 
                 # Can we catch an earlier train
                 if stop_index == source_stop.index_in_list:
@@ -109,4 +127,32 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
         # Stopping criterion
         if not marked_stops:
-            return tau_matrix
+            return tau_matrix, tau_star, parent
+
+
+def reconstruct_path(parent, tau_matrix, target_idx, round):
+    path = []
+    current_stop = target_idx
+    k = round
+
+    while True:
+        label = parent[current_stop][k]
+        if label is None:
+            break
+
+        path.append({
+            "stop": current_stop,
+            "route_id": label["route_id"],
+            "trip_id": label["trip_id"],
+            "board_stop": label["board_stop"],
+            "arrival_time": tau_matrix[current_stop][k],
+        })
+
+        if label["board_stop"] is None:
+            break
+
+        current_stop = label["board_stop"]
+        k = k-1
+
+    path.reverse()
+    return path

@@ -13,7 +13,7 @@ class Stop:
     id: str
     lat: float
     lon: float
-    min_transfer_time: int = 300 # in seconds (i.e 5mn)
+    min_transfer_time: int = 2 # in minutes 
     index_in_list: int = None
 
 
