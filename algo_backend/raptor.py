@@ -130,7 +130,8 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
             return tau_matrix, tau_star, parent
 
 
-def reconstruct_path(parent, tau_matrix, target_idx, round):
+def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], target_idx: int, round: int) -> List[Dict]:
+    """Function to reconstruct the path leading to the target stop for a given round usging RAPTOR results"""
     path = []
     current_stop = target_idx
     k = round
@@ -156,3 +157,20 @@ def reconstruct_path(parent, tau_matrix, target_idx, round):
 
     path.reverse()
     return path
+
+def get_all_paths(parent: List[List[Dict]], tau_matrix: List[List[int]], target_idx: int, max_rounds: int) -> List[List[Dict]]:
+    """Helper function to reconstruct all valid paths leading to the target stop"""
+
+    paths = []
+
+    for k in range(1, max_rounds + 1):
+
+        path = reconstruct_path(parent,tau_matrix,target_idx,k)
+
+        if not path:
+            break
+        
+        paths.append(path)
+    
+    return paths
+

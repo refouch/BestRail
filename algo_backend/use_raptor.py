@@ -1,5 +1,6 @@
 from .mock_dataset import build_mock_data
-from .raptor import RAPTOR, reconstruct_path
+from .raptor import RAPTOR, get_all_paths
+from .postprocessing import rank_by_time
 
 def print_matrix(tau):
     for line in tau:
@@ -15,9 +16,8 @@ target_stop = stop_list[3]
 
 tau, tau_star, parent = RAPTOR(source_stop,target_stop,0,stop_list,route_list)
 
-path1 = reconstruct_path(parent,tau,3,1)
-
-path2 = reconstruct_path(parent,tau,3,2)
+paths = get_all_paths(parent,tau,3,5)
+paths = rank_by_time(paths)
 
 print_matrix(tau)
 print("=============")
@@ -25,5 +25,4 @@ print(tau_star)
 print('===============')
 print_matrix(parent)
 print('============')
-print(path1)
-print(path2)
+print_matrix(paths)
