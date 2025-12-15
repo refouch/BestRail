@@ -13,9 +13,6 @@ def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> 
     for trip in route.trips:
         train_leave_time = trip.departure_times[stop_rank]
 
-        print(f'Time at stop: {time_at_stop}')
-        print(f'Train leaves at: {train_leave_time}')
-
         if time_at_stop <= train_leave_time:
             return trip # trip can be caught.
         
@@ -48,8 +45,10 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
     parent[source_stop.index_in_list][0] = { # Initialize first stop
     "prev_stop": None,
     "route_id": None,
+    "route": None,
     "trip_id": None,
     "board_stop": None, # The stop we boarded the trip in
+    "board_time": None
 }
 
     stops_to_routes = map_stop_to_routes(stop_list,route_list)
@@ -61,7 +60,6 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
     for k in range(1, max_rounds + 1):
 
-        print(f'Round {k}:\nMarked stops are: {marked_stops}\n')
         route_queue.clear()
 
         current_marked = marked_stops.copy()
@@ -83,12 +81,7 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                 else:
                     route_queue.append((route,stop))
             
-        
-        print(f"Current queue is: {[(route.id, stop.id) for route,stop in route_queue]}")
-                 
         for route, first_stop in route_queue:
-
-            print(f'Examining route {route.id}')
 
             current_trip = None
 
@@ -97,7 +90,6 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
             for rank, stop_index in enumerate(route.stop_index_list[first_stop_rank:], start=first_stop_rank):
 
                 stop = stop_list[stop_index]
-                print(f'Examining stop {stop.id}')
 
                 if current_trip is not None:
 
@@ -110,9 +102,11 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
                         parent[stop_index][k] = {
                             "prev_stop": route.stop_index_list[rank - 1] if rank > first_stop_rank else None,
+                            "route": route.index_in_list,
                             "route_id": route.id,
                             "trip_id": current_trip.id,
                             "board_stop": first_stop.index_in_list,
+                            "board_time": current_trip.departure_times[first_stop_rank]
                         }
 
                 # Can we catch an earlier train
@@ -144,8 +138,10 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
         path.append({
             "stop": current_stop,
             "route_id": label["route_id"],
+            "route": label["route"],
             "trip_id": label["trip_id"],
             "board_stop": label["board_stop"],
+            "board_time": label['board_time'],
             "arrival_time": tau_matrix[current_stop][k],
         })
 
@@ -173,4 +169,3 @@ def get_all_paths(parent: List[List[Dict]], tau_matrix: List[List[int]], target_
         paths.append(path)
     
     return paths
-

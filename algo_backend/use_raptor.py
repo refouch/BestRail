@@ -1,6 +1,6 @@
 from .mock_dataset import build_mock_data
 from .raptor import RAPTOR, get_all_paths
-from .postprocessing import rank_by_time
+from .postprocessing import rank_by_time, jsonify_paths
 
 def print_matrix(tau):
     for line in tau:
@@ -19,10 +19,6 @@ tau, tau_star, parent = RAPTOR(source_stop,target_stop,0,stop_list,route_list)
 paths = get_all_paths(parent,tau,3,5)
 paths = rank_by_time(paths)
 
-print_matrix(tau)
-print("=============")
-print(tau_star)
-print('===============')
-print_matrix(parent)
-print('============')
-print_matrix(paths)
+final_dict = jsonify_paths(paths,stop_list)
+
+print(final_dict)
