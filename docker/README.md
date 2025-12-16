@@ -4,4 +4,8 @@ Dossier pour la dockerisation. Docker Desktop est nécessaire.
 docker build -t test_app .
 
 # Lancer le container
-docker run --rm test_app
+docker run -p 8080:80 --name test_app test_app
+
+
+# Arrêter le container
+docker stop test_app
