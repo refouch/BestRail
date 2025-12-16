@@ -62,7 +62,7 @@ formulaire.addEventListener("submit", function(event) {
         sessionStorage.setItem("searchParams", JSON.stringify(payload));
         sessionStorage.setItem("searchResults", JSON.stringify(data));
 
-        window.location.href = "result.html";
+        window.location.href = "/results";
 
         // voir les autres instruction à rajouter quand on obtiens les résultats
     })

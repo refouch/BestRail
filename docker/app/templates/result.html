@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BestRail - Infrastructures & Systèmes Logiciels </title>
+    <link rel="stylesheet" href="static/CSS/common.css">
+    <link rel="stylesheet" href="static/CSS/result_style.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+</head>
+
+<body>
+
+<!-- En-tête avec menu et titre -->
+<header class="header">
+    <h1 class="site-title">
+        <i class="site-title-name"></i>
+        BestRail - Comparateur d'itinéraires de train
+    </h1>
+</header>
+
+
+<!-- Contenu principal -->
+<main class="main-content">
+
+    <!-- Récap de la recherche -->
+    <div class="search_recap_container">
+
+        <div class="search_recap">
+
+            <div class="recap_item">
+                <label>Départ</label>
+                <span class="ville_depart">Paris Gare de Lyon</span>
+            </div>
+
+            <div class="recap_arrow">→</div>
+
+            <div class="recap_item">
+                <label>Arrivée</label>
+                <span class="ville_arrivee">Lyon Part-Dieu</span>
+            </div>
+
+            <div class="recap_item">
+                <label>Date et heure</label>
+                <span class="travel_date">1 Janvier 2026 - 8h00</span>
+            </div>
+                  
+            <button class="modifiy_search_btn" id="modifyBtn">Modifier la recherche</button>
+        </div>
+
+    </div>
+
+    <!-- Wrapper pour les résultats et la carte -->
+    <div class="result_wrapper">
+
+    <!-- Résultats de la recherche -->
+    <div class="result_container">
+        <h2>Résultats de la recherche</h2>        
+
+        <!-- Liste des trajets -->
+        <div class="trajet_list">
+
+            <!-- Trajet 1 -->
+            <article class="trip_card">
+                <div class="trip_route">
+                    <span class="departure_station">Paris Gare de Lyon</span>
+                    <span class="arrow">→</span>
+                    <span class="arrival_station">Lyon Part-Dieu</span>
+                </div>
+                <div class="trip_header">
+                    <span class="departure_time">08:30</span>
+                    <span class="duration">1h55</span>
+                    <span class="arrival_time">10:25</span>
+                </div>
+                <div class="trip_details">
+                    <p class="train_type">TGV INOUI 6601</p>
+                    <p class="connections">Direct</p>
+                </div>
+                <div class="trip_footer">
+                    <span class="price">45€</span>
+                    <button class="select_trip_btn">Sélectionner</button>
+                </div>
+            </article>
+
+            <!-- Trajet 2 -->
+            <article class="trip_card">
+                <div class="trip_route">
+                    <span class="departure_station">Paris Gare de Lyon</span>
+                    <span class="arrow">→</span>
+                    <span class="arrival_station">Lyon Part-Dieu</span>
+                </div>
+                <div class="trip_header">
+                    <span class="departure_time">09:15</span>
+                    <span class="duration">2h30</span>
+                    <span class="arrival_time">11:45</span>
+                </div>
+                <div class="trip_details">
+                    <p class="train_type">TGV 6603 + TER 17824</p>
+                    <p class="connections">1 correspondance (Dijon)</p>
+                </div>
+                <div class="trip_footer">
+                    <span class="price">32€</span>
+                    <button class="select_trip_btn">Sélectionner</button>
+                </div>
+            </article>
+
+            <!-- Trajet 3 -->
+            <article class="trip_card">
+                <div class="trip_route">
+                    <span class="departure_station">Paris Gare de Lyon</span>
+                    <span class="arrow">→</span>
+                    <span class="arrival_station">Lyon Part-Dieu</span>
+                </div>
+                <div class="trip_header">
+                    <span class="departure_time">10:47</span>
+                    <span class="duration">1h58</span>
+                    <span class="arrival_time">12:45</span>
+                </div>
+                <div class="trip_details">
+                    <p class="train_type">TGV INOUI 6605</p>
+                    <p class="connections">Direct</p>
+                </div>
+                <div class="trip_footer">
+                    <span class="price">52€</span>
+                    <button class="select_trip_btn">Sélectionner</button>
+                </div>
+            </article>
+
+            <!-- Trajet 4 -->
+            <article class="trip_card">
+                <div class="trip_route">
+                    <span class="departure_station">Paris Gare de Lyon</span>
+                    <span class="arrow">→</span>
+                    <span class="arrival_station">Lyon Part-Dieu</span>
+                </div>
+                <div class="trip_header">
+                    <span class="departure_time">12:20</span>
+                    <span class="duration">3h15</span>
+                    <span class="arrival_time">15:35</span>
+                </div>
+                <div class="trip_details">
+                    <p class="train_type">Intercités 4671 + TER 18952</p>
+                    <p class="connections">2 correspondances (Dijon, Mâcon)</p>
+                </div>
+                <div class="trip_footer">
+                    <span class="price">28€</span>
+                    <button class="select_trip_btn">Sélectionner</button>
+                </div>
+            </article>
+        
+        </div>
+
+    </div>
+
+    <!-- Carte des trajets -->
+    <div class="map_container">
+
+        <!-- Conteneur de la carte Leaflet -->
+        <div id="map_result"></div>
+
+    </div>
+
+    </div>
+
+
+
+
+</main>
+
+
+
+
+<!-- Pied de page -->
+<footer class="page-footer">
+    <div class="footer-content">
+
+        <!-- Contact -->
+        <div class="contact-footer">
+            <h4>Contact</h4>
+            <p><i class="fas fa-envelope"></i>contact@mail.fr</p>
+        </div>
+
+        <!-- Info complémentaires -->
+        <div class="info-footer">
+            <h4>À propos</h4>
+            <p>Projet pour le cours Infrastructures & Systèmes Logiciels</p>
+            <div class="link-footer">
+                <a href="https://github.com/refouch/Projet-infra-sncf.git" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+
+    </div>
+</footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+            crossorigin=""></script>
+
+    <script src="static/JS/result_code.js"></script>
+</body>
+</html>
