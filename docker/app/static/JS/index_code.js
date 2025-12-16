@@ -39,7 +39,7 @@ formulaire.addEventListener("submit", function(event) {
     // Envoi de la requête au serveur
     console.log("Envoi de la requête vers le serveur...")
 
-    fetch("http://localhost:8000/search", {
+    fetch("/search", {
         // Modifier l'URL pour tomber sur le bon endpoint
         method: "POST",
         headers: {
@@ -62,9 +62,9 @@ formulaire.addEventListener("submit", function(event) {
         sessionStorage.setItem("searchParams", JSON.stringify(payload));
         sessionStorage.setItem("searchResults", JSON.stringify(data));
 
-        window.location.href = "/results";
+        window.location.href = "/result";
 
-        // voir les autres instruction à rajouter quand on obtiens les résultats
+        // voir les autres instruction à rajouter quand on obtient les résultats
     })
 
     // Gestion des erreurs

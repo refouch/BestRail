@@ -17,14 +17,9 @@ def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 # Page de recherche (search.html)
-@app.get("/search", response_class=HTMLResponse)
+@app.get("/result", response_class=HTMLResponse)
 def search_page(request: Request):
-    return templates.TemplateResponse("search.html", {"request": request})
-
-# Page des résultats (results.html)
-@app.get("/results", response_class=HTMLResponse)
-def results_page(request: Request):
-    return templates.TemplateResponse("results.html", {"request": request})
+    return templates.TemplateResponse("result.html", {"request": request})
 
 # Endpoint API pour la recherche
 @app.post("/search")
