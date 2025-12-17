@@ -14,7 +14,7 @@ Ajouter les trajets sur la carte Leaflet
 Update 17 décembre :
 Si on lance sans le server on voit les nouvelles cards mais les statiques
 Et pour l'instant si le server tourne il ne se passe rien car la fonction JS n'a pas été modifiée
-
+Potentiellement il faudrait pas faire des dictionnaires imbriqués mais des listes de dictionnaires
 
 
 
@@ -80,3 +80,47 @@ Et pour l'instant si le server tourne il ne se passe rien car la fonction JS n'a
     }
   }
 }
+
+
+
+
+/* Amélioration possible pour le format */
+
+[{"departure_stop": "Stop A",
+  "arrival_stop": "Stop D",
+    "segments": [
+        {"from": "Stop A",
+        "to": "Stop E",
+        "dep_coor": [42.0,42.0],
+        "arr_coor": [42.0,42.0],
+        "board_time": 10,
+        "arrival_time": 12,
+        "trip": "R2_T1",
+        "route": "R2"
+        },
+        {"from": "Stop E",
+        "to": "Stop D",
+        "dep_coor": [42.0,42.0],
+        "arr_coor": [42.0,42.0],
+        "board_time": 14,
+        "arrival_time": 24,
+        "trip": "R3_T1",
+        "route": "R3"
+        }
+    ]
+  },
+   {"departure_stop": "Stop A",
+    "arrival_stop": "Stop D",
+    "segments": [
+      {"from": "Stop A",
+        "to": "Stop D",
+        "dep_coor": [42.0,42.0],
+        "arr_coor": [42.0,42.0],
+        "board_time": 10,
+        "arrival_time": 40,
+        "trip": "R1_T1",
+        "route": "R1"
+      }
+    ]
+  }
+]

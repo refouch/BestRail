@@ -89,6 +89,27 @@ if (searchResults && searchResults.trajets) {
 }
 
 
+// Nouvelle fonction pour l'affichage des résultats du serveur
+if (searchResults && searchResults.trajets) {
+    
+    const trajetList = document.querySelector(".trajet_list");
+
+    trajetList.innerHTML = "";
+
+    if (Object.keys(searchResults.trajets).length === 0) {
+        trajetList.innerHTML = "<p>Aucun trajet trouvé pour cette recherche.</p>";
+    } else {
+        //Ce qu'on fait avec les trajets quand on les a
+    }
+} else {
+    console.warn("Aucune donnée trouvée dans sessionStorage");
+    document.querySelector(".trajet_list").innerHTML =
+        "<p>Aucun résultat. Veuillez effectuer une nouvelle recherche.</p>"; 
+}
+
+
+
+
 
 // Bouton pour modifier la recherche
 
