@@ -16,8 +16,8 @@ app.add_middleware(
 def home():
     return {"message": "Serveur actif !"}
 
-@app.post("/search")
-def recherche(data:dict):
+@app.post("/search_old")
+def recherche_old(data:dict):
     print(f"Données reçues : {data}")
 
     return {
@@ -58,6 +58,58 @@ def recherche(data:dict):
                 "correspondances": "2 correspondances (Dijon, Mâcon)"}
         ]
     }
+
+
+@app.post("/search")
+def recherche(data: dict):
+    print(f"Données reçues : {data}")
+
+    return {
+        "status" :"success",
+        "message": "Données bien reçues et traitées !",
+        "trajets" : {"path_1": {
+                        "departure_stop": "Paris Gare de Lyon",
+                        "arrival_stop": "Lyon Part-Dieu",
+                        "segments": {
+                            "segment_1": {
+                                "from": "Paris Gare de Lyon",
+                                "to": "Dijon",
+                                "dep_coor": [42.0 ,42.0],
+                                "arr_coor": [43.0, 43.0],
+                                "board_time": 10,
+                                "arrival_time": 12,
+                                "trip": "R2_T1",
+                                "route": "R2"},
+                            "segment_2": {
+                                "from": "Dijon",
+                                "to": "Lyon Part-Dieu",
+                                "dep_coor": [43.0, 43.0],
+                                "arr_coor": [44.0, 44.0],
+                                "board_time": 14,
+                                "arrival_time": 24,
+                                "trip": "R3_T1",
+                                "route": "R3"}
+                                    }
+                                },
+                     "path_2": {
+                        "departure_stop": "Paris Gare de Lyon",
+                        "arrival_stop": "Lyon Part-Dieu",
+                        "segments": {
+                            "segment_1": {
+                            "from": "Paris Gare de Lyon",
+                            "to": "Lyon Part-Dieu",
+                            "dep_coor": [42.0, 42.0],
+                            "arr_coor": [44.0, 44.0],
+                            "board_time": 10,
+                            "arrival_time": 40,
+                            "trip": "R1_T1",
+                            "route": "R1"}
+                                    }
+                                }
+                    }
+            }
+
+
 
 if __name__ == "__main__":
     import uvicorn

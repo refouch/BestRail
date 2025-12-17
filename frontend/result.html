@@ -64,91 +64,178 @@
         <!-- Liste des trajets -->
         <div class="trajet_list">
 
-            <!-- Trajet 1 -->
+            <!-- EXEMPLE 1 : Trajet DIRECT -->
             <article class="trip_card">
                 <div class="trip_route">
                     <span class="departure_station">Paris Gare de Lyon</span>
                     <span class="arrow">→</span>
                     <span class="arrival_station">Lyon Part-Dieu</span>
                 </div>
+
                 <div class="trip_header">
-                    <span class="departure_time">08:30</span>
-                    <span class="duration">1h55</span>
-                    <span class="arrival_time">10:25</span>
+                    <span class="departure_time">10</span>
+                    <span class="duration">30 unités</span>
+                    <span class="arrival_time">40</span>
                 </div>
-                <div class="trip_details">
-                    <p class="train_type">TGV INOUI 6601</p>
-                    <p class="connections">Direct</p>
+
+                <div class="trip_type">
+                    <p>Direct</p>
                 </div>
-                <div class="trip_footer">
-                    <span class="price">45€</span>
-                    <button class="select_trip_btn">Sélectionner</button>
+
+                <button class="details_btn" onclick="toggleDetails(this)">Voir les détails</button>
+
+                <div class="trip_details_panel">
+                    <div class="direct_info">
+                        <p><strong>Train :</strong> R1_T1</p>
+                        <p><strong>Durée :</strong> 30 unités</p>
+                    </div>
                 </div>
             </article>
 
-            <!-- Trajet 2 -->
+            <!-- EXEMPLE 2 : Trajet avec 1 CORRESPONDANCE -->
             <article class="trip_card">
                 <div class="trip_route">
                     <span class="departure_station">Paris Gare de Lyon</span>
                     <span class="arrow">→</span>
                     <span class="arrival_station">Lyon Part-Dieu</span>
                 </div>
+
                 <div class="trip_header">
-                    <span class="departure_time">09:15</span>
-                    <span class="duration">2h30</span>
-                    <span class="arrival_time">11:45</span>
+                    <span class="departure_time">10</span>
+                    <span class="duration">14 unités</span>
+                    <span class="arrival_time">24</span>
                 </div>
-                <div class="trip_details">
-                    <p class="train_type">TGV 6603 + TER 17824</p>
-                    <p class="connections">1 correspondance (Dijon)</p>
+
+                <div class="trip_type">
+                    <p>1 correspondance</p>
                 </div>
-                <div class="trip_footer">
-                    <span class="price">32€</span>
-                    <button class="select_trip_btn">Sélectionner</button>
+
+                <button class="details_btn" onclick="toggleDetails(this)">Voir les détails</button>
+
+                <div class="trip_details_panel">
+                    <div class="segments_container">
+                        
+                        <!-- Segment 1 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R2_T1</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Paris Gare de Lyon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Dijon</span>
+                                </div>
+                                <p><strong>Départ :</strong> 10</p>
+                                <p><strong>Arrivée :</strong> 12</p>
+                                <p><strong>Durée :</strong> 2 unités</p>
+                            </div>
+                        </div>
+
+                        <!-- Correspondance -->
+                        <div class="connection_info">
+                            <span class="connection_icon">⏱️</span>
+                            <p>Correspondance à Dijon - Temps d'attente : 2 unités</p>
+                        </div>
+
+                        <!-- Segment 2 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R3_T1</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Dijon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Lyon Part-Dieu</span>
+                                </div>
+                                <p><strong>Départ :</strong> 14</p>
+                                <p><strong>Arrivée :</strong> 24</p>
+                                <p><strong>Durée :</strong> 10 unités</p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </article>
 
-            <!-- Trajet 3 -->
+            <!-- EXEMPLE 3 : Trajet avec 2 CORRESPONDANCES -->
             <article class="trip_card">
                 <div class="trip_route">
                     <span class="departure_station">Paris Gare de Lyon</span>
                     <span class="arrow">→</span>
                     <span class="arrival_station">Lyon Part-Dieu</span>
                 </div>
-                <div class="trip_header">
-                    <span class="departure_time">10:47</span>
-                    <span class="duration">1h58</span>
-                    <span class="arrival_time">12:45</span>
-                </div>
-                <div class="trip_details">
-                    <p class="train_type">TGV INOUI 6605</p>
-                    <p class="connections">Direct</p>
-                </div>
-                <div class="trip_footer">
-                    <span class="price">52€</span>
-                    <button class="select_trip_btn">Sélectionner</button>
-                </div>
-            </article>
 
-            <!-- Trajet 4 -->
-            <article class="trip_card">
-                <div class="trip_route">
-                    <span class="departure_station">Paris Gare de Lyon</span>
-                    <span class="arrow">→</span>
-                    <span class="arrival_station">Lyon Part-Dieu</span>
-                </div>
                 <div class="trip_header">
-                    <span class="departure_time">12:20</span>
-                    <span class="duration">3h15</span>
-                    <span class="arrival_time">15:35</span>
+                    <span class="departure_time">8</span>
+                    <span class="duration">20 unités</span>
+                    <span class="arrival_time">28</span>
                 </div>
-                <div class="trip_details">
-                    <p class="train_type">Intercités 4671 + TER 18952</p>
-                    <p class="connections">2 correspondances (Dijon, Mâcon)</p>
+
+                <div class="trip_type">
+                    <p>2 correspondances</p>
                 </div>
-                <div class="trip_footer">
-                    <span class="price">28€</span>
-                    <button class="select_trip_btn">Sélectionner</button>
+
+                <button class="details_btn" onclick="toggleDetails(this)">Voir les détails</button>
+
+                <div class="trip_details_panel">
+                    <div class="segments_container">
+                        
+                        <!-- Segment 1 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R4_T1</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Paris Gare de Lyon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Dijon</span>
+                                </div>
+                                <p><strong>Départ :</strong> 8</p>
+                                <p><strong>Arrivée :</strong> 12</p>
+                                <p><strong>Durée :</strong> 4 unités</p>
+                            </div>
+                        </div>
+
+                        <!-- Correspondance 1 -->
+                        <div class="connection_info">
+                            <span class="connection_icon">⏱️</span>
+                            <p>Correspondance à Dijon - Temps d'attente : 3 unités</p>
+                        </div>
+
+                        <!-- Segment 2 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R5_T2</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Dijon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Mâcon</span>
+                                </div>
+                                <p><strong>Départ :</strong> 15</p>
+                                <p><strong>Arrivée :</strong> 20</p>
+                                <p><strong>Durée :</strong> 5 unités</p>
+                            </div>
+                        </div>
+
+                        <!-- Correspondance 2 -->
+                        <div class="connection_info">
+                            <span class="connection_icon">⏱️</span>
+                            <p>Correspondance à Mâcon - Temps d'attente : 1 unité</p>
+                        </div>
+
+                        <!-- Segment 3 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R6_T3</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Mâcon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Lyon Part-Dieu</span>
+                                </div>
+                                <p><strong>Départ :</strong> 21</p>
+                                <p><strong>Arrivée :</strong> 28</p>
+                                <p><strong>Durée :</strong> 7 unités</p>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </article>
         

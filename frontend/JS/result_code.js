@@ -47,7 +47,7 @@ if (searchResults && searchResults.trajets) {
     
     const trajetList = document.querySelector(".trajet_list");
 
-    trajetList.innerHTML = ""; /* On vide les trajets en dur (sera plus nécessaire ensuite) */
+    trajetList.innerHTML = ""; 
 
     if (searchResults.trajets.length === 0) {
         trajetList.innerHTML = "<p>Aucun trajet trouvé pour cette recherche.</p>";
@@ -87,13 +87,6 @@ if (searchResults && searchResults.trajets) {
     document.querySelector(".trajet_list").innerHTML =
         "<p>Aucun résultat. Veuillez effectuer une nouvelle recherche.</p>";   
 }
-
-
-
-
-
-
-
 
 
 
@@ -143,3 +136,23 @@ modifyBtn.addEventListener('click', function() {
 
     }
 });
+
+
+// ======================================
+// Gestion des panneaux déroulants
+// ======================================
+
+function toggleDetails(button) {
+    const panel = button.nextElementSibling;
+    const isOpen = panel.classList.contains('open');
+    
+    if (isOpen) {
+        panel.classList.remove('open');
+        button.classList.remove('active');
+        button.textContent = 'Voir les détails';
+    } else {
+        panel.classList.add('open');
+        button.classList.add('active');
+        button.textContent = 'Masquer les détails';
+    }
+}

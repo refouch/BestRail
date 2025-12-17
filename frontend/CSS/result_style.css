@@ -203,51 +203,136 @@
     border-radius: 20px;
 }
 
-/* Détails du trajet */
-.trip_details {
+/* Type de trajet */
+.trip_type {
     margin-bottom: 15px;
 }
 
-.train_type {
+.trip_type p {
     font-size: 0.9rem;
     color: #555;
-    margin-bottom: 5px;
     font-weight: 500;
 }
 
-.connections {
-    font-size: 0.85rem;
-    color: #777;
-}
-
-/* Pied de la carte (prix et bouton) */
-.trip_footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 12px;
-    border-top: 1px solid #f0f0f0;
-}
-
-.price {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-color, #2c3e50);
-}
-
-.select_trip_btn {
-    background-color: var(--primary-color, #2c3e50);
+/* Bouton détails */
+.details_btn {
+    background-color: var(--primary-color);
     color: white;
     padding: 10px 24px;
+    border: none;
     border-radius: 6px;
     font-weight: 600;
     font-size: 0.9rem;
+    cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
 }
 
-.select_trip_btn:hover {
-    background-color: var(--secondary-color, #3498db);
-    transform: scale(1.05);
+.details_btn:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.02);
+}
+
+.details_btn.active {
+    background-color: var(--secondary-color);
+}
+
+/* ========================================
+   PANNEAU DÉROULANT DES DÉTAILS
+   ======================================== */
+
+/* Panneau déroulant */
+.trip_details_panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    margin-top: 15px;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 0;
+}
+
+.trip_details_panel.open {
+    max-height: 800px;
+    padding-top: 15px;
+}
+
+/* Contenu du panneau - Trajet direct */
+.direct_info {
+    padding: 15px;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+.direct_info p {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.direct_info strong {
+    color: var(--text-primary);
+}
+
+/* Contenu du panneau - Trajet avec correspondances */
+.segments_container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.segment_item {
+    padding: 15px;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--primary-color);
+}
+
+.segment_header {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.segment_info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.segment_route {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.segment_route .arrow_small {
+    color: var(--text-muted);
+}
+
+/* Correspondance */
+.connection_info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    margin: 10px 0;
+    background-color: #fef3c7;
+    border-radius: var(--border-radius-sm);
+    border: 1px dashed var(--warning-color);
+}
+
+.connection_info p {
+    color: #92400e;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.connection_icon {
+    margin-right: 8px;
+    font-size: 1.2rem;
 }
 
 

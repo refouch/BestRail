@@ -10,3 +10,73 @@ Modifier le JS des résultats pour que les résultats s'affichent même en hors 
 Améliorer les visuels des cards de trajets
 
 Ajouter les trajets sur la carte Leaflet
+
+Update 17 décembre :
+Si on lance sans le server on voit les nouvelles cards mais les statiques
+Et pour l'instant si le server tourne il ne se passe rien car la fonction JS n'a pas été modifiée
+
+
+
+
+{
+  "path_1": {
+    "departure_stop": "Stop A",
+    "arrival_stop": "Stop D",
+    "segments": {
+      "segment_1": {
+        "from": "Stop A",
+        "to": "Stop E",
+        "dep_coor": [
+          42.0,
+          42.0
+        ],
+        "arr_coor": [
+          42.0,
+          42.0
+        ],
+        "board_time": 10,
+        "arrival_time": 12,
+        "trip": "R2_T1",
+        "route": "R2"
+      },
+      "segment_2": {
+        "from": "Stop E",
+        "to": "Stop D",
+        "dep_coor": [
+          42.0,
+          42.0
+        ],
+        "arr_coor": [
+          42.0,
+          42.0
+        ],
+        "board_time": 14,
+        "arrival_time": 24,
+        "trip": "R3_T1",
+        "route": "R3"
+      }
+    }
+  },
+  "path_2": {
+    "departure_stop": "Stop A",
+    "arrival_stop": "Stop D",
+    "segments": {
+      "segment_1": {
+        "from": "Stop A",
+        "to": "Stop D",
+        "dep_coor": [
+          42.0,
+          42.0
+        ],
+        "arr_coor": [
+          42.0,
+          42.0
+        ],
+        "board_time": 10,
+        "arrival_time": 40,
+        "trip": "R1_T1",
+        "route": "R1"
+      }
+    }
+  }
+}
