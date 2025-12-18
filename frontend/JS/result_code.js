@@ -1,12 +1,14 @@
+// ======================================
+// Initialisation de la carte Leaflet
+// ======================================
 
-// Initialiser la carte centrée sur la France
 const map = L.map('map_result').setView([46.603354, 1.888334], 5.5);
 
-// Ajouter le fond de carte (tiles) depuis OpenStreetMap
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19
-}).addTo(map);
+}).addTo(map); // Ajout du fond de carte depuis OpenStreetMap
+
 
 
 // ======================================
@@ -41,54 +43,6 @@ if (searchParams) {
     document.querySelector(".travel_date").textContent = dateFormatee;
 }
 
-// Affichage des résultats reçus du serveur
-
-if (searchResults && searchResults.trajets) {
-    
-    const trajetList = document.querySelector(".trajet_list");
-
-    trajetList.innerHTML = ""; 
-
-    if (searchResults.trajets.length === 0) {
-        trajetList.innerHTML = "<p>Aucun trajet trouvé pour cette recherche.</p>";
-    } else {
-        searchResults.trajets.forEach((trajet,index) => {
-            const article = document.createElement("article");
-            article.className = "trip_card";
-
-            article.innerHTML = `
-                <div class="trip_route">
-                    <span class="departure_station">${trajet.depart}</span>
-                    <span class="arrow">→</span>
-                    <span class="arrival_station">${trajet.arrivee}</span>
-                </div>
-                <div class="trip_header">
-                    <span class="departure_time">${trajet.heure_depart}</span>
-                    <span class="duration">${trajet.duree}</span>
-                    <span class="arrival_time">${trajet.heure_arrivee}</span>
-                </div>
-                <div class="trip_details">
-                    <p class="train_type">${trajet.train_type}</p>
-                    <p class="connections">${trajet.correspondances}</p>
-                </div>
-                <div class="trip_footer">
-                    <span class="price">${trajet.prix}€</span>
-                    <button class="select_trip_btn" data-trajet-index= ${index}>Sélectionner</button>
-                </div>`;
-
-            trajetList.appendChild(article);
-        });
-
-    console.log(`${searchResults.trajets.length} trajet(s) affiché(s)`);
-
-    }
-} else {
-    console.warn("Aucune donnée trouvée dans sessionStorage");
-    document.querySelector(".trajet_list").innerHTML =
-        "<p>Aucun résultat. Veuillez effectuer une nouvelle recherche.</p>";   
-}
-
-
 // Nouvelle fonction pour l'affichage des résultats du serveur
 if (searchResults && searchResults.trajets) {
     
@@ -96,10 +50,61 @@ if (searchResults && searchResults.trajets) {
 
     trajetList.innerHTML = "";
 
-    if (Object.keys(searchResults.trajets).length === 0) {
+    if (searchResults.trajets.length === 0) {
         trajetList.innerHTML = "<p>Aucun trajet trouvé pour cette recherche.</p>";
     } else {
-        //Ce qu'on fait avec les trajets quand on les a
+        
+        searchResults.trajets.forEach((trajet,index) => {
+            
+            // Données liées au trajet
+            const firstSegment = trajet.segments[0];
+            const lastSegment = trajet.segments[trajet.segments.length-1];
+            const departureTime = firstSegment.board_time;
+            const arrivalTime = lastSegment.arrival_time;
+            const duration = arrivalTime - departureTime;
+            const nbCorrespondances = trajet.segments.length -1;
+
+            // Type de trajet
+            let tripType = "";
+            if (nbCorrespondances===0) {
+                tripType = "Direct";
+            } else if (nbCorrespondances===1) {
+                tripType = "1 correspondance";
+            } else {
+                tripType = `${nbCorrespondances} correspondances`;
+            }
+
+            // Création de la card
+            const article = document.createElement("article");
+            article.className = "trip_card";
+
+            article.innerHTML = `
+                <div class="trip_route">
+                    <span class="departure_station">${trajet.departure_stop}</span>
+                    <span class="arrow">→</span>
+                    <span class="arrival_station">${trajet.arrival_stop}</span>
+                </div>
+
+                <div class="trip_header">
+                    <span class="departure_time">${departureTime}</span>
+                    <span class="duration">${duration} unités</span>
+                    <span class="arrival_time">${arrivalTime}</span>
+                </div>
+
+                <div class="trip_type">
+                    <p>${tripType}</p>
+                </div>
+
+                <button class="details_btn" onclick="toggleDetails(this)">Voir les détails</button>
+
+                <div class="trip_details_panel">
+                    ${generateDetailsPanel(trajet)}
+                </div>
+            `;
+
+            trajetList.appendChild(article);
+        });
+        console.log(`${searchResults.trajets.length} trajet(s) affiché(s)`);
     }
 } else {
     console.warn("Aucune donnée trouvée dans sessionStorage");
@@ -107,6 +112,64 @@ if (searchResults && searchResults.trajets) {
         "<p>Aucun résultat. Veuillez effectuer une nouvelle recherche.</p>"; 
 }
 
+
+// Fonction pour générer le panneau de détails d'une card
+
+function generateDetailsPanel(trajet) {
+
+    // Trajet direct
+    if (trajet.segments.length===1) {
+        const segment = trajet.segments[0];
+        const duration = segment.arrival_time - segment.board_time;
+
+        return `
+            <div class="direct_info">
+                <p><strong>Train :</strong> ${segment.trip}</p>
+                <p><strong>Durée :</strong> ${duration} unités</p>
+            </div>
+        `;
+    }
+
+    // Trajet avec au moins 1 correspondance
+    let html = "<div class='segments_container'>";
+
+    trajet.segments.forEach((segment,index) => {
+        const segmentDuration = segment.arrival_time - segment.board_time;
+
+        // Affichage du segment
+        html += `
+            <div class="segment_item">
+                <div class="segment_header">🚄 Train ${segment.trip}</div>
+                <div class="segment_info">
+                    <div class="segment_route">
+                        <span>${segment.from}</span>
+                        <span class="arrow_small">→</span>
+                        <span>${segment.to}</span>
+                    </div>
+                    <p><strong>Départ :</strong> ${segment.board_time}</p>
+                    <p><strong>Arrivée :</strong> ${segment.arrival_time}</p>
+                    <p><strong>Durée :</strong> ${segmentDuration} unités</p>
+                </div>
+            </div>
+        `;
+
+        // Affichage de la correspondance (entre deux segments)
+        if (index < trajet.segments.length -1) {
+            const nextSegment = trajet.segments[index +1];
+            const waitingTime = nextSegment.board_time - segment.arrival_time;
+
+            html += `
+                <div class="connection_info">
+                    <span class="connection_icon">⏱️</span>
+                    <p>Correspondance à ${segment.to} - Temps d'attente : ${waitingTime} unités</p>
+                </div>
+            `;
+        }
+    });
+
+    html += '</div>';
+    return html;
+}
 
 
 

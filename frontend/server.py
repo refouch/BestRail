@@ -67,12 +67,11 @@ def recherche(data: dict):
     return {
         "status" :"success",
         "message": "Données bien reçues et traitées !",
-        "trajets" : {"path_1": {
-                        "departure_stop": "Paris Gare de Lyon",
+        "trajets" : [
+                        {"departure_stop": "Paris Gare de Lyon",
                         "arrival_stop": "Lyon Part-Dieu",
-                        "segments": {
-                            "segment_1": {
-                                "from": "Paris Gare de Lyon",
+                        "segments": [
+                                {"from": "Paris Gare de Lyon",
                                 "to": "Dijon",
                                 "dep_coor": [42.0 ,42.0],
                                 "arr_coor": [43.0, 43.0],
@@ -80,8 +79,7 @@ def recherche(data: dict):
                                 "arrival_time": 12,
                                 "trip": "R2_T1",
                                 "route": "R2"},
-                            "segment_2": {
-                                "from": "Dijon",
+                                {"from": "Dijon",
                                 "to": "Lyon Part-Dieu",
                                 "dep_coor": [43.0, 43.0],
                                 "arr_coor": [44.0, 44.0],
@@ -89,24 +87,22 @@ def recherche(data: dict):
                                 "arrival_time": 24,
                                 "trip": "R3_T1",
                                 "route": "R3"}
-                                    }
+                                    ]
                                 },
-                     "path_2": {
-                        "departure_stop": "Paris Gare de Lyon",
+                        {"departure_stop": "Paris Gare de Lyon",
                         "arrival_stop": "Lyon Part-Dieu",
-                        "segments": {
-                            "segment_1": {
-                            "from": "Paris Gare de Lyon",
-                            "to": "Lyon Part-Dieu",
-                            "dep_coor": [42.0, 42.0],
-                            "arr_coor": [44.0, 44.0],
-                            "board_time": 10,
-                            "arrival_time": 40,
-                            "trip": "R1_T1",
-                            "route": "R1"}
-                                    }
-                                }
-                    }
+                        "segments": [
+                                {"from": "Paris Gare de Lyon",
+                                "to": "Lyon Part-Dieu",
+                                "dep_coor": [42.0, 42.0],
+                                "arr_coor": [44.0, 44.0],
+                                "board_time": 10,
+                                "arrival_time": 40,
+                                "trip": "R1_T1",
+                                "route": "R1"}
+                                    ]
+                        }
+                    ]   
             }
 
 
