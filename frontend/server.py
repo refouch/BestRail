@@ -88,7 +88,7 @@ def recherche(data: dict):
                                 "trip": "R3_T1",
                                 "route": "R3"}
                                     ]
-                                },
+                        },
                         {"departure_stop": "Paris Gare de Lyon",
                         "arrival_stop": "Lyon Part-Dieu",
                         "segments": [
@@ -101,6 +101,36 @@ def recherche(data: dict):
                                 "trip": "R1_T1",
                                 "route": "R1"}
                                     ]
+                        },
+                        {"departure_stop": "Paris Gare de Lyon",
+                         "arrival_stop": "Lyon Part-Dieu",
+                         "segments": [
+                                {"from": "Paris Gare de Lyon",
+                                "to": "Macon",
+                                "dep_coor": [42.0,42.0],
+                                "arr_coor": [42.5,42.5],
+                                "board_time": 10,
+                                "arrival_time": 40,
+                                "trip": "R2_T1",
+                                "route": "R2"},                              
+                                {"from": "Macon",
+                                "to": "Roanne",
+                                "dep_coor": [42.5,42.5],
+                                "arr_coor": [43.5,43.5],
+                                "board_time": 110,
+                                "arrival_time": 250,
+                                "trip": "R4_T2",
+                                "route": "R4"},
+                                {"from": "Roanne",
+                                "to": "Lyon Part-Dieu",
+                                "dep_coor": [43.5,43.5],
+                                "arr_coor": [44.0,44.0],
+                                "board_time": 320,
+                                "arrival_time": 415,
+                                "trip": "R5_T7",
+                                "route": "R5"}
+                             
+                         ]
                         }
                     ]   
             }

@@ -1,4 +1,3 @@
-
 // ===================================
 // Formulaire de recherche
 // ===================================
@@ -6,8 +5,8 @@
 const formulaire = document.getElementById("search-form");
 
 formulaire.addEventListener("submit", function(event) {
-    // pour empêcher le rechargement automatique de la page
-    event.preventDefault(); 
+    
+    event.preventDefault(); // pour empêcher le rechargement automatique de la page
 
     // Récupération des données du formulaire
     const depart_js = document.getElementById("depart").value;
@@ -28,9 +27,8 @@ formulaire.addEventListener("submit", function(event) {
     };
 
     console.log("Payload:", payload)
-    console.log("Payload en JSON;", JSON.stringify(payload))
-
-    // Affichage d'un indicateur de chargement
+    
+    // Affichage d'un indicateur de chargement sur le bouton de recherche
     const boutonRecherche = formulaire.querySelector('button[type="submit"]');
     const textOriginal = boutonRecherche.textContent;
     boutonRecherche.textContent = "Recherche en cours...";
@@ -38,9 +36,7 @@ formulaire.addEventListener("submit", function(event) {
 
     // Envoi de la requête au serveur
     console.log("Envoi de la requête vers le serveur...")
-
-    fetch("http://localhost:8000/search", {
-        // Modifier l'URL pour tomber sur le bon endpoint
+    fetch("http://localhost:8000/search", { // Modifier l'URL pour tomber sur le bon endpoint
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -81,11 +77,6 @@ formulaire.addEventListener("submit", function(event) {
     });
 
 });
-
-
-// 
-
-
 
 
 console.log("Script index_code.js chargé !");

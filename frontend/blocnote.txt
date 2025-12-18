@@ -5,16 +5,10 @@ Dans index_code.js :
 Faire un truc qui permet de modifier la recherche depuis la page des résultats
     - mettre un datetime pour l'input de la date
 
-Modifier le JS des résultats pour que les résultats s'affichent même en hors connexion
 
 Améliorer les visuels des cards de trajets
 
 Ajouter les trajets sur la carte Leaflet
-
-Update 17 décembre :
-Si on lance sans le server on voit les nouvelles cards mais les statiques
-Et pour l'instant si le server tourne il ne se passe rien car la fonction JS n'a pas été modifiée
-Potentiellement il faudrait pas faire des dictionnaires imbriqués mais des listes de dictionnaires
 
 
 
@@ -170,4 +164,98 @@ if (searchResults && searchResults.trajets) {
     console.warn("Aucune donnée trouvée dans sessionStorage");
     document.querySelector(".trajet_list").innerHTML =
         "<p>Aucun résultat. Veuillez effectuer une nouvelle recherche.</p>";   
+}
+
+OLD CSS cards/* Carte de trajet individuelle */
+.trip_card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.trip_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Route (gares de départ et d'arrivée) */
+.trip_route {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.departure_station,
+.arrival_station {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--primary-color, #2c3e50);
+}
+
+.arrow {
+    color: #999;
+    font-size: 1.2rem;
+}
+
+/* Horaires (départ, durée, arrivée) */
+.trip_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.departure_time,
+.arrival_time {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.duration {
+    font-size: 0.9rem;
+    color: #666;
+    background-color: #f8f9fa;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+/* Type de trajet */
+.trip_type {
+    margin-bottom: 15px;
+}
+
+.trip_type p {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Bouton détails */
+.details_btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
+}
+
+.details_btn:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.02);
+}
+
+.details_btn.active {
+    background-color: var(--secondary-color);
 }

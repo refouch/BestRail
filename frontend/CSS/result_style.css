@@ -122,11 +122,13 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    padding: var(--spacing-xs);
 }
 
 .result_container h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
+    
 }
 
 /* Liste des trajets */
@@ -143,12 +145,15 @@
     box-shadow: 0 4px 8px var(--secondary-hover);
 }
 
-/* Carte de trajet individuelle */
+/* Carte de trajet */
+
 .trip_card {
-    background-color: white;
+    background-color: var(--bg-primary);
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -158,63 +163,78 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Route (gares de départ et d'arrivée) */
-.trip_route {
+
+/* Bloc principal (horaires) */
+
+.trip_main_info {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
     margin-bottom: 15px;
     padding-bottom: 12px;
     border-bottom: 2px solid #f0f0f0;
 }
 
-.departure_station,
-.arrival_station {
+
+/* Colonne gauche : heures + gares */
+
+.trip_times_stations {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.trip_line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.trip_line .card_time {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    min-width: 55px; /* alignement vertical */
+}
+
+.trip_line .card_station {
     font-weight: 600;
     font-size: 0.95rem;
     color: var(--primary-color, #2c3e50);
 }
 
-.arrow {
-    color: #999;
-    font-size: 1.2rem;
+
+/* Colonne droite : durée */
+
+.trip_duration {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    background-color: var(--bg-primary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
-/* Horaires (départ, durée, arrivée) */
-.trip_header {
+
+/* Footer (type + bouton)*/
+
+.trip_footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 5px;
 }
 
-.departure_time,
-.arrival_time {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #333;
-}
-
-.duration {
-    font-size: 0.9rem;
-    color: #666;
-    background-color: #f8f9fa;
-    padding: 4px 12px;
-    border-radius: 20px;
-}
-
-/* Type de trajet */
 .trip_type {
-    margin-bottom: 15px;
-}
-
-.trip_type p {
     font-size: 0.9rem;
     color: #555;
     font-weight: 500;
 }
 
+
 /* Bouton détails */
+
 .details_btn {
     background-color: var(--primary-color);
     color: white;
@@ -225,7 +245,6 @@
     font-size: 0.9rem;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    width: 100%;
 }
 
 .details_btn:hover {
@@ -237,6 +256,8 @@
     background-color: var(--secondary-color);
 }
 
+
+
 /* ========================================
    PANNEAU DÉROULANT DES DÉTAILS
    ======================================== */
@@ -246,8 +267,8 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
-    margin-top: 15px;
-    border-top: 1px solid #e5e7eb;
+    margin-top: 5px;
+    border-top: 1px solid var(--bg-secondary);
     padding-top: 0;
 }
 
@@ -349,6 +370,7 @@
     position: sticky;
     top: 20px;
     height: fit-content;
+    padding: var(--spacing-xs);
 }
 
 /* La carte Leaflet */

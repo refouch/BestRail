@@ -10,11 +10,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map); // Ajout du fond de carte depuis OpenStreetMap
 
 
-
 // ======================================
-// Recherche
+// Affichage des résultats du serveur
 // ======================================
-
 
 // Récupération des données
 const searchParams = JSON.parse(sessionStorage.getItem("searchParams"));
@@ -23,16 +21,14 @@ const searchResults = JSON.parse(sessionStorage.getItem("searchResults"));
 console.log("Recap de la recherche (session storage):", searchParams);
 console.log("Résultats du serveur (session storage):", searchResults);
 
-
-// Modification du récapitulatif de recherche
+// Récapitulatif de la recherche
 if (searchParams) {
 
     document.querySelector(".ville_depart").textContent = searchParams.depart;
     document.querySelector(".ville_arrivee").textContent = searchParams.arrivee;
 
-    // Formatage de la date pour l'afficher correctement
-    const dateObj = new Date(searchParams.date);
-    const dateFormatee = dateObj.toLocaleDateString('fr-FR', {
+    const dateObj = new Date(searchParams.date); // Formatage de la date pour l'afficher correctement
+    const dateFormatee = dateObj.toLocaleDateString('fr-FR', { 
             weekday: 'long',
             year: 'numeric',
             month: 'long',
@@ -43,17 +39,18 @@ if (searchParams) {
     document.querySelector(".travel_date").textContent = dateFormatee;
 }
 
-// Nouvelle fonction pour l'affichage des résultats du serveur
+// Affichage de la liste des trajets 
 if (searchResults && searchResults.trajets) {
     
     const trajetList = document.querySelector(".trajet_list");
 
     trajetList.innerHTML = "";
 
-    if (searchResults.trajets.length === 0) {
+    if (searchResults.trajets.length === 0) { 
+        // En cas d'absence de trajets
         trajetList.innerHTML = "<p>Aucun trajet trouvé pour cette recherche.</p>";
-    } else {
-        
+    } else { 
+        // S'il existe au moins un trajet 
         searchResults.trajets.forEach((trajet,index) => {
             
             // Données liées au trajet
@@ -79,23 +76,28 @@ if (searchResults && searchResults.trajets) {
             article.className = "trip_card";
 
             article.innerHTML = `
-                <div class="trip_route">
-                    <span class="departure_station">${trajet.departure_stop}</span>
-                    <span class="arrow">→</span>
-                    <span class="arrival_station">${trajet.arrival_stop}</span>
+                <div class="trip_main_info">
+                    <div class="trip_time_station">
+                        <div class="trip_line">
+                            <span class="card_time">${convertHHMM(departureTime)}</span>
+                            <span class="card_station">${trajet.departure_stop}</span>
+                        </div>
+                        <div class="trip_line">
+                            <span class="card_time">${convertHHMM(arrivalTime)}</span>
+                            <span class="card_station">${trajet.arrival_stop}</span>
+                        </div>
+                    </div>
+                    <div class="trip_duration">
+                        ${convertDuration(duration)}
+                    </div>
                 </div>
 
-                <div class="trip_header">
-                    <span class="departure_time">${departureTime}</span>
-                    <span class="duration">${duration} unités</span>
-                    <span class="arrival_time">${arrivalTime}</span>
+                <div class="trip_footer">
+                    <span class="trip_type">${tripType}</span>
+                    <button class="details_btn" onclick="toggleDetails(this)">
+                        Voir les détails
+                    </button>
                 </div>
-
-                <div class="trip_type">
-                    <p>${tripType}</p>
-                </div>
-
-                <button class="details_btn" onclick="toggleDetails(this)">Voir les détails</button>
 
                 <div class="trip_details_panel">
                     ${generateDetailsPanel(trajet)}
@@ -114,7 +116,6 @@ if (searchResults && searchResults.trajets) {
 
 
 // Fonction pour générer le panneau de détails d'une card
-
 function generateDetailsPanel(trajet) {
 
     // Trajet direct
@@ -125,7 +126,7 @@ function generateDetailsPanel(trajet) {
         return `
             <div class="direct_info">
                 <p><strong>Train :</strong> ${segment.trip}</p>
-                <p><strong>Durée :</strong> ${duration} unités</p>
+                <p><strong>Durée :</strong> ${convertDuration(duration)}</p>
             </div>
         `;
     }
@@ -146,9 +147,9 @@ function generateDetailsPanel(trajet) {
                         <span class="arrow_small">→</span>
                         <span>${segment.to}</span>
                     </div>
-                    <p><strong>Départ :</strong> ${segment.board_time}</p>
-                    <p><strong>Arrivée :</strong> ${segment.arrival_time}</p>
-                    <p><strong>Durée :</strong> ${segmentDuration} unités</p>
+                    <p><strong>Départ :</strong> ${convertHHMM(segment.board_time)}</p>
+                    <p><strong>Arrivée :</strong> ${convertHHMM(segment.arrival_time)}</p>
+                    <p><strong>Durée :</strong> ${convertDuration(segmentDuration)}</p>
                 </div>
             </div>
         `;
@@ -161,7 +162,7 @@ function generateDetailsPanel(trajet) {
             html += `
                 <div class="connection_info">
                     <span class="connection_icon">⏱️</span>
-                    <p>Correspondance à ${segment.to} - Temps d'attente : ${waitingTime} unités</p>
+                    <p>Correspondance à ${segment.to} - Temps d'attente : ${convertDuration(waitingTime)}</p>
                 </div>
             `;
         }
@@ -172,9 +173,9 @@ function generateDetailsPanel(trajet) {
 }
 
 
-
-
-// Bouton pour modifier la recherche
+// ======================================
+// Modification de la recherche 
+// ======================================
 
 const modifyBtn = document.getElementById('modifyBtn');
 let isEditing = false;
@@ -183,7 +184,6 @@ modifyBtn.addEventListener('click', function() {
 
     if (!isEditing) {
         // Mode édition
-
         const recapItems = document.querySelectorAll('.recap_item span');
 
         recapItems.forEach(span => {
@@ -216,7 +216,8 @@ modifyBtn.addEventListener('click', function() {
         modifyBtn.classList.remove('validate_mode');
         isEditing = false;
 
-        // Ajouter la relance de la recherche
+        // Relance de la recherche
+        
 
     }
 });
@@ -227,9 +228,11 @@ modifyBtn.addEventListener('click', function() {
 // ======================================
 
 function toggleDetails(button) {
-    const panel = button.nextElementSibling;
+    const card = button.closest('.trip_card');
+    const panel = card.querySelector('.trip_details_panel');
+
     const isOpen = panel.classList.contains('open');
-    
+
     if (isOpen) {
         panel.classList.remove('open');
         button.classList.remove('active');
@@ -239,4 +242,29 @@ function toggleDetails(button) {
         button.classList.add('active');
         button.textContent = 'Masquer les détails';
     }
+}
+
+
+// ======================================
+// Conversion du format de l'heure
+// ======================================
+
+function convertHHMM(totalMinutes) {
+    const hours = Math.floor(totalMinutes/60);
+    const minutes = totalMinutes % 60
+
+    const hh = String(hours).padStart(2,'0');
+    const mm = String(minutes).padStart(2,'0');
+
+    return `${hh}:${mm}`;
+}
+
+function convertDuration(duration) {
+    const hours = Math.floor(duration/60);
+    const minutes = duration % 60;
+
+    if (hours === 0) {
+        return `${minutes} min`;
+    }
+    return `${hours}h${String(minutes).padStart(2,'0')}`;
 }
