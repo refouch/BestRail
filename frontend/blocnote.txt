@@ -259,3 +259,44 @@ OLD CSS cards/* Carte de trajet individuelle */
 .details_btn.active {
     background-color: var(--secondary-color);
 }
+
+
+OLD bouton modify 
+if (!isEditing) {
+        // Mode édition
+        const recapItems = document.querySelectorAll('.recap_item span');
+
+        recapItems.forEach(span => {
+            const currentValue = span.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentValue;
+            input.className = 'recap_input';
+
+            span.replaceWith(input);
+        });
+
+        modifyBtn.textContent = 'Valider';
+        modifyBtn.classList.add('validate_mode');
+        isEditing = true;
+
+    } else {
+        // Mode validation
+        const inputs = document.querySelectorAll('.recap_input');
+        
+        inputs.forEach(input => {
+            const newValue = input.value;
+            const span = document.createElement('span');
+            span.textContent = newValue;
+
+            input.replaceWith(span);
+        });
+
+        modifyBtn.textContent = 'Modifier la recherche';
+        modifyBtn.classList.remove('validate_mode');
+        isEditing = false;
+
+        // Relance de la recherche
+        
+
+    }

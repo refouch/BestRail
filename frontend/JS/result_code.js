@@ -9,6 +9,120 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19
 }).addTo(map); // Ajout du fond de carte depuis OpenStreetMap
 
+// Stockage des couches de la carte
+let currentMapLayers = [];
+
+// fonction pour nettoyer les layers de la carte
+function clearMapLayers() {
+    currentMapLayers.forEach(layer => {
+        map.removeLayer(layer);
+    });
+    currentMapLayers = [];
+}
+
+// Fonction pour créer un arc courbe entre deux points
+function createCurvedLine(latlng1, latlng2, color = '#2563eb') {
+    const offsetX = latlng2[1] - latlng1[1];
+    const offsetY = latlng2[0] - latlng1[0];
+    
+    // Calcul du point de contrôle pour la courbe (point milieu décalé perpendiculairement)
+    const midX = (latlng1[1] + latlng2[1]) / 2;
+    const midY = (latlng1[0] + latlng2[0]) / 2;
+    
+    // Calcul de la distance pour ajuster la courbure
+    const distance = Math.sqrt(offsetX * offsetX + offsetY * offsetY);
+    const curvature = distance * 0.2; // 20% de la distance pour la courbure
+    
+    // Point de contrôle perpendiculaire à la ligne
+    const controlX = midX - offsetY * curvature / distance;
+    const controlY = midY + offsetX * curvature / distance;
+    
+    // Création de points le long de la courbe de Bézier quadratique
+    const points = [];
+    const numPoints = 50; // Nombre de points pour lisser la courbe
+    
+    for (let i = 0; i <= numPoints; i++) {
+        const t = i / numPoints;
+        const t1 = 1 - t;
+        
+        // Formule de courbe de Bézier quadratique
+        const lat = t1 * t1 * latlng1[0] + 2 * t1 * t * controlY + t * t * latlng2[0];
+        const lng = t1 * t1 * latlng1[1] + 2 * t1 * t * controlX + t * t * latlng2[1];
+        
+        points.push([lat, lng]);
+    }
+    
+    // Création de la polyligne avec animation
+    const polyline = L.polyline(points, {
+        color: color,
+        weight: 3,
+        opacity: 0.8,
+        smoothFactor: 1
+    });
+    
+    return polyline;
+}
+
+// Fonction pour afficher un trajet sur la carte
+function displayTripOnMap(trajet, highlight = false) {
+
+    // Nettoyage des couches précédentes
+    clearMapLayers();
+
+    const color = highlight ? '#dc2626' : '#2563eb';
+    const allCoordinates = [];
+
+    // Pour chaque segment du trajet
+    trajet.segments.forEach((segment,index) => {
+        const depCoord = segment.dep_coor;
+        const arrCoord = segment.arr_coor;
+
+        allCoordinates.push(depCoord,arrCoord);
+
+        // Création de l'arc courbe entre départ et arrivée
+        const curvedLine = createCurvedLine(depCoord,arrCoord, color);
+        curvedLine.addTo(map);
+        currentMapLayers.push(curvedLine);
+
+        // Marqueur pour la gare de départ
+        if (index === 0) {
+            const startMarker = L.circleMarker(depCoord, {
+                radius: 8,
+                fillColor: '#10b981',
+                color: '#fff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.9
+            }).bindPopup(`<b>Départ</b><br>${segment.from}<br>${convertHHMM(segment.board_time)}`);
+            
+            startMarker.addTo(map);
+            currentMapLayers.push(startMarker);
+        }
+
+        // Marqueur pour la gare d'arrivée
+        const isLastSegment = index === trajet.segments.length - 1;
+        const markerColor = isLastSegment ? '#dc2626' : '#f59e0b';
+
+        const endMarker = L.circleMarker(arrCoord, {
+            radius: isLastSegment ? 8 : 6,
+            fillColor: markerColor,
+            color: '#fff',
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.9
+        }).bindPopup(`<b>${isLastSegment ? 'Arrivée' : 'Correspondance'}</b><br>${segment.to}<br>${convertHHMM(segment.arrival_time)}`);
+        
+        endMarker.addTo(map);
+        currentMapLayers.push(endMarker);
+    });
+
+    // Ajustement de la vue pour afficher tout le trajet
+    if (allCoordinates.length > 0) {
+        const bounds = L.latLngBounds(allCoordinates);
+        map.fitBounds(bounds, { padding: [50, 50] });
+    }
+}
+
 
 // ======================================
 // Affichage des résultats du serveur
@@ -105,6 +219,17 @@ if (searchResults && searchResults.trajets) {
             `;
 
             trajetList.appendChild(article);
+
+            // Evenement de survol : affichage sur la carte
+            article.addEventListener('mouseenter',function() {
+                displayTripOnMap(trajet, false);
+            });
+            article.addEventListener('mouseleave', function() {
+                const detailsBtn = article.querySelector('.details_btn');
+                if (!detailsBtn.classList.contains('active')) {
+                    clearMapLayers();
+                }
+            });
         });
         console.log(`${searchResults.trajets.length} trajet(s) affiché(s)`);
     }
@@ -183,42 +308,93 @@ let isEditing = false;
 modifyBtn.addEventListener('click', function() {
 
     if (!isEditing) {
-        // Mode édition
-        const recapItems = document.querySelectorAll('.recap_item span');
+        // ========== Mode Édition ==========
 
-        recapItems.forEach(span => {
-            const currentValue = span.textContent;
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = currentValue;
-            input.className = 'recap_input';
+        // Récupération des informations à modifier
+        const villeDepart = document.querySelector('.ville_depart');
+        const villeArrivee = document.querySelector('.ville_arrivee');
+        const travelDate = document.querySelector('.travel_date');
+        
+        // Conversion de la date au format datetime-local (format pour la recherche)
+        const dateObj = new Date(searchParams.date);
+        const datetimeValue = dateObj.toISOString().slice(0,16);
 
-            span.replaceWith(input);
-        });
+        // Remplacement des inputs
+        villeDepart.innerHTML = `<input type="text" class="recap_input" id="edit_depart" value="${searchParams.depart}" required>`;
+        villeArrivee.innerHTML = `<input type="text" class="recap_input" id="edit_arrivee" value="${searchParams.arrivee}" required>`;
+        travelDate.innerHTML = `<input type="datetime-local" class="recap_input" id="edit_datetime" value="${datetimeValue}" required>`;
 
         modifyBtn.textContent = 'Valider';
         modifyBtn.classList.add('validate_mode');
         isEditing = true;
 
     } else {
-        // Mode validation
-        const inputs = document.querySelectorAll('.recap_input');
-        
-        inputs.forEach(input => {
-            const newValue = input.value;
-            const span = document.createElement('span');
-            span.textContent = newValue;
+        // ========== Mode Validation ==========
 
-            input.replaceWith(span);
+        // Récupération des nouvelles valeurs
+        const newDepart = document.getElementById('edit_depart').value.trim();
+        const newArrivee = document.getElementById('edit_arrivee').value.trim();
+        const newDatetime = document.getElementById('edit_datetime').value;
+
+        // Validation des champs
+        if (!newDepart || !newArrivee || !newDatetime) {
+            alert('Veuillez remplir tous les champs.');
+            return;
+        }
+
+        // Préparation du payload pour le serveur
+        const payload = {
+            depart: newDepart,
+            arrivee: newArrivee,
+            date: newDatetime
+        };
+
+        console.log("Nouvelle recherche avec :", payload);
+
+        // Indicateur de chargement
+        modifyBtn.textContent = 'Recherche en cours...';
+        modifyBtn.disabled = true;
+
+        // Envoi de la requête au serveur
+        fetch("http://localhost:8000/search", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+
+        // Gestion de la réponse
+        .then(response => {
+            console.log("Statut de la réponse:", response.status);
+            console.log("Réponse OK?", response.ok);
+            return response.json();
+        })
+
+        // Traitement des résultats
+        .then(data => {
+            console.log("Réponse du serveur:", data);
+
+            // Mise à jour du sessionStorage
+            sessionStorage.setItem("searchParams", JSON.stringify(payload));
+            sessionStorage.setItem("searchResults", JSON.stringify(data));
+            
+            // Rechargement de la page avec les nouveaux résultats
+            window.location.reload();
+        })
+
+        // Gestion des erreurs
+        .catch(error => {
+            console.error("Erreur lors de la requête:", error);
+            console.error("Message d'erreur:", error.message);
+
+            // Restauration du bouton de recherche
+            modifyBtn.textContent = 'Valider';
+            modifyBtn.disabled = false;
+
+            // Message d'erreur à l'utilisateur
+            alert("Une erreur s'est produite lors de la recherche. Veuillez réessayer.");
         });
-
-        modifyBtn.textContent = 'Modifier la recherche';
-        modifyBtn.classList.remove('validate_mode');
-        isEditing = false;
-
-        // Relance de la recherche
-        
-
     }
 });
 
@@ -230,17 +406,39 @@ modifyBtn.addEventListener('click', function() {
 function toggleDetails(button) {
     const card = button.closest('.trip_card');
     const panel = card.querySelector('.trip_details_panel');
-
     const isOpen = panel.classList.contains('open');
 
+    // Récupération de l'index du trajet
+    const allCards = document.querySelectorAll('trip_card');
+    const cardIndex = Array.from(allCards).indexOf(card);
+
     if (isOpen) {
+        // Fermeture du panneau
         panel.classList.remove('open');
         button.classList.remove('active');
         button.textContent = 'Voir les détails';
+
+        // Nettoyage de la carte
+        clearMapLayers();
     } else {
+        // Fermeture de tous les autres panneaux
+        document.querySelectorAll('.trip_details_panel.open').forEach(p => {
+            p.classList.remove('open');
+        });
+        document.querySelectorAll('.details_btn.active').forEach(b => {
+            b.classList.remove('active');
+            b.textContent = 'Voir les détails';
+        });
+
+        // Ouverture du panneau actuel
         panel.classList.add('open');
         button.classList.add('active');
         button.textContent = 'Masquer les détails';
+
+        // Affichage du trajet sur la carte
+        if (searchResults && searchResults.trajets && searchResults.trajets[cardIndex]) {
+            displayTripOnMap(searchResults.trajets[cardIndex], true);
+        }
     }
 }
 
