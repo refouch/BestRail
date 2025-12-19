@@ -43,11 +43,11 @@ def merge(left: List[List[Dict]], right: List[List[Dict]]) -> List[List[Dict]]:
 def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
     """Final formatting of the results to be sent to the frontend"""
 
-    final_dict = {}
+    final_list = []
 
     for k, path in enumerate(paths):
 
-        segments = {}
+        segments = []
 
         for i in range(len(path) - 1):
 
@@ -60,7 +60,7 @@ def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
             trip = path[i + 1].get('trip_id')
             route = path[i + 1].get('route_id')
 
-            segments[f'segment_{i + 1}'] = {
+            segments.append({
                 "from": stop1.name,
                 "to": stop2.name,
                 "dep_coor": (stop1.lat,stop1.lon),
@@ -69,12 +69,12 @@ def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
                 "arrival_time": arrival_time,
                 "trip": trip,
                 "route": route
-            }
+            })
 
-        final_dict[f'path_{k + 1}'] = {
+        final_list.append({
             "departure_stop": stop_list[path[0].get('stop')].name,
             "arrival_stop": stop_list[path[-1].get('stop')].name,
             "segments": segments
-        }
+        })
     
-    return json.dumps(final_dict,indent=2)
+    return json.dumps(final_list,indent=2)
