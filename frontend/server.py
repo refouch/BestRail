@@ -15,7 +15,7 @@ app.add_middleware(
 @app.get("/")
 def home():
     return {"message": "Serveur actif !"}
-
+'''
 @app.post("/search_old")
 def recherche_old(data:dict):
     print(f"Données reçues : {data}")
@@ -58,7 +58,7 @@ def recherche_old(data:dict):
                 "correspondances": "2 correspondances (Dijon, Mâcon)"}
         ]
     }
-
+'''
 
 @app.post("/search")
 def recherche(data: dict):
@@ -73,16 +73,16 @@ def recherche(data: dict):
                         "segments": [
                                 {"from": "Paris Gare de Lyon",
                                 "to": "Dijon",
-                                "dep_coor": [42.0 ,42.0],
-                                "arr_coor": [43.0, 43.0],
+                                "dep_coor": [48.8447, 2.3737],
+                                "arr_coor": [47.3230, 5.0272],
                                 "board_time": 10,
                                 "arrival_time": 12,
                                 "trip": "R2_T1",
                                 "route": "R2"},
                                 {"from": "Dijon",
                                 "to": "Lyon Part-Dieu",
-                                "dep_coor": [43.0, 43.0],
-                                "arr_coor": [44.0, 44.0],
+                                "dep_coor": [47.3230, 5.0272],
+                                "arr_coor": [45.7605, 4.8601],
                                 "board_time": 14,
                                 "arrival_time": 24,
                                 "trip": "R3_T1",
@@ -94,8 +94,8 @@ def recherche(data: dict):
                         "segments": [
                                 {"from": "Paris Gare de Lyon",
                                 "to": "Lyon Part-Dieu",
-                                "dep_coor": [42.0, 42.0],
-                                "arr_coor": [44.0, 44.0],
+                                "dep_coor": [48.8447, 2.3737],
+                                "arr_coor": [45.7605, 4.8601],
                                 "board_time": 10,
                                 "arrival_time": 40,
                                 "trip": "R1_T1",
@@ -107,24 +107,24 @@ def recherche(data: dict):
                          "segments": [
                                 {"from": "Paris Gare de Lyon",
                                 "to": "Macon",
-                                "dep_coor": [42.0,42.0],
-                                "arr_coor": [42.5,42.5],
+                                "dep_coor": [48.8447, 2.3737],
+                                "arr_coor": [46.3027, 4.8250],
                                 "board_time": 10,
                                 "arrival_time": 40,
                                 "trip": "R2_T1",
                                 "route": "R2"},                              
                                 {"from": "Macon",
                                 "to": "Roanne",
-                                "dep_coor": [42.5,42.5],
-                                "arr_coor": [43.5,43.5],
+                                "dep_coor": [46.3027, 4.8250],
+                                "arr_coor": [46.0393, 4.0629],
                                 "board_time": 110,
                                 "arrival_time": 250,
                                 "trip": "R4_T2",
                                 "route": "R4"},
                                 {"from": "Roanne",
                                 "to": "Lyon Part-Dieu",
-                                "dep_coor": [43.5,43.5],
-                                "arr_coor": [44.0,44.0],
+                                "dep_coor": [46.0393, 4.0629],
+                                "arr_coor": [45.7605, 4.8601],
                                 "board_time": 320,
                                 "arrival_time": 415,
                                 "trip": "R5_T7",
