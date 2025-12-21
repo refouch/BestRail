@@ -78,6 +78,24 @@ export const StorageManager = {
     },
 
     /**
+     * Récupère à la fois les paramètres et les résultats de recherche
+     * @returns {Object} Objet contenant params et results
+     * 
+     * @example
+     * const {params, results} = StorageManager.getSearchData();
+     * if (params && results) {
+     *      // Afficher les résultats
+     * }
+     */
+    getSearchData() {
+        return {
+            params: this.getSearchParams(),
+            results: this.getSearchResults()
+        };
+    },
+
+
+    /**
      * Efface toutes les données de recherche du sessionStorage
      * Utile pour le bouton "Nouvelle recherche" ou la déconnexion
      * 
