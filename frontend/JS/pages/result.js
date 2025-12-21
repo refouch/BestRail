@@ -245,9 +245,10 @@ window.toggleDetails = function(button) {
         button.classList.remove("active");
         button.textContent = "Voir les détails";
 
-        // Nettoyage de la carte
+        // Nettoyage de la carte et réinitialisation position et zoom
         if (mapManager) {
             mapManager.clearLayers();
+            mapManager.resetView();
         }
     } else {
         // Fermeture de tous les autres panneaux
@@ -266,6 +267,7 @@ window.toggleDetails = function(button) {
 
         // Affichage du trajet sur la carte (en rouge)
         if (mapManager && searchResults.trajets[cardIndex]) {
+            mapManager.resetView(); // Réinitialisation avant l'affichage
             mapManager.displayTrip(searchResults.trajets[cardIndex], true);
         }
     }

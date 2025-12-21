@@ -173,14 +173,6 @@ export class MapManager {
             endMarker.addTo(this.map);
             this.currentLayers.push(endMarker);
         });
-
-        // Ajustement de la vue pour afficher tous le trajet
-        if (allCoordinates.length > 0) {
-            const bounds = L.latlngBounds(allCoordinates);
-            this.map.fitBounds(bounds, {
-                padding: MAP_CONFIG.BOUNDS_PADDING
-            });
-        }
     }
 
     /**
