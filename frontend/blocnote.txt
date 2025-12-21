@@ -1,0 +1,302 @@
+Dans index_code.js :
+    - ajouter un truc pour vérifier que la réponse est ok : if (!response.ok)
+
+
+Faire un truc qui permet de modifier la recherche depuis la page des résultats
+    - mettre un datetime pour l'input de la date
+
+
+Améliorer les visuels des cards de trajets
+
+Ajouter les trajets sur la carte Leaflet
+
+
+
+{
+  "path_1": {
+    "departure_stop": "Stop A",
+    "arrival_stop": "Stop D",
+    "segments": {
+      "segment_1": {
+        "from": "Stop A",
+        "to": "Stop E",
+        "dep_coor": [
+          42.0,
+          42.0
+        ],
+        "arr_coor": [
+          42.0,
+          42.0
+        ],
+        "board_time": 10,
+        "arrival_time": 12,
+        "trip": "R2_T1",
+        "route": "R2"
+      },
+      "segment_2": {
+        "from": "Stop E",
+        "to": "Stop D",
+        "dep_coor": [
+          42.0,
+          42.0
+        ],
+        "arr_coor": [
+          42.0,
+          42.0
+        ],
+        "board_time": 14,
+        "arrival_time": 24,
+        "trip": "R3_T1",
+        "route": "R3"
+      }
+    }
+  },
+  "path_2": {
+    "departure_stop": "Stop A",
+    "arrival_stop": "Stop D",
+    "segments": {
+      "segment_1": {
+        "from": "Stop A",
+        "to": "Stop D",
+        "dep_coor": [
+          42.0,
+          42.0
+        ],
+        "arr_coor": [
+          42.0,
+          42.0
+        ],
+        "board_time": 10,
+        "arrival_time": 40,
+        "trip": "R1_T1",
+        "route": "R1"
+      }
+    }
+  }
+}
+
+
+
+
+/* Amélioration possible pour le format */
+
+[{"departure_stop": "Stop A",
+  "arrival_stop": "Stop D",
+    "segments": [
+        {"from": "Stop A",
+        "to": "Stop E",
+        "dep_coor": [42.0,42.0],
+        "arr_coor": [42.0,42.0],
+        "board_time": 10,
+        "arrival_time": 12,
+        "trip": "R2_T1",
+        "route": "R2"
+        },
+        {"from": "Stop E",
+        "to": "Stop D",
+        "dep_coor": [42.0,42.0],
+        "arr_coor": [42.0,42.0],
+        "board_time": 14,
+        "arrival_time": 24,
+        "trip": "R3_T1",
+        "route": "R3"
+        }
+    ]
+  },
+   {"departure_stop": "Stop A",
+    "arrival_stop": "Stop D",
+    "segments": [
+      {"from": "Stop A",
+        "to": "Stop D",
+        "dep_coor": [42.0,42.0],
+        "arr_coor": [42.0,42.0],
+        "board_time": 10,
+        "arrival_time": 40,
+        "trip": "R1_T1",
+        "route": "R1"
+      }
+    ]
+  }
+]
+
+
+OLD fonction pour afficher les cards
+if (searchResults && searchResults.trajets) {
+    
+    const trajetList = document.querySelector(".trajet_list");
+
+    trajetList.innerHTML = ""; 
+
+    if (searchResults.trajets.length === 0) {
+        trajetList.innerHTML = "<p>Aucun trajet trouvé pour cette recherche.</p>";
+    } else {
+        searchResults.trajets.forEach((trajet,index) => {
+            const article = document.createElement("article");
+            article.className = "trip_card";
+
+            article.innerHTML = `
+                <div class="trip_route">
+                    <span class="departure_station">${trajet.depart}</span>
+                    <span class="arrow">→</span>
+                    <span class="arrival_station">${trajet.arrivee}</span>
+                </div>
+                <div class="trip_header">
+                    <span class="departure_time">${trajet.heure_depart}</span>
+                    <span class="duration">${trajet.duree}</span>
+                    <span class="arrival_time">${trajet.heure_arrivee}</span>
+                </div>
+                <div class="trip_details">
+                    <p class="train_type">${trajet.train_type}</p>
+                    <p class="connections">${trajet.correspondances}</p>
+                </div>
+                <div class="trip_footer">
+                    <span class="price">${trajet.prix}€</span>
+                    <button class="select_trip_btn" data-trajet-index= ${index}>Sélectionner</button>
+                </div>`;
+
+            trajetList.appendChild(article);
+        });
+
+    console.log(`${searchResults.trajets.length} trajet(s) affiché(s)`);
+
+    }
+} else {
+    console.warn("Aucune donnée trouvée dans sessionStorage");
+    document.querySelector(".trajet_list").innerHTML =
+        "<p>Aucun résultat. Veuillez effectuer une nouvelle recherche.</p>";   
+}
+
+OLD CSS cards/* Carte de trajet individuelle */
+.trip_card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.trip_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Route (gares de départ et d'arrivée) */
+.trip_route {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.departure_station,
+.arrival_station {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--primary-color, #2c3e50);
+}
+
+.arrow {
+    color: #999;
+    font-size: 1.2rem;
+}
+
+/* Horaires (départ, durée, arrivée) */
+.trip_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.departure_time,
+.arrival_time {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.duration {
+    font-size: 0.9rem;
+    color: #666;
+    background-color: #f8f9fa;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+/* Type de trajet */
+.trip_type {
+    margin-bottom: 15px;
+}
+
+.trip_type p {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Bouton détails */
+.details_btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
+}
+
+.details_btn:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.02);
+}
+
+.details_btn.active {
+    background-color: var(--secondary-color);
+}
+
+
+OLD bouton modify 
+if (!isEditing) {
+        // Mode édition
+        const recapItems = document.querySelectorAll('.recap_item span');
+
+        recapItems.forEach(span => {
+            const currentValue = span.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentValue;
+            input.className = 'recap_input';
+
+            span.replaceWith(input);
+        });
+
+        modifyBtn.textContent = 'Valider';
+        modifyBtn.classList.add('validate_mode');
+        isEditing = true;
+
+    } else {
+        // Mode validation
+        const inputs = document.querySelectorAll('.recap_input');
+        
+        inputs.forEach(input => {
+            const newValue = input.value;
+            const span = document.createElement('span');
+            span.textContent = newValue;
+
+            input.replaceWith(span);
+        });
+
+        modifyBtn.textContent = 'Modifier la recherche';
+        modifyBtn.classList.remove('validate_mode');
+        isEditing = false;
+
+        // Relance de la recherche
+        
+
+    }
