@@ -31,6 +31,9 @@ function initSearchForm() {
 async function handleFormSubmit(event) {
     event.preventDefault(); // Empêcher le rechargement automatique de la page
 
+    // Récupération du formulaire
+    const formulaire = event.target;
+
     // Récupération des données du formulaire
     const depart = document.getElementById("depart").value;
     const arrivee = document.getElementById("arrivee").value;
