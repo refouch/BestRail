@@ -91,7 +91,7 @@
 
 /* Style du récap en mode édition */
 
-.recap_input { /* Modifier comme les recap_item span */
+.recap-input { /* Modifier comme les recap-item span */
     background-color: var(--bg-primary);
     padding: 8px 16px; 
     border-radius: var(--border-radius);
@@ -105,22 +105,22 @@
     font-family: inherit;
 }
 
-.recap_input:focus {
+.recap-input:focus {
     outline: 2px solid var(--primary-color);
     outline-offset: -2px;
 }
 
-.recap-item span:has(.recap_input) {
+.recap-item span:has(.recap-input) {
     padding: 0 !important; /* Pour que l'input prenne toute la place du span quand on modifie */
 }
 
 /* Style du bouton en mode validation */
-.modifiy-search-btn.validate_mode {
+.modifiy-search-btn.validate-mode {
     background-color: var(--bg-primary);
     color: var(--primary-color);
 }
 
-.modifiy-search-btn.validate_mode:hover {
+.modifiy-search-btn.validate-mode:hover {
     background-color: #059669;
     color: var(--bg-primary);
 }
@@ -173,7 +173,7 @@
 
 /* Carte de trajet */
 
-.trip_card {
+.trip-card {
     background-color: var(--bg-primary);
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -185,7 +185,7 @@
     cursor: pointer;
 }
 
-.trip_card:hover {
+.trip-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     border-color: var(--primary-color);
@@ -206,7 +206,7 @@
 
 /* Bloc principal (horaires) */
 
-.trip_main_info {
+.trip-main-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -218,26 +218,26 @@
 
 /* Colonne gauche : heures + gares */
 
-.trip_times_stations {
+.trip-times-stations {
     display: flex;
     flex-direction: column;
     gap: 6px;
 }
 
-.trip_line {
+.trip-line {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.trip_line .card_time {
+.trip-line .card-time {
     font-size: 1.2rem;
     font-weight: 700;
     color: #333;
     min-width: 55px; /* alignement vertical */
 }
 
-.trip_line .card_station {
+.trip-line .card-station {
     font-weight: 600;
     font-size: 0.95rem;
     color: var(--primary-color, #2c3e50);
@@ -246,7 +246,7 @@
 
 /* Colonne droite : durée */
 
-.trip_duration {
+.trip-duration {
     font-size: 0.9rem;
     color: var(--secondary-color);
     background-color: var(--bg-primary);
@@ -259,14 +259,14 @@
 
 /* Footer (type + bouton)*/
 
-.trip_footer {
+.trip-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 5px;
 }
 
-.trip_type {
+.trip-type {
     font-size: 0.9rem;
     color: #555;
     font-weight: 500;
@@ -275,7 +275,7 @@
 
 /* Bouton détails */
 
-.details_btn {
+.details-btn {
     background-color: var(--primary-color);
     color: white;
     padding: 10px 24px;
@@ -287,12 +287,12 @@
     transition: background-color 0.3s, transform 0.2s;
 }
 
-.details_btn:hover {
+.details-btn:hover {
     background-color: var(--primary-hover);
     transform: scale(1.02);
 }
 
-.details_btn.active {
+.details-btn.active {
     background-color: var(--secondary-color);
 }
 
@@ -303,7 +303,7 @@
    ======================================== */
 
 /* Panneau déroulant */
-.trip_details_panel {
+.trip-details-panel {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
@@ -312,49 +312,49 @@
     padding-top: 0;
 }
 
-.trip_details_panel.open {
+.trip-details-panel.open {
     max-height: 800px;
     padding-top: 15px;
 }
 
 /* Contenu du panneau - Trajet direct */
-.direct_info {
+.direct-info {
     padding: 15px;
     background-color: var(--bg-secondary);
     border-radius: var(--border-radius-sm);
 }
 
-.direct_info p {
+.direct-info p {
     margin-bottom: 8px;
     color: var(--text-secondary);
 }
 
-.direct_info strong {
+.direct-info strong {
     color: var(--text-primary);
 }
 
 /* Contenu du panneau - Trajet avec correspondances */
-.segments_container {
+.segments-container {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.segment_item {
+.segment-item {
     padding: 15px;
     background-color: var(--bg-secondary);
     border-radius: var(--border-radius-sm);
     border-left: 4px solid var(--primary-color);
 }
 
-.segment_header {
+.segment-header {
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 10px;
     font-size: 1rem;
 }
 
-.segment_info {
+.segment-info {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -362,19 +362,19 @@
     font-size: 0.9rem;
 }
 
-.segment_route {
+.segment-route {
     display: flex;
     align-items: center;
     gap: 8px;
     font-weight: 500;
 }
 
-.segment_route .arrow_small {
+.segment-route .arrow-small {
     color: var(--text-muted);
 }
 
 /* Correspondance */
-.connection_info {
+.connection-info {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -385,13 +385,13 @@
     border: 1px dashed var(--warning-color);
 }
 
-.connection_info p {
+.connection-info p {
     color: #92400e;
     font-weight: 500;
     font-size: 0.9rem;
 }
 
-.connection_icon {
+.connection-icon {
     margin-right: 8px;
     font-size: 1.2rem;
 }

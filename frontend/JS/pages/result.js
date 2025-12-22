@@ -97,7 +97,7 @@ function displayTripsList() {
  * Attache les événements de survol et de clic aux cartes de trajets
  */
 function attachTripCardEvents() {
-    const tripCards = document.querySelectorAll(".trip_card");
+    const tripCards = document.querySelectorAll(".trip-card");
 
     tripCards.forEach((card, index) => {
         const trajet = searchResults.trajets[index];
@@ -114,7 +114,7 @@ function attachTripCardEvents() {
         // Événement de sortie : nettoyer la carte si détails fermés
         card.addEventListener("mouseleave", () => {
             if (mapManager) {
-                const detailsBtn = card.querySelector(".details_btn");
+                const detailsBtn = card.querySelector(".details-btn");
                 if (!detailsBtn.classList.contains("active")) {
                     mapManager.clearLayers();
                 }
@@ -166,12 +166,12 @@ function enableEditMode() {
     const datetimeValue = dateObj.toISOString().slice(0,16);
 
     // Remplacement par des inputs
-    villeDepart.innerHTML = `<input type="text" class="recap_input" id="edit_depart" value="${searchParams.depart}" required>`;
-    villeArrivee.innerHTML = `<input type="text" class="recap_input" id="edit_arrivee" value="${searchParams.arrivee}" required>`;
-    travelDate.innerHTML = `<input type="datetime-local" class="recap_input" id="edit_datetime" value="${datetimeValue}" required>`;
+    villeDepart.innerHTML = `<input type="text" class="recap-input" id="edit-depart" value="${searchParams.depart}" required>`;
+    villeArrivee.innerHTML = `<input type="text" class="recap-input" id="edit-arrivee" value="${searchParams.arrivee}" required>`;
+    travelDate.innerHTML = `<input type="datetime-local" class="recap-input" id="edit-datetime" value="${datetimeValue}" required>`;
 
     modifyBtn.textContent = "Valider";
-    modifyBtn.classList.add("validate_mode");
+    modifyBtn.classList.add("validate-mode");
     isEditing = true;
 }
 
@@ -181,9 +181,9 @@ function enableEditMode() {
  */
 async function submitModifiedSearch(modifyBtn) {
     // Récupération des nouvelles valeurs
-    const newDepart = document.getElementById("edit_depart").value.trim();
-    const newArrivee = document.getElementById("edit_arrivee").value.trim();
-    const newDatetime = document.getElementById("edit_datetime").value;
+    const newDepart = document.getElementById("edit-depart").value.trim();
+    const newArrivee = document.getElementById("edit-arrivee").value.trim();
+    const newDatetime = document.getElementById("edit-datetime").value;
 
     // Validation des champs 
     if (!newDepart || !newArrivee || !newDatetime) {
@@ -232,8 +232,8 @@ async function submitModifiedSearch(modifyBtn) {
  * @param {HTMLElement} button - Bouton "Voir les détails"
  */
 window.toggleDetails = function(button) {
-    const card = button.closest(".trip_card");
-    const panel = card.querySelector(".trip_details_panel");
+    const card = button.closest(".trip-card");
+    const panel = card.querySelector(".trip-details-panel");
     const isOpen = panel.classList.contains("open");
 
     // Récupération de l'index du trajet
@@ -252,10 +252,10 @@ window.toggleDetails = function(button) {
         }
     } else {
         // Fermeture de tous les autres panneaux
-        document.querySelectorAll(".trip_details_panel.open").forEach(p => {
+        document.querySelectorAll(".trip-details-panel.open").forEach(p => {
             p.classList.remove("open");
         });
-        document.querySelectorAll(".details_btn.active").forEach(b => {
+        document.querySelectorAll(".details-btn.active").forEach(b => {
             b.classList.remove("active");
             b.textContent = "Voir les détails";
         });

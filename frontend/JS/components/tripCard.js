@@ -36,31 +36,31 @@ export const TripCardGenerator = {
         const tripType = this._getTripType(nbCorrespondances);
 
         return `
-            <article class="trip_card" data-trip-index="${index}">
-                <div class="trip_main_info">
-                    <div class="trip_time_station">
-                        <div class="trip_line">
-                            <span class="card_time">${convertHHMM(departureTime)}</span>
-                            <span class="card_station">${trajet.departure_stop}</span>
+            <article class="trip-card" data-trip-index="${index}">
+                <div class="trip-main-info">
+                    <div class="trip-time-station">
+                        <div class="trip-line">
+                            <span class="card-time">${convertHHMM(departureTime)}</span>
+                            <span class="card-station">${trajet.departure_stop}</span>
                         </div>
-                        <div class="trip_line">
-                            <span class="card_time">${convertHHMM(arrivalTime)}</span>
-                            <span class="card_station">${trajet.arrival_stop}</span>
+                        <div class="trip-line">
+                            <span class="card-time">${convertHHMM(arrivalTime)}</span>
+                            <span class="card-station">${trajet.arrival_stop}</span>
                         </div>
                     </div>
-                    <div class="trip_duration">
+                    <div class="trip-duration">
                         ${convertDuration(duration)}
                     </div>
                 </div>
 
-                <div class="trip_footer">
-                    <span class="trip_type">${tripType}</span>
-                    <button class="details_btn" onclick="toggleDetails(this)">
+                <div class="trip-footer">
+                    <span class="trip-type">${tripType}</span>
+                    <button class="details-btn" onclick="toggleDetails(this)">
                         Voir les détails
                     </button>
                 </div>
 
-                <div class="trip_details_panel">
+                <div class="trip-details-panel">
                     ${this.generateDetailsPanel(trajet)}
                 </div>
             </article>
@@ -111,7 +111,7 @@ export const TripCardGenerator = {
         const duration = segment.arrival_time - segment.board_time;
 
         return `
-            <div class="direct_info">
+            <div class="direct-info">
                 <p><strong>Train :</strong> ${segment.trip}</p>
                 <p><strong>Durée :</strong> ${convertDuration(duration)}</p>
             </div>
@@ -125,7 +125,7 @@ export const TripCardGenerator = {
      * @private
      */
     _generateMultiSegmentDetails(segments) {
-        let html = "<div class='segments_container'>";
+        let html = "<div class='segments-container'>";
 
         segments.forEach((segment,index) =>{
             // Affichage du segment
@@ -152,12 +152,12 @@ export const TripCardGenerator = {
         const segmentDuration = segment.arrival_time - segment.board_time;
         
         return `
-            <div class="segment_item">
-                <div class="segment_header">🚄 Train ${segment.trip}</div>
-                <div class="segment_info">
-                    <div class="segment_route">
+            <div class="segment-item">
+                <div class="segment-header">🚄 Train ${segment.trip}</div>
+                <div class="segment-info">
+                    <div class="segment-route">
                         <span>${segment.from}</span>
-                        <span class="arrow_small">→</span>
+                        <span class="arrow-small">→</span>
                         <span>${segment.to}</span>
                     </div>
                     <p><strong>Départ :</strong> ${convertHHMM(segment.board_time)}</p>
@@ -179,8 +179,8 @@ export const TripCardGenerator = {
         const waitingTime = nextSegment.board_time - currentSegment.arrivalTime;
 
         return `
-            <div class="connection_info">
-                <span class="connection_icon">⏱️</span>
+            <div class="connection-info">
+                <span class="connection-icon">⏱️</span>
                 <p>Correspondance à ${currentSegment.to} - Temps d'attente : ${convertDuration(waitingTime)}</p>
             </div>
         `;
