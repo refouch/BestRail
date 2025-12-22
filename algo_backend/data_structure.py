@@ -20,7 +20,6 @@ class Stop:
 @dataclass
 class Route:
     """Object representing a fixed route or itinerary"""
-    name: str
     id: str
     stop_list: List[str] # all stops the route goes through. Represented the stop_id
     stop_index_list: List[int] = None # TO BE CONSTRUCTED
