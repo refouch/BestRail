@@ -6,7 +6,7 @@
    CONTENU PRINCIPAL
    ======================================== */
 
-.main_content {
+.main-content {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -20,14 +20,14 @@
    ======================================== */
 
 /* Container du récap (barre en haut) */
-.search_recap_container {
+.search-recap-container {
     width: 100%;
     background-color: var(--bg-primary);
     padding: var(--spacing-xs);
 }
 
 /* Informations de recherche */
-.search_recap {
+.search-recap {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -41,20 +41,20 @@
 }
 
 /* Item contenant une des infos du récap */
-.recap_item {
+.recap-item {
     display: flex;
     flex-direction: column;
     gap: 5px; /* Espacement entre les labels et span*/
 }
 
-.recap_item label {
+.recap-item label {
     font-size: 0.5rem;
     color: var(--bg-primary);
     text-transform: uppercase;
     padding-left: 4px;
 }
 
-.recap_item span {
+.recap-item span {
     background-color: var(--bg-primary);
     padding: 8px 16px; /* Taille des spans */
     border-radius: var(--border-radius);
@@ -63,13 +63,13 @@
     display: inline-block;
 }
 
-.recap_arrow {
+.recap-arrow {
     font-size: 1.5rem;
     color: var(--bg-primary);
     font-weight: bold;
 }
 
-.modifiy_search_btn {
+.modifiy-search-btn {
     margin-left: auto; /* Pousse le bouton à droite */
     margin-right: 12px; 
     background-color: var(--bg-primary);
@@ -84,7 +84,7 @@
     align-self: center;
 }
 
-.modifiy_search_btn:hover {
+.modifiy-search-btn:hover {
     background-color: var(--secondary-color);
     transform: scale(1.05);
 }
@@ -110,17 +110,17 @@
     outline-offset: -2px;
 }
 
-.recap_item span:has(.recap_input) {
+.recap-item span:has(.recap_input) {
     padding: 0 !important; /* Pour que l'input prenne toute la place du span quand on modifie */
 }
 
 /* Style du bouton en mode validation */
-.modifiy_search_btn.validate_mode {
+.modifiy-search-btn.validate_mode {
     background-color: var(--bg-primary);
     color: var(--primary-color);
 }
 
-.modifiy_search_btn.validate_mode:hover {
+.modifiy-search-btn.validate_mode:hover {
     background-color: #059669;
     color: var(--bg-primary);
 }
@@ -128,7 +128,7 @@
 
 
 /* Wrapper des résultats et de la carte */
-.result_wrapper {
+.result-wrapper {
     display: flex;
     gap: 2rem;
     width: 100%;
@@ -142,7 +142,7 @@
    CONTENEUR DES RÉSULTATS (40% gauche)
    ======================================== */
 
-.result_container {
+.result-container {
     flex: 1;
     /*width: 40%;*/
     display: flex;
@@ -151,14 +151,14 @@
     padding: var(--spacing-xs);
 }
 
-.result_container h2 {
+.result-container h2 {
     font-size: 1.5rem;
     margin-bottom: 10px;
     
 }
 
 /* Liste des trajets */
-.trajet_list {
+.trajet-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -166,7 +166,7 @@
     max-height: 600px; /* Permet le scroll si bcp de résultats */
 }
 
-.trajet_list:hover {
+.trajet-list:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--secondary-hover);
 }
@@ -401,7 +401,7 @@
    CONTENEUR DE LA CARTE (60% droite)
    ======================================== */
 
-.map_container {
+.map-container {
     flex: 1;
     /*width: 60%;*/
     display: flex;
@@ -415,7 +415,7 @@
 
 /* La carte Leaflet */
 
-#map_result {
+#map-result {
     height: 600px;
     width: 100%;
     border-radius: var(--border-radius);
@@ -431,34 +431,34 @@
    ============================================ */
 
 @media (max-width: 1024px) {
-    .main_content {
+    .main-content {
         flex-direction: column;
     }
     
-    .result_container,
-    .map_container {
+    .result-container,
+    .map-container {
         width: 100%;
     }
     
-    .map_container {
+    .map-container {
         position: static;
     }
     
-    #map_result {
+    #map-result {
         height: 400px;
     }
     
-    .trajet_list {
+    .trajet-list {
         max-height: none;
     }
 }
 
 @media (max-width: 768px) {
-    .main_content {
+    .main-content {
         padding: 10px;
     }
     
-    #map_result {
+    #map-result {
         height: 300px;
     }
 }

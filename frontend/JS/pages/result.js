@@ -21,7 +21,7 @@ let isEditing = false;
  */
 function initMap() {
     try {
-        mapManager = new MapManager("map_result");
+        mapManager = new MapManager("map-result");
         console.log("Carte initialisée avec succès");
     } catch (error) {
         console.error("Erreur lors de l'initialisation de la carte:", error);
@@ -56,8 +56,8 @@ function loadSearchData() {
 function displaySearchRecap() {
     if (!searchParams) return;
 
-    document.querySelector(".ville_depart").textContent = searchParams.depart;
-    document.querySelector(".ville_arrivee").textContent = searchParams.arrivee;
+    document.querySelector(".ville-depart").textContent = searchParams.depart;
+    document.querySelector(".ville-arrivee").textContent = searchParams.arrivee;
 
     // Formatage de la date pour l'affichage
     const dateObj = new Date(searchParams.date);
@@ -69,17 +69,17 @@ function displaySearchRecap() {
         hour: '2-digit',
         minute: '2-digit'
     });
-    document.querySelector(".travel_date").textContent = dateFormatee;
+    document.querySelector(".travel-date").textContent = dateFormatee;
 }
 
 /**
  * Affiche la liste des trajets trouvés
  */
 function displayTripsList() {
-    const trajetList = document.querySelector(".trajet_list");
+    const trajetList = document.querySelector(".trajet-list");
 
     if (!trajetList) {
-        console.error("Conteneur .trajet_list non trouvé");
+        console.error("Conteneur .trajet-list non trouvé");
         return;
     }
 
@@ -156,9 +156,9 @@ async function handleModifySearch() {
  * Active le mode édition du récapitulatif de recherche
  */
 function enableEditMode() {
-    const villeDepart = document.querySelector(".ville_depart");
-    const villeArrivee = document.querySelector(".ville_arrivee");
-    const travelDate = document.querySelector(".travel_date");
+    const villeDepart = document.querySelector(".ville-depart");
+    const villeArrivee = document.querySelector(".ville-arrivee");
+    const travelDate = document.querySelector(".travel-date");
     const modifyBtn = document.getElementById("modifyBtn");
 
     // Conversion de la date au format datetime-local
