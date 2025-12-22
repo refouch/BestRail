@@ -4,11 +4,11 @@
 
 import csv 
 from .data_structure import Stop, Route, Trip, map_index
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import os.path
 from collections import defaultdict
 
-def group_stop_times_by_trip(file_path):
+def group_stop_times_by_trip(file_path: str) -> Dict:
     # Dictionnaire pour stocker temporairement les données par trajet
     # structure : { trip_id: [ {données_arrêt_1}, {données_arrêt_2} ] }
     trips_builder = defaultdict(list)
@@ -40,7 +40,7 @@ def hms_to_minutes(hms_str: str) -> float:
     return int(h) * 60 + int(m) + int(s) / 60
 
 
-def load_gtfs_data(gtfs_dir):
+def load_gtfs_data(gtfs_dir: str) -> Tuple[List[Stop], List[Route], Dict[Stop]]:
     """Function to tranform GTFS data into lists of custom objects"""
 
     # Building stop list and mapping 

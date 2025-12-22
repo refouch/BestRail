@@ -130,7 +130,6 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
     path = []
     current_stop = target_idx
     
-    # Start from the round where we found the journey
     k = k_round
 
     while k > 0:
@@ -142,7 +141,6 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
             k -= 1
             continue
             
-        # We found the leg!
         path.append({
             "stop": current_stop,
             "route_id": label["route_id"],
@@ -153,10 +151,7 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
             "arrival_time": tau_matrix[current_stop][k],
         })
 
-        # Move to the stop where we boarded this trip
         current_stop = label["board_stop"]
-        # Crucial: Since we used 1 trip to get here, the previous stop 
-        # MUST have been reached by round k-1
         k -= 1
 
     path.reverse()
