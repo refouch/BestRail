@@ -176,7 +176,7 @@ export const TripCardGenerator = {
      * @private
      */
     _generateConnectionHTML(currentSegment, nextSegment) {
-        const waitingTime = nextSegment.board_time - currentSegment.arrivalTime;
+        const waitingTime = nextSegment.board_time - currentSegment.arrival_time;
 
         return `
             <div class="connection-info">
