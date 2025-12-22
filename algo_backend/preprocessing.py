@@ -129,7 +129,7 @@ def load_gtfs_data(gtfs_dir):
     
     map_index(route_list)
             
-    return stop_list, route_list
+    return stop_list, route_list, stop_dict
             
 
 if __name__ == "__main__":

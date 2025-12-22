@@ -121,20 +121,28 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
         # Stopping criterion
         if not marked_stops:
-            return tau_matrix, tau_star, parent
-
-
-def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], target_idx: int, round: int) -> List[Dict]:
-    """Function to reconstruct the path leading to the target stop for a given round usging RAPTOR results"""
-    path = []
-    current_stop = target_idx
-    k = round
-
-    while True:
-        label = parent[current_stop][k]
-        if label is None:
             break
 
+    return tau_matrix, tau_star, parent
+
+
+def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], target_idx: int, k_round: int) -> List[Dict]:
+    path = []
+    current_stop = target_idx
+    
+    # Start from the round where we found the journey
+    k = k_round
+
+    while k > 0:
+
+        label = parent[current_stop][k]
+        
+        # If no update in this round, look at the previous round
+        if label is None:
+            k -= 1
+            continue
+            
+        # We found the leg!
         path.append({
             "stop": current_stop,
             "route_id": label["route_id"],
@@ -145,11 +153,11 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
             "arrival_time": tau_matrix[current_stop][k],
         })
 
-        if label["board_stop"] is None:
-            break
-
+        # Move to the stop where we boarded this trip
         current_stop = label["board_stop"]
-        k = k-1
+        # Crucial: Since we used 1 trip to get here, the previous stop 
+        # MUST have been reached by round k-1
+        k -= 1
 
     path.reverse()
     return path
@@ -162,10 +170,8 @@ def get_all_paths(parent: List[List[Dict]], tau_matrix: List[List[int]], target_
     for k in range(1, max_rounds + 1):
 
         path = reconstruct_path(parent,tau_matrix,target_idx,k)
-
-        if not path:
-            break
         
-        paths.append(path)
+        if path:
+            paths.append(path)
     
     return paths
