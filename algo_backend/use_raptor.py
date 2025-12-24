@@ -8,8 +8,8 @@ def print_matrix(tau):
 
 gtfs_dir = 'gtfs_sncf'
 
-stop_list, route_list = load_gtfs_data(gtfs_dir)
-
+stop_list, route_list, stop_dict = load_gtfs_data(gtfs_dir)
+print(stop_dict['StopArea:OCE87726414'])
 source_stop = stop_list[2932]
 target_stop = stop_list[2822]
 

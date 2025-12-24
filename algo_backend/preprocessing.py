@@ -40,7 +40,7 @@ def hms_to_minutes(hms_str: str) -> float:
     return int(h) * 60 + int(m) + int(s) / 60
 
 
-def load_gtfs_data(gtfs_dir: str) -> Tuple[List[Stop], List[Route], Dict[Stop]]:
+def load_gtfs_data(gtfs_dir: str) -> Tuple[List[Stop], List[Route], Dict[str, Stop]]:
     """Function to tranform GTFS data into lists of custom objects"""
 
     # Building stop list and mapping 
