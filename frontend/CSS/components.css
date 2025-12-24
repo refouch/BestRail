@@ -1,0 +1,225 @@
+
+/* ==================================================================
+   COMPONENTS - COMPOSANTS RÉUTILISABLES
+   Boutons, formulaires, cartes et autres éléments réutilisables
+   ================================================================== */
+
+/* ========================================
+   FORMULAIRES
+   ======================================== */
+
+.search-form {
+    display: flex;
+    flex-direction: column; /* Formulaire en colonne */
+    gap: var(--spacing-sm);
+}
+
+.case-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels */
+.search-form label {
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+/* Inputs */
+.search-form input[type="text"],
+.search-form input[type="datetime-local"] {
+    padding: 12px;
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.search-form input[type="text"]:focus,
+.search-form input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: var(--primary-hover);
+}
+
+/* Inputs de la recherche depuis la page de résultats */
+.recap-input {
+    background-color: var(--bg-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--secondary-color);
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    display: block;
+    font-family: inherit;
+}
+
+.recap-input:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: -2px;
+}
+
+/* ========================================
+   BOUTONS
+   ======================================== */
+
+/* Bouton "rechercher" */
+.search-button {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: var(--spacing-sm);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: var(--spacing-xs);
+}
+
+.search-button:hover {
+    background-color: var(--primary-hover);
+}
+
+
+/* Bouton "modifier la recherche" */
+.modify-search-btn {
+    margin-left: auto;
+    margin-right: 12px;
+    background-color: var(--bg-primary);
+    color: var(--primary-color);
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color var(--transition-normal), transform var(--transition-fast);
+    align-self: center;
+}
+
+.modify-search-btn:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+
+/* Bouton "modifier la recherche" mode validation */
+.modify-search-btn.validate-mode {
+    background-color: var(--bg-primary);
+    color: var(--primary-color);
+}
+
+.modify-search-btn.validate-mode:hover {
+    background-color: var(--success-color);
+    color: var(--bg-primary);
+}
+
+
+/* Bouton "voir les détails" */
+.details-btn {
+    background-color: var(--primary-color);
+    color: var(--bg-primary);
+    padding: 10px var(--spacing-md);
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.details-btn:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.02);
+}
+
+.details-btn.active {
+    background-color: var(--secondary-color);
+}
+
+
+/* ========================================
+   CARTES DE TRAJET
+   ======================================== */
+
+.trip-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+    padding: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    box-shadow: 0 2px 4px #0000001a;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.trip-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px #00000026;
+    border-color: var(--primary-color);
+}
+
+/* Infos principales (Horaires) */
+.trip-main-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.trip-time_station {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.trip-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.trip-line.card-time {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    min-width: 55px;
+}
+
+.trip-line.card-station {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--primary-color, #2c3e50);
+}
+
+.trip-duration {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    background-color: var(--bg-primary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.trip-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.trip-type {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 500;
+}
