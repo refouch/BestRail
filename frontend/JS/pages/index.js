@@ -9,6 +9,60 @@ import { StorageManager } from "../utils/storageUtils.js";
 import { MESSAGES } from "../config.js";
 
 /**
+ * Charge la liste des gares et remplit le datalist
+ */
+async function loadStations() {
+    // Vérifier si les gares sont déjà en cache
+    let stations = StorageManager.getStations();
+
+    if (stations && stations.length > 0) {
+        console.log("Gares chargées depuis le cache");
+        populateDatalist(stations);
+        return;
+    }
+
+    // Sinon, récupérer depuis le serveur
+    try {
+        stations = await SearchAPI.getStations();
+
+        // Sauvegarde dans le sessionStorage pour les prochaines utilisations
+        StorageManager.saveStations(stations);
+
+        // Remplir le datalist
+        populateDatalist(stations);
+
+        console.log(`${stations.length} gares chargées avec succès !`);
+    } catch (error) {
+        console.error("Erreur lors du chargement des gares:", error);
+    }
+}
+
+/**
+ * Remplit le datalist avec la liste des gares
+ * @param {Array<string>} stations - Liste des nomes de gares
+ */
+function populateDatalist(stations) {
+    const datalist = document.getElementById("stations-list");
+
+    if (!datalist) {
+        console.error("Datalist #stations-list non trouvé");
+        return;
+    }
+
+    // Vider le datalist existant
+    datalist.innerHTML = "";
+
+    // Ajouter chaque gare comme option
+    stations.forEach(station => {
+        const option = document.createElement("option");
+        option.value = station;
+        datalist.appendChild(option);
+    });
+
+    console.log(`Datalist rempli avec ${stations.length} gares.`);
+}
+
+/**
  * Initialise le formulaire de recherdhe
  */
 function initSearchForm() {
@@ -88,7 +142,12 @@ async function handleFormSubmit(event) {
 /**
  * Initialise la page d'accueil
  */
-function initIndexPage() {
+async function initIndexPage() {
+
+    // Charger les gares
+    await loadStations();
+
+    // Puis initialiser le formulaire
     initSearchForm();
     console.log("Page d'accueil initialisée");
 }

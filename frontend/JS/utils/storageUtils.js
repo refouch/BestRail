@@ -94,6 +94,46 @@ export const StorageManager = {
         };
     },
 
+    /**
+     * Sauvegarde la liste des gares dans le sessionStorage
+     * @param {Array<string>} stations - Liste des noms de gares
+     * 
+     * @example
+     * StorageManager.saveStations(["Paris Gare de Lyon","Lyon Part-Dieu", ...]);
+     */
+
+    saveStations(stations) {
+        try {
+            sessionStorage.setItem(
+                STORAGE_KEYS.STATIONS_LIST,
+                JSON.stringify(stations)
+            );
+            console.log("Liste des gares sauvegardée dans sessionStorage.");
+        } catch (error) {
+            console.error("Erreur lors de la sauvegarde des gares:", error);
+        }
+    },
+
+    /**
+     * Récupère la liste des gares depuis le sessionStorage
+     * @returns {Array<string>|null} Liste des gares ou null si non trouvée
+     * 
+     * @example
+     * const stations = StorageManager.getStations();
+     * if (stations) {
+     *  console.log(`${stations.length} gares disponibles`);
+     * }
+     */
+    getStations() {
+        try {
+            const data = sessionStorage.getItem(STORAGE_KEYS.STATIONS_LIST);
+            return data ? JSON.parse(data) : null;
+        } catch (error) {
+            console.error("Erreur lors de la lecture des gares:", error);
+            return null;
+        }
+    },
+
 
     /**
      * Efface toutes les données de recherche du sessionStorage

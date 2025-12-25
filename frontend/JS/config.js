@@ -8,7 +8,8 @@
 export const API_CONFIG = {
     BASE_URL: "http://localhost:8000",
     ENDPOINTS: {
-        SEARCH: "/search"
+        SEARCH: "/search",
+        STATIONS: "/stations"
     }
 };
 
@@ -77,7 +78,8 @@ export const MAP_CONFIG = {
 // Clés pour le sessionStorage
 export const STORAGE_KEYS = {
     SEARCH_PARAMS: "searchParams",
-    SEARCH_RESULTS: "searchResults"
+    SEARCH_RESULTS: "searchResults",
+    STATIONS_LIST: "stationsList"
 };
 
 // Messages utilisateur
@@ -85,5 +87,6 @@ export const MESSAGES= {
     SEARCH_IN_PROGRESS: "Recherche en cours...",
     SEARCH_ERROR: "Une erreur s'est produite lors de la recherche. Veuillez réessayer.",
     NO_RESULTS: "Aucun trajet trouvé pour cette recherche.",
-    FILL_ALL_FIELDS: "Veuillez remplir tous les champs."
+    FILL_ALL_FIELDS: "Veuillez remplir tous les champs.",
+    STATIONS_LOAD_ERROR: "Impossible de charger la liste des gares."
 };

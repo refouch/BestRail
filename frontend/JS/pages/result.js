@@ -17,6 +17,52 @@ let searchResults = null;
 let isEditing = false;
 
 /**
+ * Charge la liste des gares pour l'autocomplétion
+ */
+async function loadStations() {
+    // Vérifier si les gares sont déjà en cache
+    let stations = StorageManager.getStations();
+
+    if (!stations || stations.length === 0) {
+        // Récupérer depuis le serveur
+        try {
+            stations = await SearchAPI.getStations();
+            StorageManager.saveStations(stations);
+            console.log(`${stations.length} gares chargées.`);
+        } catch (error) {
+            console.error("Erreur lors du chargement des gares:", error);
+        }  
+    } 
+}
+
+/**
+ * Crée un datalist pour l'autocomplétion des gares en mode édition
+ * @param {Array<string>} stations - Liste des noms de gares
+ * @returns {HTMLDataListElement} Élement datalist 
+ */
+function createDatalist(stations) {
+    // Vérifier si le datalist existe déjà
+    let datalist = document.getElementById("stations-edit-list");
+
+    if (!datalist) {
+        // Créer le datalist
+        datalist = document.createElement("datalist");
+        datalist.id = "stations-edit-list";
+        document.body.appendChild(datalist);
+    }
+
+    // Vider et remplir le datalist
+    datalist.innerHTML = "";
+    stations.forEach(station => {
+        const option = document.createElement("option");
+        option.value = station;
+        datalist.appendChild(option);
+    });
+
+    return datalist;
+}
+
+/**
  * Initialise la carte Leaflet
  */
 function initMap() {
@@ -165,9 +211,17 @@ function enableEditMode() {
     const dateObj = new Date(searchParams.date);
     const datetimeValue = dateObj.toISOString().slice(0,16);
 
+    // Récupérer les gares du cache
+    const stations = StorageManager.getStations();
+
+    // Créer le datalist si on a des gares
+    if (stations && stations.length > 0) {
+        createDatalist(stations);
+    }
+
     // Remplacement par des inputs
-    villeDepart.innerHTML = `<input type="text" class="recap-input" id="edit-depart" value="${searchParams.depart}" required>`;
-    villeArrivee.innerHTML = `<input type="text" class="recap-input" id="edit-arrivee" value="${searchParams.arrivee}" required>`;
+    villeDepart.innerHTML = `<input type="text" class="recap-input" id="edit-depart" value="${searchParams.depart}" list="stations-edit-list" required>`;
+    villeArrivee.innerHTML = `<input type="text" class="recap-input" id="edit-arrivee" value="${searchParams.arrivee}" list="stations-edit-list" required>`;
     travelDate.innerHTML = `<input type="datetime-local" class="recap-input" id="edit-datetime" value="${datetimeValue}" required>`;
 
     modifyBtn.textContent = "Valider";
@@ -276,11 +330,14 @@ window.toggleDetails = function(button) {
 /**
  * Initialise la page de résultats
  */
-function initResultsPage() {
+async function initResultsPage() {
     // Chargement des données
     if (!loadSearchData()) {
         return; // Redirection vers l'accueil
     }
+
+    // Charger les gares pour l'autocomplétion
+    await loadStations();
 
     // Initialisation des composants
     initMap();

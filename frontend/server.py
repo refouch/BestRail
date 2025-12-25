@@ -12,10 +12,42 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Liste des gares disponibles
+GARES = [
+    "Paris Gare de Lyon",
+    "Lyon Part-Dieu",
+    "Marseille Saint-Charles",
+    "Dijon",
+    "Macon",
+    "Roanne",
+    "Bordeaux Saint-Jean",
+    "Toulouse Matabiau",
+    "Lille Europe",
+    "Strasbourg",
+    "Nantes",
+    "Rennes",
+    "Montpellier Saint-Roch",
+    "Nice Ville",
+    "Grenoble",
+    "Avignon TGV",
+    "Le Mans",
+    "Tours",
+    "Angers Saint-Laud",
+    "Reims"
+]
+
+
+
 @app.get("/")
 def home():
     return {"message": "Serveur actif !"}
 
+@app.get("/stations")
+def get_stations():
+    return {
+        "status": "success",
+        "stations": sorted(GARES)
+    }
 
 @app.post("/search")
 def recherche(data: dict):

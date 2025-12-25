@@ -46,6 +46,7 @@
                 id="depart"
                 name="gare-depart"  
                 placeholder="Ex: Paris Gare de Lyon"
+                list="stations-list"
                 required
             >
          </div>
@@ -59,6 +60,7 @@
                 id="arrivee"
                 name="gare-arrivee"
                 placeholder="Ex : Lyon Part-Dieu"
+                list="stations-list"
                 required
             >
         </div>
@@ -74,6 +76,11 @@
                 required
             >
         </div>
+
+        <!-- Datalist pour les champs de gares -->
+        <datalist id="stations-list">
+            <!-- Remplissage dynamique par JavaScript-->
+        </datalist>
 
         <!-- Bouton de soumission du formulaire -->
          <button type="submit" class="search-button">

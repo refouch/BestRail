@@ -12,6 +12,50 @@ import { API_CONFIG, MESSAGES } from "../config.js";
 export const SearchAPI = {
 
     /**
+     * Récupère la liste des gares disponibles depuis le serveur
+     * @returns {Promise<Array<string>>} Liste des noms de gares
+     * @throws {Error} si la requête échoue
+     * 
+     * @example
+     * try {
+     *  const stations = await SearchAPI.getStations();
+     *  console.log(stations); //["Paris Gare de Lyon", "Lyon Part-Dieu", ...]
+     *  } catch (error) {
+     *  console.error(error);
+     * }
+     */
+    async getStations() {
+        console.log("Récupération de la liste des gares...");
+
+        try {
+            const response = await fetch(
+                `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.STATIONS}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            console.log("Statut de la réponse (stations):", response.status);
+
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Liste des gares reçue:", data);
+
+            return data.stations || [];
+            
+        } catch (error) {
+
+        }
+    },
+
+
+    /**
      * Effectue une recherche de trajets auprès du serveur
      * @param {Object} searchData - Données de recherche
      * @param {string} searchData.depart - Gare de départ
