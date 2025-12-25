@@ -189,14 +189,14 @@
     gap: 10px;
 }
 
-.trip-line.card-time {
+.trip-line .card-time {
     font-size: 1.2rem;
     font-weight: 700;
     color: #333;
     min-width: 55px;
 }
 
-.trip-line.card-station {
+.trip-line .card-station {
     font-weight: 600;
     font-size: 0.95rem;
     color: var(--primary-color, #2c3e50);

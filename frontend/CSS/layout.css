@@ -55,13 +55,13 @@
 .contact-footer h4 {
     font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
     color: var(--text-light);
 }
 
 .contact-footer p {
     color: var(--text-muted);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);

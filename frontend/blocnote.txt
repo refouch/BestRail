@@ -2,6 +2,7 @@
 Script JS pour désactiver le datalist lorsque l'input est vide
 Script JS pour sélectionner l'ensemble de l'input quand on modifie
 
+Améliorer le visuel du détail des trajets
 
 
 
