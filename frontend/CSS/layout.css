@@ -40,7 +40,7 @@
 .page-footer {
     background-color: var(--bg-dark);
     color: var(--text-light);
-    margin: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
 }
 
 .footer-content {
@@ -103,7 +103,6 @@
     transform: translateY(-2px);
 }
 
-/* .footer-bottom */
 
 /* ========================================
    RESPONSIVE DESIGN

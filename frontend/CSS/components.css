@@ -152,6 +152,7 @@
     background-color: var(--bg-primary);
     border: 1px solid var(--bg-secondary);
     border-radius: var(--border-radius-sm);
+    border-color: var(--secondary-color);
     padding: 20px;
     padding-bottom: 10px;
     padding-top: 10px;
