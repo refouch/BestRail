@@ -77,4 +77,5 @@ def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
             "segments": segments
         })
     
-    return json.dumps(final_list,indent=2)
+    # return json.dumps(final_list,indent=2)
+    return final_list

@@ -5,11 +5,25 @@
  */
 
 // Configuration de l'API
+// export const API_CONFIG = {
+//     BASE_URL: "http://localhost:8000",
+//     ENDPOINTS: {
+//         SEARCH: "/search",
+//         STATIONS: "/stations"
+//     }
+// };
+
 export const API_CONFIG = {
-    BASE_URL: "http://localhost:8000",
+    // 1. Si on est sur ton PC (localhost) -> adresse normale
+    // 2. Si on est sur Onyxia -> on utilise le chemin relatif avec le proxy
+    BASE_URL: window.location.hostname === "localhost" 
+              ? "http://localhost:8000" 
+              : window.location.pathname.includes('/proxy/8000') 
+                ? "/proxy/8000" 
+                : "", 
     ENDPOINTS: {
-        SEARCH: "/search",
-        STATIONS: "/stations"
+        STATIONS: "/stations",
+        SEARCH: "/search"
     }
 };
 

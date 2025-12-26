@@ -1,6 +1,6 @@
-from .raptor import RAPTOR, get_all_paths
-from .postprocessing import rank_by_time, jsonify_paths
-from .preprocessing import load_gtfs_data
+from algo_backend.raptor import RAPTOR, get_all_paths
+from algo_backend.postprocessing import rank_by_time, jsonify_paths
+from algo_backend.preprocessing import load_gtfs_data
 
 def print_matrix(tau):
     for line in tau:
@@ -12,6 +12,9 @@ stop_list, route_list, stop_dict = load_gtfs_data(gtfs_dir)
 print(stop_dict['StopArea:OCE87726414'])
 source_stop = stop_list[2932]
 target_stop = stop_list[2822]
+
+print(stop_list[2932].name)
+print(stop_list[2822].name)
 
 tau, tau_star, parent = RAPTOR(source_stop,target_stop,0,stop_list,route_list)
 
