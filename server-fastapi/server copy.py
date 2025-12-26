@@ -27,6 +27,15 @@ gtfs_dir = 'gtfs_sncf'
 
 stop_list, route_list, stop_dict = load_gtfs_data(gtfs_dir)
 stop_name_to_index_dict = { stop.name : stop.index_in_list for stop in stop_dict.values()}
+stop_names = list(stop_name_to_index_dict.keys())
+
+@app.get("/stations")
+def get_stations():
+    return {
+        "status": "success",
+        "stations": sorted(stop_names)
+    }
+
 
 @app.post("/search")
 def recherche(data: dict, stop_list: list, route_list: list, stop_dict: dict, stop_name_to_index_dict: dict):
