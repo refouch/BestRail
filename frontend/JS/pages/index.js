@@ -18,6 +18,7 @@ async function loadStations() {
     if (stations && stations.length > 0) {
         console.log("Gares chargées depuis le cache");
         populateDatalist(stations);
+        setupInputFiltering(); // Filtrage autocomplétion selon taille de l'input
         return;
     }
 
@@ -30,6 +31,9 @@ async function loadStations() {
 
         // Remplir le datalist
         populateDatalist(stations);
+
+        // Configurer le filtrage
+        setupInputFiltering();
 
         console.log(`${stations.length} gares chargées avec succès !`);
     } catch (error) {
@@ -60,6 +64,47 @@ function populateDatalist(stations) {
     });
 
     console.log(`Datalist rempli avec ${stations.length} gares.`);
+}
+
+/**
+ * Configure le filtrage : le datalist n'apparaît qu'à partir de 2 caractères
+ */
+function setupInputFiltering() {
+    const departInput = document.getElementById("depart");
+    const arriveeInput = document.getElementById("arrivee");
+
+    if (!departInput || !arriveeInput) {
+        console.error("Inputs non trouvés");
+        return;
+    }
+
+    // Fonction pour gérer l'affichage du datalist
+    const handleInputChange = (input) => {
+        const value = input.value;
+
+        if (value.length < 2) {
+            // Retirer la connexion au datalist
+            input.removeAttribute("list");
+        } else {
+            // Connecter au datalist
+            input.setAttribute("list", "stations-list");
+        }
+    };
+
+    // Attacher les événements aux deux inputs
+    departInput.addEventListener("input", (e) => {
+        handleInputChange(e.target);
+    });
+
+    arriveeInput.addEventListener("input", (e) => {
+        handleInputChange(e.target);
+    });
+
+    // Retirer l'attribut list au chargement
+    departInput.removeAttribute("list");
+    arriveeInput.removeAttribute("list");
+
+    console.log("Filtrage configuré : datalist visible à partir de 2 caractères")
 }
 
 /**

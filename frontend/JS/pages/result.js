@@ -63,6 +63,42 @@ function createDatalist(stations) {
 }
 
 /**
+ * Configure le filtrage pour les inputs en mode édition
+ * Le datalist n'apparaît qu'à partir de 2 caractères
+ * @param {HTMLInputElement} departInput - Input départ
+ * @param {HTMLInputElement} arriveeInput - Input arrivée
+ */
+function setupEditModeFiltering(departInput, arriveeInput) {
+    // Fonction pour gérer l'affichage du datalist
+    const handleInputChange = (input) => {
+        const value = input.value;
+
+        if (value.length < 2) {
+            // Retirer la connexion au datalist
+            input.removeAttribute("list");
+        } else {
+            // Connecter au datalist
+            input.setAttribute("list","stations-edit-list");
+        }
+    };
+
+    // Attacher les événements
+    departInput.addEventListener("input", (e) => {
+        handleInputChange(e.target);
+    });
+
+    arriveeInput.addEventListener("input", (e) => {
+        handleInputChange(e.target);
+    });
+
+    // Au départ, pas de connexion au datalist
+    departInput.removeAttribute("list");
+    arriveeInput.removeAttribute("list");
+
+    console.log("Filtrage en mode édition configuré");
+}
+
+/**
  * Initialise la carte Leaflet
  */
 function initMap() {
@@ -220,9 +256,17 @@ function enableEditMode() {
     }
 
     // Remplacement par des inputs
-    villeDepart.innerHTML = `<input type="text" class="recap-input" id="edit-depart" value="${searchParams.depart}" list="stations-edit-list" required>`;
-    villeArrivee.innerHTML = `<input type="text" class="recap-input" id="edit-arrivee" value="${searchParams.arrivee}" list="stations-edit-list" required>`;
+    villeDepart.innerHTML = `<input type="text" class="recap-input" id="edit-depart" value="${searchParams.depart}" required>`;
+    villeArrivee.innerHTML = `<input type="text" class="recap-input" id="edit-arrivee" value="${searchParams.arrivee}" required>`;
     travelDate.innerHTML = `<input type="datetime-local" class="recap-input" id="edit-datetime" value="${datetimeValue}" required>`;
+
+    // Configurer le filtrage dynamique
+    const departInput = document.getElementById("edit-depart");
+    const arriveeInput = document.getElementById("edit-arrivee");
+
+    if (departInput && arriveeInput) {
+        setupEditModeFiltering(departInput, arriveeInput);
+    }
 
     modifyBtn.textContent = "Valider";
     modifyBtn.classList.add("validate-mode");
