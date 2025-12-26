@@ -1,123 +1,10 @@
-Dans index_code.js :
-    - ajouter un truc pour vérifier que la réponse est ok : if (!response.ok)
+
+Script JS pour désactiver le datalist lorsque l'input est vide
+Script JS pour sélectionner l'ensemble de l'input quand on modifie
+
+Améliorer le visuel du détail des trajets
 
 
-Faire un truc qui permet de modifier la recherche depuis la page des résultats
-    - mettre un datetime pour l'input de la date
-
-
-Améliorer les visuels des cards de trajets
-
-Ajouter les trajets sur la carte Leaflet
-
-
-
-{
-  "path_1": {
-    "departure_stop": "Stop A",
-    "arrival_stop": "Stop D",
-    "segments": {
-      "segment_1": {
-        "from": "Stop A",
-        "to": "Stop E",
-        "dep_coor": [
-          42.0,
-          42.0
-        ],
-        "arr_coor": [
-          42.0,
-          42.0
-        ],
-        "board_time": 10,
-        "arrival_time": 12,
-        "trip": "R2_T1",
-        "route": "R2"
-      },
-      "segment_2": {
-        "from": "Stop E",
-        "to": "Stop D",
-        "dep_coor": [
-          42.0,
-          42.0
-        ],
-        "arr_coor": [
-          42.0,
-          42.0
-        ],
-        "board_time": 14,
-        "arrival_time": 24,
-        "trip": "R3_T1",
-        "route": "R3"
-      }
-    }
-  },
-  "path_2": {
-    "departure_stop": "Stop A",
-    "arrival_stop": "Stop D",
-    "segments": {
-      "segment_1": {
-        "from": "Stop A",
-        "to": "Stop D",
-        "dep_coor": [
-          42.0,
-          42.0
-        ],
-        "arr_coor": [
-          42.0,
-          42.0
-        ],
-        "board_time": 10,
-        "arrival_time": 40,
-        "trip": "R1_T1",
-        "route": "R1"
-      }
-    }
-  }
-}
-
-
-
-
-/* Amélioration possible pour le format */
-
-[{"departure_stop": "Stop A",
-  "arrival_stop": "Stop D",
-    "segments": [
-        {"from": "Stop A",
-        "to": "Stop E",
-        "dep_coor": [42.0,42.0],
-        "arr_coor": [42.0,42.0],
-        "board_time": 10,
-        "arrival_time": 12,
-        "trip": "R2_T1",
-        "route": "R2"
-        },
-        {"from": "Stop E",
-        "to": "Stop D",
-        "dep_coor": [42.0,42.0],
-        "arr_coor": [42.0,42.0],
-        "board_time": 14,
-        "arrival_time": 24,
-        "trip": "R3_T1",
-        "route": "R3"
-        }
-    ]
-  },
-   {"departure_stop": "Stop A",
-    "arrival_stop": "Stop D",
-    "segments": [
-      {"from": "Stop A",
-        "to": "Stop D",
-        "dep_coor": [42.0,42.0],
-        "arr_coor": [42.0,42.0],
-        "board_time": 10,
-        "arrival_time": 40,
-        "trip": "R1_T1",
-        "route": "R1"
-      }
-    ]
-  }
-]
 
 
 OLD fonction pour afficher les cards
@@ -300,3 +187,179 @@ if (!isEditing) {
         
 
     }
+
+Exemple cards statiques result.html
+<!-- EXEMPLE 1 : Trajet DIRECT -->
+            <article class="trip_card">
+                <div class="trip_route">
+                    <span class="departure_station">Paris Gare de Lyon</span>
+                    <span class="arrow">→</span>
+                    <span class="arrival_station">Lyon Part-Dieu</span>
+                </div>
+
+                <div class="trip_header">
+                    <span class="departure_time">10</span>
+                    <span class="duration">30 unités</span>
+                    <span class="arrival_time">40</span>
+                </div>
+
+                <div class="trip_type">
+                    <p>Direct</p>
+                </div>
+
+                <button class="details_btn" onclick="toggleDetails(this)">Voir les détails</button>
+
+                <div class="trip_details_panel">
+                    <div class="direct_info">
+                        <p><strong>Train :</strong> R1_T1</p>
+                        <p><strong>Durée :</strong> 30 unités</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- EXEMPLE 2 : Trajet avec 1 CORRESPONDANCE -->
+            <article class="trip_card">
+                <div class="trip_route">
+                    <span class="departure_station">Paris Gare de Lyon</span>
+                    <span class="arrow">→</span>
+                    <span class="arrival_station">Lyon Part-Dieu</span>
+                </div>
+
+                <div class="trip_header">
+                    <span class="departure_time">10</span>
+                    <span class="duration">14 unités</span>
+                    <span class="arrival_time">24</span>
+                </div>
+
+                <div class="trip_type">
+                    <p>1 correspondance</p>
+                </div>
+
+                <button class="details_btn" onclick="toggleDetails(this)">Voir les détails</button>
+
+                <div class="trip_details_panel">
+                    <div class="segments_container">
+                        
+                        <!-- Segment 1 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R2_T1</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Paris Gare de Lyon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Dijon</span>
+                                </div>
+                                <p><strong>Départ :</strong> 10</p>
+                                <p><strong>Arrivée :</strong> 12</p>
+                                <p><strong>Durée :</strong> 2 unités</p>
+                            </div>
+                        </div>
+
+                        <!-- Correspondance -->
+                        <div class="connection_info">
+                            <span class="connection_icon">⏱️</span>
+                            <p>Correspondance à Dijon - Temps d'attente : 2 unités</p>
+                        </div>
+
+                        <!-- Segment 2 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R3_T1</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Dijon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Lyon Part-Dieu</span>
+                                </div>
+                                <p><strong>Départ :</strong> 14</p>
+                                <p><strong>Arrivée :</strong> 24</p>
+                                <p><strong>Durée :</strong> 10 unités</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </article>
+
+            <!-- EXEMPLE 3 : Trajet avec 2 CORRESPONDANCES -->
+            <article class="trip_card">
+                <div class="trip_route">
+                    <span class="departure_station">Paris Gare de Lyon</span>
+                    <span class="arrow">→</span>
+                    <span class="arrival_station">Lyon Part-Dieu</span>
+                </div>
+
+                <div class="trip_header">
+                    <span class="departure_time">8</span>
+                    <span class="duration">20 unités</span>
+                    <span class="arrival_time">28</span>
+                </div>
+
+                <div class="trip_type">
+                    <p>2 correspondances</p>
+                </div>
+
+                <button class="details_btn" onclick="toggleDetails(this)">Voir les détails</button>
+
+                <div class="trip_details_panel">
+                    <div class="segments_container">
+                        
+                        <!-- Segment 1 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R4_T1</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Paris Gare de Lyon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Dijon</span>
+                                </div>
+                                <p><strong>Départ :</strong> 8</p>
+                                <p><strong>Arrivée :</strong> 12</p>
+                                <p><strong>Durée :</strong> 4 unités</p>
+                            </div>
+                        </div>
+
+                        <!-- Correspondance 1 -->
+                        <div class="connection_info">
+                            <span class="connection_icon">⏱️</span>
+                            <p>Correspondance à Dijon - Temps d'attente : 3 unités</p>
+                        </div>
+
+                        <!-- Segment 2 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R5_T2</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Dijon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Mâcon</span>
+                                </div>
+                                <p><strong>Départ :</strong> 15</p>
+                                <p><strong>Arrivée :</strong> 20</p>
+                                <p><strong>Durée :</strong> 5 unités</p>
+                            </div>
+                        </div>
+
+                        <!-- Correspondance 2 -->
+                        <div class="connection_info">
+                            <span class="connection_icon">⏱️</span>
+                            <p>Correspondance à Mâcon - Temps d'attente : 1 unité</p>
+                        </div>
+
+                        <!-- Segment 3 -->
+                        <div class="segment_item">
+                            <div class="segment_header">🚄 Train R6_T3</div>
+                            <div class="segment_info">
+                                <div class="segment_route">
+                                    <span>Mâcon</span>
+                                    <span class="arrow_small">→</span>
+                                    <span>Lyon Part-Dieu</span>
+                                </div>
+                                <p><strong>Départ :</strong> 21</p>
+                                <p><strong>Arrivée :</strong> 28</p>
+                                <p><strong>Durée :</strong> 7 unités</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </article>

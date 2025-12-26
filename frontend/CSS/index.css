@@ -1,0 +1,79 @@
+
+/* ===============================================================
+   INDEX - STYLES SPÉCIFIQUES À LA PAGE D'ACCUEIL
+   =============================================================== */
+
+/* ========================================
+   CONTENU PRINCIPAL
+   ======================================== */
+
+.main-content {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    min-height: calc(100vh - var(--header-height));
+}
+
+/* ========================================
+   FOND D'ÉCRAN
+   ======================================== */
+
+.hero-section {
+    width: 100%;
+    height: 0;
+    padding-bottom: 68.55%;
+    background-image: url(../Image_fond_ecran.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/* ========================================
+   CONTENEUR DU FORMULAIRE DE RECHERCHE
+   ======================================== */
+
+.search-container {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    width: 400px;
+    z-index: 10;
+    background-color: var(--bg-primary);
+    padding: 30px;
+    border-radius: var(--border-radius);
+}
+
+/* ========================================
+   ENCART DE PRÉSENTATION
+   ======================================== */
+
+.presentation-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.presentation {
+    max-width: var(--container-max-width);
+    width: 100%;
+    padding: var(--spacing-lg);
+    background: var(--primary-color);
+    color: var(--text-light);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+}
+
+.presentation h2 {
+    font-size: 1.8rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-light);
+}
+
+.presentation p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: var(--spacing-sm);
+}

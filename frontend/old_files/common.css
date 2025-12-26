@@ -79,7 +79,7 @@ body {
    ======================================== */
 .header {
   background-color: var(--bg-primary);
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0 ;
   padding: 0 var(--spacing-lg);
   height: var(--header-height);
   display: flex;
