@@ -363,3 +363,191 @@ Exemple cards statiques result.html
                     </div>
                 </div>
             </article>
+
+
+
+Ancien components.css
+
+/* Trajets directs */
+.direct-info {
+    padding: 15px;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+.direct-info p {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.direct-info strong {
+    color: var(--text-primary);
+}
+
+/* Trajets avec correspondance(s) */
+.segment-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.segment-item {
+    padding: 15px;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--primary-color);
+}
+
+.segment-header {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.segment-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.segment-route {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-weight: 500;
+}
+
+.segment-route.arrow-small {
+    color: var(text-muted);
+}
+
+/* Correspondance */
+.connection-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    margin: 10px 0;
+    background-color: #fef3c7;
+    border-radius: var(--border-radius-sm);
+    border: 1px dashed var(--warning-color);
+}
+
+.connection-info p {
+    color: #92400e;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.connection-icon {
+    margin-right: var(--spacing-xs);
+    font-size: 1.2rem;
+}
+
+
+Ancien tripcard.JS
+/**
+     * Génère le panneau de détails d'un trajet (segments + correspondances)
+     * @param {Object} trajet - Objet trajet avec segments
+     * @returns {string} HTML du panneau de détails
+     * 
+     * @example
+     * const detailsHTML = TripCardGenerator.generateDetailsPanel(trajet);
+     */
+    generateDetailsPanel(trajet) {
+        // Trajet direct (1 segment)
+        if (trajet.segments.length === 1) {
+            return this._generateDirectTripDetails(trajet.segments[0]);
+        }
+
+        // Trajet avec au moins 1 correspondance
+        return this._generateMultiSegmentDetails(trajet.segments);
+    },
+
+    /**
+     * Génère les détails pour un trajet direct (sans correspondances)
+     * @param {Object} segment - Segment unique du trajet
+     * @returns {string} HTML des détails du trajet direct
+     * @private 
+     */
+    _generateDirectTripDetails(segment) {
+        const duration = segment.arrival_time - segment.board_time;
+
+        return `
+            <div class="direct-info">
+                <p><strong>Train :</strong> ${segment.trip}</p>
+                <p><strong>Durée :</strong> ${convertDuration(duration)}</p>
+            </div>
+        `;
+    },
+
+    /**
+     * Génère les détails pour un trajet avec correspondances
+     * @param {Array} segments - Tableau des segments du trajet
+     * @returns {string} HTML des segments et correspondances
+     * @private
+     */
+    _generateMultiSegmentDetails(segments) {
+        let html = "<div class='segments-container'>";
+
+        segments.forEach((segment,index) =>{
+            // Affichage du segment
+            html += this._generateSegmentHTML(segment);
+
+            // Affichage de la correspondance entre deux segments
+            if (index < segments.length -1) {
+                const nextSegment = segments[index +1];
+                html += this._generateConnectionHTML(segment, nextSegment);
+            }
+        });
+
+        html += "</div>";
+        return html;
+    },
+
+    /**
+     * Génère le HTML d'un segment individuel
+     * @param {Object} segment - Segment avec infos sur le train, les horaires, les gares
+     * @returns {string} HTML du segment
+     * @private
+     */
+    _generateSegmentHTML(segment) {
+        const segmentDuration = segment.arrival_time - segment.board_time;
+        
+        return `
+            <div class="segment-item">
+                <div class="segment-header">🚄 Train ${segment.trip}</div>
+                <div class="segment-info">
+                    <div class="segment-route">
+                        <span>${segment.from}</span>
+                        <span class="arrow-small">→</span>
+                        <span>${segment.to}</span>
+                    </div>
+                    <p><strong>Départ :</strong> ${convertHHMM(segment.board_time)}</p>
+                    <p><strong>Arrivée :</strong> ${convertHHMM(segment.arrival_time)}</p>
+                    <p><strong>Durée :</strong> ${convertDuration(segmentDuration)}</p>
+                </div>
+            </div>
+        `; 
+    },
+
+    /**
+     * Génère le HTML d'une correspondance entre deux segments
+     * @param {Object} currentSegment - Segment actuel
+     * @param {Object} nextSegment - Segment suivant
+     * @returns {string} HTML de la correspondance
+     * @private
+     */
+    _generateConnectionHTML(currentSegment, nextSegment) {
+        const waitingTime = nextSegment.board_time - currentSegment.arrival_time;
+
+        return `
+            <div class="connection-info">
+                <span class="connection-icon">⏱️</span>
+                <p>Correspondance à ${currentSegment.to} - Temps d'attente : ${convertDuration(waitingTime)}</p>
+            </div>
+        `;
+    },
