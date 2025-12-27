@@ -63,8 +63,8 @@ def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
             segments.append({
                 "from": stop1.name,
                 "to": stop2.name,
-                "dep_coor": (stop1.lat,stop1.lon),
-                "arr_coor": (stop2.lat,stop2.lon),
+                "dep_coor": (float(stop1.lat), float(stop1.lon)),
+                "arr_coor": (float(stop2.lat), float(stop2.lon)),
                 "board_time": board_time,
                 "arrival_time": arrival_time,
                 "trip": trip,
