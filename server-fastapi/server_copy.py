@@ -97,8 +97,12 @@ def recherche(data: dict):
     tau, tau_star, parent = RAPTOR(source_stop, target_stop, departure_time, stop_list, route_list, max_round)
 
     paths = get_all_paths(parent, tau, target_index_in_list, max_round)
+    print("############------------------PATHS : \n", paths)
+    print('\n')
     paths = rank_by_time(paths)
-    print("jsonify_paths(paths, stop_list) : ", jsonify_paths(paths, stop_list))
+    print("############------------------RANKED PATHS : \n", paths)
+    print('\n')
+    print("############__________________jsonify_paths(paths, stop_list) : ", jsonify_paths(paths, stop_list))
     results = {"status": "success",
                "message": "Données bien reçues et traitées !",
                'trajets': jsonify_paths(paths, stop_list)}
