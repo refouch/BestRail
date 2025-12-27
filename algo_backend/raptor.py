@@ -5,6 +5,9 @@
 
 from algo_backend.data_structure import Stop, Route, Trip, map_stop_to_routes
 from typing import Dict, List, Optional, Tuple
+import logging
+
+logger = logging.getLogger(__name__)
 
 def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> Optional[Trip]:
     """Function to determine the first trip that can be caught for a given stop and in the route and a given time
@@ -32,6 +35,9 @@ def check_earlier_stops(queue: List[Tuple[Route,Stop]], route: Route, stop: Stop
 def RAPTOR(source_stop: Stop, target_stop: Stop, 
            departure_time: float, 
            stop_list: List[Stop], route_list: List[Route], max_rounds: int = 5) -> Dict:
+    
+    logger.debug(f'Source Stop: {source_stop}')
+    logger.debug(f'Target Stop: {target_stop}')
 
     ### First part: Initialization
     num_stops = len(stop_list)
@@ -60,6 +66,9 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
     for k in range(1, max_rounds + 1):
 
+        logger.debug(f"#####_________ BEGGINING ROUND N° {k}")
+        logger.debug(f'Currently marked stops: {marked_stops}')
+
         route_queue.clear()
 
         current_marked = marked_stops.copy()
@@ -68,6 +77,8 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
         for stop_index in current_marked:
 
             stop = stop_list[stop_index]
+
+            logger.debug(f'Examining Stop: {stop}')
 
             for route_index in stops_to_routes[stop_index]:
 
@@ -82,42 +93,42 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                     route_queue.append((route,stop))
             
         for route, first_stop in route_queue:
+                    current_trip = None
+                    board_stop_index = None
+                    board_stop_rank = None
 
-            current_trip = None
+                    start_rank = route.stop_list.index(first_stop.id)
+                    for rank in range(start_rank, len(route.stop_index_list)):
+                        stop_index = route.stop_index_list[rank]
+                        
+                        if current_trip is not None:
+                            arrival_time = current_trip.arrival_times[rank]
+                            # Local pruning only to get more paths
+                            if arrival_time < tau_star[stop_index]:
+                                tau_matrix[stop_index][k] = arrival_time
+                                tau_star[stop_index] = arrival_time
+                                marked_stops.add(stop_index)
+                                
+                                parent[stop_index][k] = {
+                                    "route_id": route.id,
+                                    "trip_id": current_trip.id,
+                                    "board_stop": board_stop_index,
+                                    "board_time": current_trip.departure_times[board_stop_rank],
+                                    "arrival_time": arrival_time
+                                }
 
-            first_stop_rank = route.stop_list.index(first_stop.id)
+                        transfer_time = stop_list[stop_index].min_transfer_time if k > 1 else 0
+                        prev_time = tau_matrix[stop_index][k-1] + transfer_time
 
-            for rank, stop_index in enumerate(route.stop_index_list[first_stop_rank:], start=first_stop_rank):
 
-                stop = stop_list[stop_index]
-
-                if current_trip is not None:
-
-                    arrival_time = current_trip.arrival_times[rank] 
-
-                    if arrival_time < tau_star[stop_index]:
-                        tau_matrix[stop_index][k] = arrival_time
-                        tau_star[stop_index] = arrival_time
-                        marked_stops.add(stop_index)
-
-                        parent[stop_index][k] = {
-                            "prev_stop": route.stop_index_list[rank - 1] if rank > first_stop_rank else None,
-                            "route": route.index_in_list,
-                            "route_id": route.id,
-                            "trip_id": current_trip.id,
-                            "board_stop": first_stop.index_in_list,
-                            "board_time": current_trip.departure_times[first_stop_rank]
-                        }
-
-                # Can we catch an earlier train
-                if stop_index == source_stop.index_in_list:
-                    ready_time = departure_time
-                else:
-                    ready_time = tau_matrix[stop_index][k-1] + stop.min_transfer_time
-
-                # Can we board a new trip?
-                if current_trip is None or ready_time <= current_trip.departure_times[rank]:
-                    current_trip = earliest_trip_at_stop(route, rank, ready_time)
+                        if current_trip is None or prev_time <= current_trip.departure_times[rank]:
+                            et = earliest_trip_at_stop(route, rank, prev_time)
+                            if et is not None:
+                                # Si on n'avait rien ou si ce nouveau trip est plus rapide à l'arrivée
+                                if current_trip is None or et.arrival_times[-1] < current_trip.arrival_times[-1]:
+                                    current_trip = et
+                                    board_stop_index = stop_index
+                                    board_stop_rank = rank
 
         # Stopping criterion
         if not marked_stops:
@@ -144,7 +155,6 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
         path.append({
             "stop": current_stop,
             "route_id": label["route_id"],
-            "route": label["route"],
             "trip_id": label["trip_id"],
             "board_stop": label["board_stop"],
             "board_time": label['board_time'],
@@ -152,7 +162,6 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
         })
 
         current_stop = label["board_stop"]
-        k -= 1
 
     path.reverse()
     return path

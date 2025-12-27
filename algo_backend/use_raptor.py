@@ -1,6 +1,9 @@
 from .raptor import RAPTOR, get_all_paths
 from .postprocessing import rank_by_time, jsonify_paths
 from .preprocessing import load_gtfs_data
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 def print_matrix(tau):
     for line in tau:
@@ -23,4 +26,5 @@ paths = rank_by_time(paths)
 
 final_dict = jsonify_paths(paths,stop_list)
 
+print(paths)
 print(final_dict)

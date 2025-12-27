@@ -39,46 +39,47 @@ def merge(left: List[List[Dict]], right: List[List[Dict]]) -> List[List[Dict]]:
 
     return result
 
+"""
+def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
+    Final formatting of the results to be sent to the frontend
 
-# def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
-#     """Final formatting of the results to be sent to the frontend"""
+    final_list = []
 
-#     final_list = []
+    for k, path in enumerate(paths):
 
-#     for k, path in enumerate(paths):
+        segments = []
 
-#         segments = []
+        for i in range(len(path) - 1):
 
-#         for i in range(len(path) - 1):
+            stop1 = stop_list[path[i].get('stop')]
+            stop2 = stop_list[path[i + 1].get('stop')]
 
-#             stop1 = stop_list[path[i].get('stop')]
-#             stop2 = stop_list[path[i + 1].get('stop')]
+            board_time = path[i + 1].get('board_time')
+            arrival_time = path[i + 1].get('arrival_time')
 
-#             board_time = path[i + 1].get('board_time')
-#             arrival_time = path[i + 1].get('arrival_time')
+            trip = path[i + 1].get('trip_id')
+            route = path[i + 1].get('route_id')
 
-#             trip = path[i + 1].get('trip_id')
-#             route = path[i + 1].get('route_id')
+            segments.append({
+                "from": stop1.name,
+                "to": stop2.name,
+                "dep_coor": (float(stop1.lat), float(stop1.lon)),
+                "arr_coor": (float(stop2.lat), float(stop2.lon)),
+                "board_time": board_time,
+                "arrival_time": arrival_time,
+                "trip": trip,
+                "route": route
+            })
 
-#             segments.append({
-#                 "from": stop1.name,
-#                 "to": stop2.name,
-#                 "dep_coor": (float(stop1.lat), float(stop1.lon)),
-#                 "arr_coor": (float(stop2.lat), float(stop2.lon)),
-#                 "board_time": board_time,
-#                 "arrival_time": arrival_time,
-#                 "trip": trip,
-#                 "route": route
-#             })
-
-#         final_list.append({
-#             "departure_stop": stop_list[path[0].get('stop')].name,
-#             "arrival_stop": stop_list[path[-1].get('stop')].name,
-#             "segments": segments
-#         })
+        final_list.append({
+            "departure_stop": stop_list[path[0].get('stop')].name,
+            "arrival_stop": stop_list[path[-1].get('stop')].name,
+            "segments": segments
+        })
     
-#     # return json.dumps(final_list,indent=2)
-#     return final_list
+     # return json.dumps(final_list,indent=2)
+    return final_list
+"""
 
 def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
     """Final formatting of the results to be sent to the frontend"""
@@ -112,7 +113,7 @@ def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
             })
 
         final_list.append({
-            "departure_stop": stop_list[path[0].get('stop')].name,
+            "departure_stop": stop_list[path[0].get('board_stop')].name,
             "arrival_stop": stop_list[path[-1].get('stop')].name,
             "segments": segments
         })
