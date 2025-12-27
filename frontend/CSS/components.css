@@ -338,14 +338,14 @@
 .segment-card {
     display: flex;
     align-items: center;
-    min-height: 40px;
+    /* min-height: 40px; */
 }
 
 /* Informations de gare (temps + station sur même ligne) */
 .segment-info {
     display: flex;
     align-items: baseline;
-    gap: 12px;
+    gap: 10px;
 }
 
 .segment-time {
@@ -366,7 +366,7 @@
     flex: 1;
     display: flex;
     align-items: center;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 .segment-meta {
