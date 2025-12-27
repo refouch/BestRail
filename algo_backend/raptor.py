@@ -104,7 +104,7 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                         if current_trip is not None:
                             arrival_time = current_trip.arrival_times[rank]
 
-                            if arrival_time < tau_matrix[stop_index][k]: # MODFIED PRUNING TO CURRENT ROUND ONLY -> Goal = get more alternative paths
+                            if arrival_time < tau_star[stop_index]: # MODFIED PRUNING TO CURRENT ROUND ONLY -> Goal = get more alternative paths
                                 tau_matrix[stop_index][k] = arrival_time
                                 tau_star[stop_index] = arrival_time
                                 marked_stops.add(stop_index)
@@ -147,7 +147,6 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
 
         label = parent[current_stop][k]
         
-        # If no update in this round, look at the previous round
         if label is None:
             return []
             
@@ -166,16 +165,43 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
     path.reverse()
     return path
 
-def get_all_paths(parent: List[List[Dict]], tau_matrix: List[List[int]], target_idx: int, max_rounds: int) -> List[List[Dict]]:
-    """Helper function to reconstruct all valid paths leading to the target stop"""
+def get_unique_paths(parent, tau_matrix, target_idx, max_rounds):
+    unique_paths = []
+    seen_trip_ids = set() # On utilise les IDs des trajets pour identifier un parcours
+
+    for k in range(1, max_rounds + 1):
+        path = reconstruct_path(parent, tau_matrix, target_idx, k)
+        if path:
+            # Créer une signature unique du trajet (ex: tuple des trip_ids utilisés)
+            signature = tuple(segment['trip_id'] for segment in path)
+            
+            if signature not in seen_trip_ids:
+                unique_paths.append(path)
+                seen_trip_ids.add(signature)
+    
+    return unique_paths
+
+def paths_in_time_range(departure_time: int, source_stop: Stop, target_stop: Stop, 
+                        stop_list: List[Stop], route_list: List[Route], rounds: int = 5,
+                        consecutive_paths: int  = 5): # By default 5 consecutive paths
 
     paths = []
 
-    for k in range(1, max_rounds + 1):
+    for _ in range(consecutive_paths):
+        new_paths = []
 
-        path = reconstruct_path(parent,tau_matrix,target_idx,k)
-        
-        if path:
-            paths.append(path)
+        tau, tau_star, parent = RAPTOR(source_stop,target_stop,departure_time,stop_list,route_list,max_rounds=rounds)
     
+        new_paths = get_unique_paths(parent,tau,target_stop.index_in_list,rounds)
+
+        if not new_paths:
+            print('No more paths found at this time for this many rounds')
+            break
+       
+        paths.extend(new_paths)
+
+        boarding_time = new_paths[0][0].get('board_time')
+
+        departure_time = boarding_time + 1
+
     return paths

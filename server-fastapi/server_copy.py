@@ -8,7 +8,7 @@ import os
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from algo_backend.raptor import RAPTOR, get_all_paths
+from algo_backend.raptor import RAPTOR, paths_in_time_range
 from algo_backend.postprocessing import rank_by_time, jsonify_paths
 from algo_backend.preprocessing import load_gtfs_data
 
@@ -94,9 +94,11 @@ def recherche(data: dict):
     print(stop_list[2822].name)
     max_round = 5
 
-    tau, tau_star, parent = RAPTOR(source_stop, target_stop, departure_time, stop_list, route_list, max_round)
+    # tau, tau_star, parent = RAPTOR(source_stop, target_stop, departure_time, stop_list, route_list, max_round)
 
-    paths = get_all_paths(parent, tau, target_index_in_list, max_round)
+    # paths = get_all_paths(parent, tau, target_index_in_list, max_round)
+
+    paths = paths_in_time_range(departure_time,source_stop,target_stop,stop_list,route_list)
     print("############------------------PATHS : \n", paths)
     print('\n')
     paths = rank_by_time(paths)
