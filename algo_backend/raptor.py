@@ -149,8 +149,7 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
         
         # If no update in this round, look at the previous round
         if label is None:
-            k -= 1
-            continue
+            return []
             
         path.append({
             "stop": current_stop,

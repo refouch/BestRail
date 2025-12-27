@@ -88,35 +88,36 @@ def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
 
     for k, path in enumerate(paths):
 
-        segments = []
+        if path:
+            segments = []
 
-        for i in range(len(path)): # for each segment in path
+            for i in range(len(path)): # for each segment in path
 
-            stop1 = stop_list[path[i].get('board_stop')]
-            stop2 = stop_list[path[i].get('stop')]
+                stop1 = stop_list[path[i].get('board_stop')]
+                stop2 = stop_list[path[i].get('stop')]
 
-            board_time = path[i].get('board_time')
-            arrival_time = path[i].get('arrival_time')
+                board_time = path[i].get('board_time')
+                arrival_time = path[i].get('arrival_time')
 
-            trip = path[i].get('trip_id')
-            route = path[i].get('route_id')
+                trip = path[i].get('trip_id')
+                route = path[i].get('route_id')
 
-            segments.append({
-                "from": stop1.name,
-                "to": stop2.name,
-                "dep_coor": (float(stop1.lat), float(stop1.lon)),
-                "arr_coor": (float(stop2.lat), float(stop2.lon)),
-                "board_time": board_time,
-                "arrival_time": arrival_time,
-                "trip": trip,
-                "route": route
+                segments.append({
+                    "from": stop1.name,
+                    "to": stop2.name,
+                    "dep_coor": (float(stop1.lat), float(stop1.lon)),
+                    "arr_coor": (float(stop2.lat), float(stop2.lon)),
+                    "board_time": board_time,
+                    "arrival_time": arrival_time,
+                    "trip": trip,
+                    "route": route
+                })
+
+            final_list.append({
+                "departure_stop": stop_list[path[0].get('board_stop')].name,
+                "arrival_stop": stop_list[path[-1].get('stop')].name,
+                "segments": segments
             })
-
-        final_list.append({
-            "departure_stop": stop_list[path[0].get('board_stop')].name,
-            "arrival_stop": stop_list[path[-1].get('stop')].name,
-            "segments": segments
-        })
     
     # return json.dumps(final_list,indent=2)
     return final_list
