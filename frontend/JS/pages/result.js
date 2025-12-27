@@ -99,6 +99,18 @@ function setupEditModeFiltering(departInput, arriveeInput) {
 }
 
 /**
+ * Sélectionne tout le contenu d'un input
+ * @param {}
+ */
+function enableAutoSelectOnFocus(input) {
+    input.addEventListener("focus", () => {
+        if (input.value) {
+            input.select();
+        }
+    });
+}
+
+/**
  * Initialise la carte Leaflet
  */
 function initMap() {
@@ -266,6 +278,8 @@ function enableEditMode() {
 
     if (departInput && arriveeInput) {
         setupEditModeFiltering(departInput, arriveeInput);
+        enableAutoSelectOnFocus(departInput);
+        enableAutoSelectOnFocus(arriveeInput);
     }
 
     modifyBtn.textContent = "Valider";
