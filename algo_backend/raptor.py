@@ -103,8 +103,8 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                         
                         if current_trip is not None:
                             arrival_time = current_trip.arrival_times[rank]
-                            # Local pruning only to get more paths
-                            if arrival_time < tau_star[stop_index]:
+
+                            if arrival_time < tau_matrix[stop_index][k]: # MODFIED PRUNING TO CURRENT ROUND ONLY -> Goal = get more alternative paths
                                 tau_matrix[stop_index][k] = arrival_time
                                 tau_star[stop_index] = arrival_time
                                 marked_stops.add(stop_index)
@@ -162,6 +162,7 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
         })
 
         current_stop = label["board_stop"]
+        k = k - 1
 
     path.reverse()
     return path
