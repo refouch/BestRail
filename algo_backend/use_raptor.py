@@ -1,6 +1,6 @@
-from algo_backend.raptor import RAPTOR, get_all_paths
-from algo_backend.postprocessing import rank_by_time, jsonify_paths
-from algo_backend.preprocessing import load_gtfs_data
+from .raptor import RAPTOR, get_all_paths
+from .postprocessing import rank_by_time, jsonify_paths
+from .preprocessing import load_gtfs_data
 
 def print_matrix(tau):
     for line in tau:
