@@ -41,21 +41,21 @@ def merge(left: List[List[Dict]], right: List[List[Dict]]) -> List[List[Dict]]:
     return result
 
 
-def extract_train_info(trip_id):
+def extract_train_info(trip_id: str) -> str:
     """
-    Extrait le type et le numéro d'un train depuis son ID GTFS complexe.
+    Extract the train type and train number from complex GTFS ID
     Ex: "OCESN863040..." -> ("TER", "863040")
     """
     
-    # 1. Extraction du Numéro
-    # Regex : On cherche le début (^) suivi de lettres ([A-Z]+) 
-    # puis on capture les chiffres qui suivent (\d+)
+    # Extraction of the number
+    # Regex : look for the begining (^) followed by letters ([A-Z]+) 
+    # then capture the numbers that follow (\d+)
     match_num = re.search(r'^[A-Z]+(\d+)', trip_id)
     numero = match_num.group(1) if match_num else "Inconnu"
 
-    # 2. Extraction du Type
-    # On cherche les codes spécifiques encadrés par des deux-points
-    type_train = "Train" # Valeur par défaut
+    # Extraction of the kind of trian 
+    
+    type_train = "Train"
     
     if ":OUI:" in trip_id:
         type_train = "TGV INOUI"
@@ -63,55 +63,13 @@ def extract_train_info(trip_id):
         type_train = "OUIGO"
     elif ":TER:" in trip_id:
         type_train = "TER"
-    elif ":COR:" in trip_id or ":IC:" in trip_id: # Cas fréquents pour Intercités
+    elif ":COR:" in trip_id or ":IC:" in trip_id: 
         type_train = "Intercités"
-    elif "TGV" in trip_id: # Cas de secours
+    elif "TGV" in trip_id: 
         type_train = "TGV"
 
-    return f"{type_train} n°{numero}" # Prêt à afficher
+    return f"{type_train} n°{numero}"
 
-
-"""
-def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
-    Final formatting of the results to be sent to the frontend
-
-    final_list = []
-
-    for k, path in enumerate(paths):
-
-        segments = []
-
-        for i in range(len(path) - 1):
-
-            stop1 = stop_list[path[i].get('stop')]
-            stop2 = stop_list[path[i + 1].get('stop')]
-
-            board_time = path[i + 1].get('board_time')
-            arrival_time = path[i + 1].get('arrival_time')
-
-            trip = path[i + 1].get('trip_id')
-            route = path[i + 1].get('route_id')
-
-            segments.append({
-                "from": stop1.name,
-                "to": stop2.name,
-                "dep_coor": (float(stop1.lat), float(stop1.lon)),
-                "arr_coor": (float(stop2.lat), float(stop2.lon)),
-                "board_time": board_time,
-                "arrival_time": arrival_time,
-                "trip": trip,
-                "route": route
-            })
-
-        final_list.append({
-            "departure_stop": stop_list[path[0].get('stop')].name,
-            "arrival_stop": stop_list[path[-1].get('stop')].name,
-            "segments": segments
-        })
-    
-     # return json.dumps(final_list,indent=2)
-    return final_list
-"""
 
 def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
     """Final formatting of the results to be sent to the frontend"""
