@@ -5,6 +5,7 @@
 from typing import List, Dict
 from .data_structure import Stop
 import json
+import re 
 
 def rank_by_time(paths: List[List[Dict]]) -> List[List[Dict]]:
     """Function to rerank paths in the list according to arrival time rather than number of rounds
@@ -38,6 +39,37 @@ def merge(left: List[List[Dict]], right: List[List[Dict]]) -> List[List[Dict]]:
     result.extend(right[j:])
 
     return result
+
+
+def extract_train_info(trip_id):
+    """
+    Extrait le type et le numéro d'un train depuis son ID GTFS complexe.
+    Ex: "OCESN863040..." -> ("TER", "863040")
+    """
+    
+    # 1. Extraction du Numéro
+    # Regex : On cherche le début (^) suivi de lettres ([A-Z]+) 
+    # puis on capture les chiffres qui suivent (\d+)
+    match_num = re.search(r'^[A-Z]+(\d+)', trip_id)
+    numero = match_num.group(1) if match_num else "Inconnu"
+
+    # 2. Extraction du Type
+    # On cherche les codes spécifiques encadrés par des deux-points
+    type_train = "Train" # Valeur par défaut
+    
+    if ":OUI:" in trip_id:
+        type_train = "TGV INOUI"
+    elif ":OGO:" in trip_id:
+        type_train = "OUIGO"
+    elif ":TER:" in trip_id:
+        type_train = "TER"
+    elif ":COR:" in trip_id or ":IC:" in trip_id: # Cas fréquents pour Intercités
+        type_train = "Intercités"
+    elif "TGV" in trip_id: # Cas de secours
+        type_train = "TGV"
+
+    return f"{type_train} n°{numero}" # Prêt à afficher
+
 
 """
 def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
@@ -100,6 +132,7 @@ def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> Dict:
                 arrival_time = path[i].get('arrival_time')
 
                 trip = path[i].get('trip_id')
+                trip = extract_train_info(trip)
                 route = path[i].get('route_id')
 
                 segments.append({
