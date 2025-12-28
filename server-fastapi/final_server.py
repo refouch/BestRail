@@ -9,10 +9,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.responses import RedirectResponse
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from algo_backend.raptor import paths_in_time_range
 from algo_backend.postprocessing import rank_by_time, jsonify_paths
 from algo_backend.preprocessing import load_gtfs_data
+from algo_backend.sncf_data import download_and_extract_gtfs
 
 #------Define API instance------#
 app = FastAPI()
@@ -29,12 +31,50 @@ app.add_middleware(
 
 # path to GTFS data files
 gtfs_dir = 'gtfs_sncf'
-stop_list, route_list, stop_dict = load_gtfs_data(gtfs_dir)
+url = "https://eu.ftp.opendatasoft.com/sncf/plandata/Export_OpenData_SNCF_GTFS_NewTripId.zip"
 
-# dict with {"stop name in French" : stop index in total stop list}
-stop_name_to_index_dict = {stop.name: stop.index_in_list for stop in stop_list}
+# Initialization of data variables
+stop_list = []
+route_list = []
+stop_dict = {}
+stop_name_to_index_dict = {}
+stop_names = []
 
-stop_names = list(stop_name_to_index_dict.keys()) # list of the stop names
+# update the data 
+def update_and_load_data():
+    """
+    Download and reload GTFS data
+    """
+    global stop_list, route_list, stop_dict, stop_name_to_index_dict, stop_names
+    
+    print(f"[{datetime.now()}] Démarrage de la mise à jour des données...")
+    
+    try:
+        download_and_extract_gtfs(url)
+        new_s_list, new_r_list, new_s_dict = load_gtfs_data(gtfs_dir)
+        
+        stop_list = new_s_list
+        route_list = new_r_list
+        stop_dict = new_s_dict
+        stop_name_to_index_dict = {stop.name: stop.index_in_list for stop in stop_list}
+        stop_names = list(stop_name_to_index_dict.keys())
+        
+        print(f"[{datetime.now()}] mise à jour terminée")
+        
+    except Exception as e:
+        print(f"erreur : {e}")
+
+# --- chargement au démarrage de l'app ---
+@app.on_event("startup")
+def startup_event():
+    update_and_load_data()
+    
+    # mise à jour planifiée
+    scheduler = BackgroundScheduler()
+    # mise à jour tous les jours à 4h
+    scheduler.add_job(update_and_load_data, 'cron', hour=4, minute=0)
+    scheduler.start()
+    print("planificateur démarré")
 
 
 @app.get("/result.html")
