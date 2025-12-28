@@ -1,97 +1,113 @@
 # Mock server
 
+import os 
+from datetime import datetime
+from typing import Dict, TypedDict, List, Tuple, Any
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import json
-from datetime import datetime
-import os 
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.responses import RedirectResponse
 
-from algo_backend.raptor import RAPTOR, paths_in_time_range
+from algo_backend.raptor import paths_in_time_range
 from algo_backend.postprocessing import rank_by_time, jsonify_paths
 from algo_backend.preprocessing import load_gtfs_data
 
+#------Define API instance------#
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Autorise tout le monde (pratique pour le dev sur Onyxia)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+#------Get the data------#
 
-# from fastapi.staticfiles import StaticFiles
-# from fastapi.responses import FileResponse
-
-# # On monte le dossier frontend pour qu'il soit accessible via l'URL /frontend
-# app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
-
-# # On crée une route pour afficher l'index
-# @app.get("/")
-# async def read_index():
-#     return FileResponse('frontend/index.html')
-
-
-# @app.get("/")
-# def home():
-#     return {"message": "Serveur actif !"}
-
-
+# path to GTFS data files
 gtfs_dir = 'gtfs_sncf'
-
 stop_list, route_list, stop_dict = load_gtfs_data(gtfs_dir)
+
+# dict with {"stop name in French" : stop index in total stop list}
 stop_name_to_index_dict = {stop.name: stop.index_in_list for stop in stop_list}
-stop_names = list(stop_name_to_index_dict.keys())
 
+stop_names = list(stop_name_to_index_dict.keys()) # list of the stop names
 
-from fastapi.responses import RedirectResponse
 
 @app.get("/result.html")
-async def redirect_result():
-    # Si on détecte qu'on est sur Onyxia, on redirige vers le proxy
-    # Sinon (localhost), on laisse faire le static mount
+async def redirect_result() -> FileResponse:
+    """
+    Serves the result HTML page directly to handle client-side navigation.
+
+    This explicit route ensures consistent access to the results page, 
+    particularly when running behind a reverse proxy (like Onyxia).
+
+    Returns:
+        FileResponse: The 'result.html' file object.
+    """
     return FileResponse(os.path.join(frontend_path, "result.html"))
 
-
-
 @app.get("/stations")
-def get_stations():
+def get_stations() -> Dict[str, Any]:
+    """
+    Retrieves the list of all available train stations from the loaded GTFS data.
+
+    Returns:
+        dict: A JSON response containing:
+            - status (str): The success status of the request.
+            - stations (List[str]): An alphabetically sorted list of all station names.
+    """
     return {
         "status": "success",
         "stations": sorted(stop_names)
     }
 
+#------ Research ------#
+
+Segment = TypedDict("Segment", {
+    "from": str,
+    "to": str,
+    "dep_coor": Tuple[float, float], # (lat, lon)
+    "arr_coor": Tuple[float, float],
+    "board_time": float,
+    "arrival_time": float,
+    "trip": str,
+    "route": str
+})
+
+class Trajet(TypedDict):
+    departure_stop: str
+    arrival_stop: str
+    segments: List[Segment]
+
+class ApiResponse(TypedDict):
+    status: str
+    message: str
+    trajets: List[Trajet]
 
 @app.post("/search")
-def recherche(data: dict):
-    print(f"Données reçues : {data}")
-    print("stop_list : ", stop_list[:10])
-    for i, (cle, valeur) in enumerate(stop_dict.items()):
-        if i < 10:
-            print(f"{cle} : {valeur}")
-        else:
-            break # On arrête la boucle après 10 éléments
+def recherche(data: dict) -> ApiResponse:
+    
+    print(f"Données reçues : {data} \n")
+    
     source = data['depart']
     target = data['arrivee']
     date = data['date']
-    date = datetime.fromisoformat(date)
-    departure_time = float(date.hour * 60 + date.minute + date.second / 60)
-    print("departure_time :", departure_time)
+    date = datetime.fromisoformat(date) # transform to datetime format
+    departure_time = float(date.hour * 60 + date.minute + date.second / 60) # convert into minutes from 0:00
+    
 
     source_index_in_list = stop_name_to_index_dict[source]
     target_index_in_list = stop_name_to_index_dict[target]
-    print("source_index_in_list : ", source_index_in_list)
-    print("target_index_in_list : ", target_index_in_list)
 
     source_stop = stop_list[source_index_in_list]
     target_stop = stop_list[target_index_in_list]
     print(source_stop.name)
     print(target_stop.name)
-    print(stop_list[2932].name)
-    print(stop_list[2822].name)
+    
     max_round = 5
 
     # tau, tau_star, parent = RAPTOR(source_stop, target_stop, departure_time, stop_list, route_list, max_round)
@@ -125,4 +141,4 @@ app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("server-fastapi.server_copy:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("server-fastapi.final_server:app", host="0.0.0.0", port=8000, reload=True)
