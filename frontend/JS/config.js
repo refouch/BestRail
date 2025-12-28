@@ -55,8 +55,8 @@ export const MAP_CONFIG = {
             opacity: 0.8
         },
         LINE_HIGHLIGHT: {
-            color: '#dc2626',
-            weight: 3,
+            color: '#1d4ed8',
+            weight: 3.5,
             opacity: 0.8
         },
         MARKER_START: {

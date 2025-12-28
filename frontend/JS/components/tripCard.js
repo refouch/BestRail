@@ -84,12 +84,9 @@ export const TripCardGenerator = {
     },
 
     /**
-     * Génère le panneau de détails d'un trajet (segments + correspondances)
+     * Génère le panneau de détails d'un trajet
      * @param {Object} trajet - Objet trajet avec segments
      * @returns {string} HTML du panneau de détails
-     * 
-     * @example
-     * const detailsHTML = TripCardGenerator.generateDetailsPanel(trajet);
      */
     generateDetailsPanel(trajet) {
         // Trajet direct (1 segment)
@@ -102,20 +99,13 @@ export const TripCardGenerator = {
     },
 
     /**
-     * Génère les détails pour un trajet direct (sans correspondances)
+     * Génère les détails pour un trajet direct
      * @param {Object} segment - Segment unique du trajet
      * @returns {string} HTML des détails du trajet direct
-     * @private 
+     * @private
      */
     _generateDirectTripDetails(segment) {
-        const duration = segment.arrival_time - segment.board_time;
-
-        return `
-            <div class="direct-info">
-                <p><strong>Train :</strong> ${segment.trip}</p>
-                <p><strong>Durée :</strong> ${convertDuration(duration)}</p>
-            </div>
-        `;
+        return `<div class="timeline">${this._generateSegmentHTML(segment,0,1)}</div>`;
     },
 
     /**
@@ -125,13 +115,13 @@ export const TripCardGenerator = {
      * @private
      */
     _generateMultiSegmentDetails(segments) {
-        let html = "<div class='segments-container'>";
+        let html = "<div class='timeline'>";
 
-        segments.forEach((segment,index) =>{
+        segments.forEach((segment,index) => {
             // Affichage du segment
-            html += this._generateSegmentHTML(segment);
+            html += this._generateSegmentHTML(segment, index, segments.length);
 
-            // Affichage de la correspondance entre deux segments
+            // Affichage de la correspondance
             if (index < segments.length -1) {
                 const nextSegment = segments[index +1];
                 html += this._generateConnectionHTML(segment, nextSegment);
@@ -145,27 +135,52 @@ export const TripCardGenerator = {
     /**
      * Génère le HTML d'un segment individuel
      * @param {Object} segment - Segment avec infos sur le train, les horaires, les gares
+     * @param {number} index - Index du segment dans la liste
+     * @param {number} totalSegments - Nombre total de segments
      * @returns {string} HTML du segment
      * @private
      */
-    _generateSegmentHTML(segment) {
+    _generateSegmentHTML(segment, index, totalSegments) {
+        const isFirst = (index === 0);
+        const isLast = (index === totalSegments -1);
         const segmentDuration = segment.arrival_time - segment.board_time;
-        
+
+        // CLasse du premier point
+        const startPointClass = isFirst ? "timeline-point start" : "timeline-point";
+        // Classe du dernier point
+        const endPointClass = isLast ? "timeline-point end" : "timeline-point";
+
         return `
-            <div class="segment-item">
-                <div class="segment-header">🚄 Train ${segment.trip}</div>
-                <div class="segment-info">
-                    <div class="segment-route">
-                        <span>${segment.from}</span>
-                        <span class="arrow-small">→</span>
-                        <span>${segment.to}</span>
+            <div class="timeline-segment">
+                <div class="timeline-column">
+                    <div class="segment-vertical-line"></div>
+                    <div class="${startPointClass}"></div>
+                    <div style="flex: 1;"></div>
+                    <div class="${endPointClass}"></div>
+                </div>
+                <div class="timeline-content">
+                    <div class="segment-card">
+                        <div class="segment-info">
+                            <span class="segment-time">${convertHHMM(segment.board_time)}</span>
+                            <span class="segment-station">${segment.from}</span>
+                        </div>
                     </div>
-                    <p><strong>Départ :</strong> ${convertHHMM(segment.board_time)}</p>
-                    <p><strong>Arrivée :</strong> ${convertHHMM(segment.arrival_time)}</p>
-                    <p><strong>Durée :</strong> ${convertDuration(segmentDuration)}</p>
+                
+                    <div class="segment-trip">
+                        <div class="segment-meta">
+                            <strong>${segment.trip}</strong> · ${convertDuration(segmentDuration)}
+                        </div>
+                    </div>
+                
+                    <div class="segment-card">
+                        <div class="segment-info">
+                            <span class="segment-time">${convertHHMM(segment.arrival_time)}</span>
+                            <span class="segment-station">${segment.to}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        `; 
+        `;
     },
 
     /**
@@ -179,12 +194,19 @@ export const TripCardGenerator = {
         const waitingTime = nextSegment.board_time - currentSegment.arrival_time;
 
         return `
-            <div class="connection-info">
-                <span class="connection-icon">⏱️</span>
-                <p>Correspondance à ${currentSegment.to} - Temps d'attente : ${convertDuration(waitingTime)}</p>
+            <div class="timeline-connection">
+                <div class="connection-column">
+                    <div class="connection-line"></div>
+                </div>
+                <div class="connection-content-wrapper">
+                    <div class="connection-content">
+                        Correspondance à ${currentSegment.to} - <strong>${convertDuration(waitingTime)}</strong>
+                    </div>
+                </div>
             </div>
         `;
     },
+
 
     /**
      * Génère toutes les cartes pour une liste de trajets
