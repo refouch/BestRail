@@ -5,9 +5,6 @@
 
 from algo_backend.data_structure import Stop, Route, Trip, map_stop_to_routes
 from typing import Dict, List, Optional, Tuple
-import logging
-
-logger = logging.getLogger(__name__)
 
 def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> Optional[Trip]:
     """Function to determine the first trip that can be caught for a given stop and in the route and a given time
@@ -17,7 +14,7 @@ def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> 
         train_leave_time = trip.departure_times[stop_rank]
 
         if time_at_stop <= train_leave_time:
-            return trip # trip can be caught.
+            return trip 
         
     return None
 
@@ -35,9 +32,6 @@ def check_earlier_stops(queue: List[Tuple[Route,Stop]], route: Route, stop: Stop
 def RAPTOR(source_stop: Stop, target_stop: Stop, 
            departure_time: float, 
            stop_list: List[Stop], route_list: List[Route], max_rounds: int = 5) -> Dict:
-    
-    logger.debug(f'Source Stop: {source_stop}')
-    logger.debug(f'Target Stop: {target_stop}')
 
     ### First part: Initialization
     num_stops = len(stop_list)
@@ -53,7 +47,7 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
     "route_id": None,
     "route": None,
     "trip_id": None,
-    "board_stop": None, # The stop we boarded the trip in
+    "board_stop": None,
     "board_time": None
 }
 
@@ -66,9 +60,6 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
     for k in range(1, max_rounds + 1):
 
-        logger.debug(f"#####_________ BEGGINING ROUND N° {k}")
-        logger.debug(f'Currently marked stops: {marked_stops}')
-
         route_queue.clear()
 
         current_marked = marked_stops.copy()
@@ -78,12 +69,9 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
             stop = stop_list[stop_index]
 
-            logger.debug(f'Examining Stop: {stop}')
-
             for route_index in stops_to_routes[stop_index]:
 
                 route = route_list[route_index]
-
                 update_queue = check_earlier_stops(route_queue,route,stop)
 
                 if type(update_queue) == list:
@@ -120,12 +108,10 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                         transfer_time = stop_list[stop_index].min_transfer_time if k > 1 else 0
                         prev_time = tau_matrix[stop_index][k-1] + transfer_time
 
-
                         if current_trip is None or prev_time <= current_trip.departure_times[rank]:
                             et = earliest_trip_at_stop(route, rank, prev_time)
                             if et is not None:
-                                # Si on n'avait rien ou si ce nouveau trip est plus rapide à l'arrivée
-                                if current_trip is None or et.arrival_times[-1] < current_trip.arrival_times[-1]:
+                                if current_trip is None or et.arrival_times[rank] < current_trip.arrival_times[rank]:
                                     current_trip = et
                                     board_stop_index = stop_index
                                     board_stop_rank = rank
@@ -148,7 +134,8 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
         label = parent[current_stop][k]
         
         if label is None:
-            return []
+            k = k - 1
+            continue
             
         path.append({
             "stop": current_stop,
@@ -165,14 +152,14 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
     path.reverse()
     return path
 
+
 def get_unique_paths(parent, tau_matrix, target_idx, max_rounds):
     unique_paths = []
-    seen_trip_ids = set() # On utilise les IDs des trajets pour identifier un parcours
+    seen_trip_ids = set()
 
     for k in range(1, max_rounds + 1):
         path = reconstruct_path(parent, tau_matrix, target_idx, k)
         if path:
-            # Créer une signature unique du trajet (ex: tuple des trip_ids utilisés)
             signature = tuple(segment['trip_id'] for segment in path)
             
             if signature not in seen_trip_ids:
@@ -181,13 +168,16 @@ def get_unique_paths(parent, tau_matrix, target_idx, max_rounds):
     
     return unique_paths
 
+
 def paths_in_time_range(departure_time: int, source_stop: Stop, target_stop: Stop, 
                         stop_list: List[Stop], route_list: List[Route], rounds: int = 5,
                         consecutive_paths: int  = 5): # By default 5 consecutive paths
 
     paths = []
 
-    for _ in range(consecutive_paths):
+    for i in range(consecutive_paths):
+
+        print(f"Sequence {i} / departure_time = {departure_time}")
         new_paths = []
 
         tau, tau_star, parent = RAPTOR(source_stop,target_stop,departure_time,stop_list,route_list,max_rounds=rounds)
@@ -195,13 +185,12 @@ def paths_in_time_range(departure_time: int, source_stop: Stop, target_stop: Sto
         new_paths = get_unique_paths(parent,tau,target_stop.index_in_list,rounds)
 
         if not new_paths:
-            print('No more paths found at this time for this many rounds')
             break
        
         paths.extend(new_paths)
 
         boarding_time = new_paths[0][0].get('board_time')
 
-        departure_time = boarding_time + 1
+        departure_time = boarding_time + 2
 
     return paths

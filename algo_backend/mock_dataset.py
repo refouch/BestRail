@@ -45,7 +45,6 @@ def build_mock_data():
     r1_stop_index_list = [id_to_index[sid] for sid in r1_stop_ids]
 
     route1 = Route(
-        name="Route 1",
         id="R1",
         stop_list=r1_stop_ids,
         stop_index_list=r1_stop_index_list,
@@ -73,7 +72,6 @@ def build_mock_data():
     r2_stop_index_list = [id_to_index[sid] for sid in r2_stop_ids]
 
     route2 = Route(
-        name="Route 2",
         id="R2",
         stop_list=r2_stop_ids,
         stop_index_list=r2_stop_index_list,
@@ -103,7 +101,6 @@ def build_mock_data():
     r3_stop_index_list = [id_to_index[sid] for sid in r3_stop_ids]
 
     route3 = Route(
-        name="Route 3",
         id="R3",
         stop_list=r3_stop_ids,
         stop_index_list=r3_stop_index_list,

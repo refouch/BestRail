@@ -1,5 +1,5 @@
 import pytest
-from algo_backend.raptor import RAPTOR, get_all_paths  # Adjust path if needed
+from algo_backend.raptor import RAPTOR, get_unique_paths  # Adjust path if needed
 from algo_backend.mock_dataset import build_mock_data
 from algo_backend.postprocessing import rank_by_time
 
@@ -48,7 +48,7 @@ def test_impossible_trip(dataset):
 
 def test_backtracking(dataset):
     tau, tau_star, parent = run_raptor(dataset, "A", "D", departure_time=0)
-    paths = get_all_paths(parent,tau,3,5)
-    assert paths[0] == [{'stop': 0, 'route_id': None, 'trip_id': None, 'board_stop': None, 'arrival_time': 0}, {'stop': 3, 'route_id': 'R1', 'trip_id': 'R1_T1', 'board_stop': 0, 'arrival_time': 40}]
+    paths = get_unique_paths(parent,tau,3,5)
+    assert paths[0] == [{'stop': 3, 'route_id': 'R1', 'trip_id': 'R1_T1', 'board_stop': 0, 'board_time': 10, 'arrival_time': 40}]
     paths = rank_by_time(paths)
-    assert paths[0] == [{'stop': 0, 'route_id': None, 'trip_id': None, 'board_stop': None, 'arrival_time': 0}, {'stop': 4, 'route_id': 'R2', 'trip_id': 'R2_T1', 'board_stop': 0, 'arrival_time': 12}, {'stop': 3, 'route_id': 'R3', 'trip_id': 'R3_T1', 'board_stop': 4, 'arrival_time': 24}]
+    assert paths[0] == [{'stop': 4, 'route_id': 'R2', 'trip_id': 'R2_T1', 'board_stop': 0, 'board_time': 10, 'arrival_time': 12}, {'stop': 3, 'route_id': 'R3', 'trip_id': 'R3_T1', 'board_stop': 4, 'board_time': 14, 'arrival_time': 24}]

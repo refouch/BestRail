@@ -1,9 +1,7 @@
-from .raptor import RAPTOR, paths_in_time_range
+from .raptor import RAPTOR, paths_in_time_range, get_unique_paths
+from .mock_dataset import build_mock_data
 from .postprocessing import rank_by_time, jsonify_paths
 from .preprocessing import load_gtfs_data
-import logging
-
-logging.basicConfig(level=logging.INFO)
 
 def print_matrix(tau):
     for line in tau:
@@ -11,18 +9,18 @@ def print_matrix(tau):
 
 gtfs_dir = 'gtfs_sncf'
 
-stop_list, route_list, stop_dict = load_gtfs_data(gtfs_dir)
-print(stop_dict['StopArea:OCE87726414'])
-source_stop = stop_list[2932]
-target_stop = stop_list[2822]
+dataset = build_mock_data()
 
-print(stop_list[2932].name)
-print(stop_list[2822].name)
+stop_list = dataset['stop_list']
+route_list = dataset['route_list']
 
-# tau, tau_star, parent = RAPTOR(source_stop,target_stop,0,stop_list,route_list)
+source_stop = stop_list[0]
+target_stop = stop_list[3]
 
-# paths = get_all_paths(parent,tau,2822,5)
-paths = paths_in_time_range(600,source_stop,target_stop,stop_list,route_list,rounds=5)
+tau, tau_star, parent = RAPTOR(source_stop,target_stop,0,stop_list,route_list)
+
+paths = get_unique_paths(parent,tau,3,5)
+
 paths = rank_by_time(paths)
 
 final_dict = jsonify_paths(paths,stop_list)
