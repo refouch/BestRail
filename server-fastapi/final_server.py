@@ -3,6 +3,7 @@
 import os 
 from datetime import datetime
 from typing import Dict, TypedDict, List, Tuple, Any
+from pprint import pprint
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -158,27 +159,32 @@ def recherche(data: dict) -> ApiResponse:
     source_stop = stop_list[source_index_in_list]
     target_stop = stop_list[target_index_in_list]
     print(f"SOURCE STOP NAME : {source_stop.name}")
-    print(f"TARGET STOP NAME : {target_stop.name}")
+    print(f"TARGET STOP NAME : {target_stop.name}\n")
     
     # Run the RAPTOR algorithm
     paths = paths_in_time_range(departure_time,source_stop,target_stop,stop_list,route_list)
     # logs
-    print("############------------------PATHS : \n", paths)
+    print("############------------------PATHS : \n")
+    pprint(paths)
     print('\n')
     
     paths = rank_by_time(paths)
     # logs
-    print("############------------------RANKED PATHS : \n", paths)
+    print("############------------------RANKED PATHS : \n")
+    pprint(paths)
     print('\n')
     
     # format the results
+    jsonified_paths = jsonify_paths(paths, stop_list)
     results = {"status": "success",
                "message": "Données bien reçues et traitées !",
-               'trajets': jsonify_paths(paths, stop_list)}
+               'trajets': jsonified_paths}
     # logs
-    print("############__________________JSONIFIED PATHS : \n", jsonify_paths(paths, stop_list))
+    print("############__________________JSONIFIED PATHS : \n")
+    pprint(jsonified_paths)
     print('\n')
-    print(f"Données envoyées : {results}")
+    print(f"Données envoyées : \n")
+    pprint(results)
     
     return results
 
