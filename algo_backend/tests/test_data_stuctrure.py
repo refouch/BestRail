@@ -11,7 +11,7 @@ def setup_data():
     stop_list = [stop1, stop2, stop3]
 
     # Route
-    route = Route(id="R1", name="Route 1", stop_list=["A","B","C"])
+    route = Route(id="R1", stop_list=["A","B","C"])
     route_list = [route]
 
     # Build stop_index_list
