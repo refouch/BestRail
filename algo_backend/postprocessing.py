@@ -82,7 +82,7 @@ def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> List[Dict]:
     final_list = []
 
     duplicate_trains_check = set()
-    """CONTEXTE: Pour unr raison étrange, documentée par la SNCF elle-même, le jeu de données GTFS comprend des doublons sur certaines lignes.
+    """CONTEXTE: Pour une raison étrange, documentée par la SNCF elle-même, le jeu de données GTFS comprend des doublons sur certaines lignes.
         En particulier un même train, avec le même numéro, peut apparaître deux fois comme deux 'trips' différents, avec une heure de départ légèrement décalée
         mais une heure d'arrivée identique. Il n'y a a priori pas de moyen trivial de savoir quel sera le 'vrai' train. Le problème étant endogène aux données 
         elles-mêmes, nous avons choisi simplement de retirer à chaque fois l'un des deux trains si un numéro particulier présente des doublons.
@@ -131,5 +131,4 @@ def jsonify_paths(paths: List[List[Dict]], stop_list: List[Stop]) -> List[Dict]:
                     "segments": segments
                 })
     
-    # return json.dumps(final_list,indent=2)
     return final_list
