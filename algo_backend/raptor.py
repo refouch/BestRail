@@ -30,13 +30,15 @@ def check_earlier_stops(queue: List[Tuple[Route,Stop]], route: Route, stop: Stop
     
     return None
 
-def RAPTOR(source_stop: Stop, 
+def RAPTOR(source_stop: Stop, target_stop: Stop, 
            departure_time: float, 
            stop_list: List[Stop], route_list: List[Route], max_rounds: int = 5) -> Tuple[List[List[int]], List[int], List[List[Dict]]]:
     """Main function implementing the basic RAPTOR algorithm as defined in the paper
         
         Input:
             - source_stop: The Stop object representing our departure point
+            - target_stop: The Stop object representing our destination. Is useful for optimization and pruning.
+                NOTE: As we do not prune for the moment, the argument is useless. It was left for reference and potential future improvements.
             - departure time: In minutes from midnight
             - stop_list, route_list: list of every object built from the GTFS database
                 Construction of both lists is provided in the preprocessing.py script.
