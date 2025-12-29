@@ -1,0 +1,175 @@
+/* ===================================================================
+   RESULT - STYLES SPÉCIFIQUES À LA PAGE DES RÉSULTATS
+   =================================================================== */
+
+/* ========================================
+   CONTENU PRINCIPAL
+   ======================================== */
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+   }
+
+/* ========================================
+   RÉCAPITULATIF DE LA RECHERCHE
+   ======================================== */
+
+/* Conteneur du récap */
+.search-recap-container {
+    width: 100%;
+    background-color: var(--bg-primary);
+    padding: var(--spacing-xs);
+}
+
+/* Récap */
+.search-recap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    background-color: var(--primary-color);
+    padding: 0;
+    padding-left: 12px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    border-radius: var(--border-radius);
+}
+
+.recap-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.recap-item label {
+    font-size: 0.5rem;
+    color: var(--bg-primary);
+    text-transform: uppercase;
+    padding-left: 4px;
+}
+
+.recap-item span {
+    background-color: var(--bg-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--secondary-color);
+    display: inline-block;
+    min-width: 212px;
+}
+
+.recap-arrow {
+    font-size: 1.5rem;
+    color: var(--bg-primary);
+    font-weight: bold;
+}
+
+/* Récap en mode édition */
+.recap-item span:has(.recap-input) {
+    padding: 0 !important;
+    /* Assure que l'input prenne toute la place du span qu'on édite */
+}
+
+/* ========================================
+   WRAPPER DES RÉSULTATS ET DE LA CARTE
+   ======================================== */
+
+.result-wrapper {
+    display: flex;
+    gap: var(--spacing-lg);
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ========================================
+   CONTENEUR DES RÉSULTATS (gauche)
+   ======================================== */
+
+.result-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: var(--spacing-xs);
+}
+
+.result-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.trajet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    max-height: 600px;
+    padding: var(--spacing-sm) var(--spacing-xs);
+}
+
+
+/* ========================================
+   CONTENEUR DE LA CARTE (droite)
+   ======================================== */
+
+.map-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    padding: var(--spacing-xs);
+}
+
+#map-result {
+    height: 600px;
+    width: 100%;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--bg-primary);
+    box-shadow: 0 2px 8px var(--secondary-hover);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .result-container,
+    .map-container {
+        width: 100%;
+    }
+    
+    .map-container {
+        position: static;
+    }
+    
+    #map-result {
+        height: 400px;
+    }
+    
+    .trajet-list {
+        max-height: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+    }
+    
+    #map-result {
+        height: 300px;
+    }
+}

@@ -1,0 +1,464 @@
+/* ===================================================================
+   Fichier CSS avec les éléments spécifiques à la page des résultats
+   =================================================================== */
+
+/* ========================================
+   CONTENU PRINCIPAL
+   ======================================== */
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ========================================
+   RÉCAP DE LA RECHERCHE
+   ======================================== */
+
+/* Container du récap (barre en haut) */
+.search-recap-container {
+    width: 100%;
+    background-color: var(--bg-primary);
+    padding: var(--spacing-xs);
+}
+
+/* Informations de recherche */
+.search-recap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    background-color: var(--primary-color);
+    padding: 0;
+    padding-left: 12px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    border-radius: var(--border-radius);
+}
+
+/* Item contenant une des infos du récap */
+.recap-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Espacement entre les labels et span*/
+}
+
+.recap-item label {
+    font-size: 0.5rem;
+    color: var(--bg-primary);
+    text-transform: uppercase;
+    padding-left: 4px;
+}
+
+.recap-item span {
+    background-color: var(--bg-primary);
+    padding: 8px 16px; /* Taille des spans */
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--secondary-color);
+    display: inline-block;
+}
+
+.recap-arrow {
+    font-size: 1.5rem;
+    color: var(--bg-primary);
+    font-weight: bold;
+}
+
+.modifiy-search-btn {
+    margin-left: auto; /* Pousse le bouton à droite */
+    margin-right: 12px; 
+    background-color: var(--bg-primary);
+    color: var(--primary-color);
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color var(--transition-normal), transform var(--transition-fast);
+    align-self: center;
+}
+
+.modifiy-search-btn:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+/* Style du récap en mode édition */
+
+.recap-input { /* Modifier comme les recap-item span */
+    background-color: var(--bg-primary);
+    padding: 8px 16px; 
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--secondary-color);
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    display: block;
+    font-family: inherit;
+}
+
+.recap-input:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: -2px;
+}
+
+.recap-item span:has(.recap-input) {
+    padding: 0 !important; /* Pour que l'input prenne toute la place du span quand on modifie */
+}
+
+/* Style du bouton en mode validation */
+.modifiy-search-btn.validate-mode {
+    background-color: var(--bg-primary);
+    color: var(--primary-color);
+}
+
+.modifiy-search-btn.validate-mode:hover {
+    background-color: #059669;
+    color: var(--bg-primary);
+}
+
+
+
+/* Wrapper des résultats et de la carte */
+.result-wrapper {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+
+/* ========================================
+   CONTENEUR DES RÉSULTATS (40% gauche)
+   ======================================== */
+
+.result-container {
+    flex: 1;
+    /*width: 40%;*/
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: var(--spacing-xs);
+}
+
+.result-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    
+}
+
+/* Liste des trajets */
+.trajet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+    max-height: 600px; /* Permet le scroll si bcp de résultats */
+}
+
+.trajet-list:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--secondary-hover);
+}
+
+/* Carte de trajet */
+
+.trip-card {
+    background-color: var(--bg-primary);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.trip-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
+}
+
+/* Style des popups Leaflet */
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+}
+
+.leaflet-popup-content {
+    margin: 13px 19px;
+    line-height: 1.4;
+    font-size: 13px;
+}
+
+
+/* Bloc principal (horaires) */
+
+.trip-main-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+
+/* Colonne gauche : heures + gares */
+
+.trip-times-stations {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.trip-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.trip-line .card-time {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    min-width: 55px; /* alignement vertical */
+}
+
+.trip-line .card-station {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--primary-color, #2c3e50);
+}
+
+
+/* Colonne droite : durée */
+
+.trip-duration {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    background-color: var(--bg-primary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+
+/* Footer (type + bouton)*/
+
+.trip-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.trip-type {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 500;
+}
+
+
+/* Bouton détails */
+
+.details-btn {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.details-btn:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.02);
+}
+
+.details-btn.active {
+    background-color: var(--secondary-color);
+}
+
+
+
+/* ========================================
+   PANNEAU DÉROULANT DES DÉTAILS
+   ======================================== */
+
+/* Panneau déroulant */
+.trip-details-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    margin-top: 5px;
+    border-top: 1px solid var(--bg-secondary);
+    padding-top: 0;
+}
+
+.trip-details-panel.open {
+    max-height: 800px;
+    padding-top: 15px;
+}
+
+/* Contenu du panneau - Trajet direct */
+.direct-info {
+    padding: 15px;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+}
+
+.direct-info p {
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.direct-info strong {
+    color: var(--text-primary);
+}
+
+/* Contenu du panneau - Trajet avec correspondances */
+.segments-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.segment-item {
+    padding: 15px;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--primary-color);
+}
+
+.segment-header {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.segment-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.segment-route {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.segment-route .arrow-small {
+    color: var(--text-muted);
+}
+
+/* Correspondance */
+.connection-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    margin: 10px 0;
+    background-color: #fef3c7;
+    border-radius: var(--border-radius-sm);
+    border: 1px dashed var(--warning-color);
+}
+
+.connection-info p {
+    color: #92400e;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.connection-icon {
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
+
+
+/* ========================================
+   CONTENEUR DE LA CARTE (60% droite)
+   ======================================== */
+
+.map-container {
+    flex: 1;
+    /*width: 60%;*/
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    padding: var(--spacing-xs);
+}
+
+/* La carte Leaflet */
+
+#map-result {
+    height: 600px;
+    width: 100%;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--bg-primary);
+    box-shadow: 0 2px 8px var(--secondary-hover);
+}
+
+
+
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1024px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .result-container,
+    .map-container {
+        width: 100%;
+    }
+    
+    .map-container {
+        position: static;
+    }
+    
+    #map-result {
+        height: 400px;
+    }
+    
+    .trajet-list {
+        max-height: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 10px;
+    }
+    
+    #map-result {
+        height: 300px;
+    }
+}

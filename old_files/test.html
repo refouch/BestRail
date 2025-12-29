@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Test Timeline Trajet SNCF-like</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    padding: 40px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* ===============================
+   PANNEAU DÉTAILS
+   =============================== */
+
+.trip-details-panel {
+    background-color: #ffffff;
+    padding: 30px;
+    padding-left: 50px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+/* Barre verticale à gauche de tout le panneau */
+.trip-details-panel::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 30px;
+    bottom: 30px;
+    width: 4px;
+    background-color: #e2e8f0;
+    border-radius: 2px;
+}
+
+/* ===============================
+   TIMELINE
+   ======================================== */
+
+.timeline {
+    position: relative;
+}
+
+/* ===============================
+   SEGMENT DE TRAJET
+   ======================================== */
+
+.timeline-segment {
+    position: relative;
+    display: flex;
+}
+
+/* Colonne gauche : ligne verticale continue + points */
+.timeline-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Ligne verticale derrière les points */
+.segment-vertical-line {
+    position: absolute;
+    width: 4px;
+    background-color: #2563eb;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 0;
+}
+
+/* Point de timeline */
+.timeline-point {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 3px solid #2563eb;
+    background-color: white;
+    flex-shrink: 0;
+    z-index: 2;
+    position: relative;
+    margin: 0;
+}
+
+.timeline-point.start {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    width: 18px;
+    height: 18px;
+}
+
+.timeline-point.end {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    width: 18px;
+    height: 18px;
+}
+
+/* Colonne droite : informations */
+.timeline-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+/* Carte de point (départ/arrivée) */
+.segment-card {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+}
+
+/* Informations de gare (temps + station sur même ligne) */
+.segment-info {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.segment-time {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    min-width: 60px;
+}
+
+.segment-station {
+    font-size: 0.95rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Zone du trajet */
+.segment-trip {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.segment-meta {
+    font-size: 0.9rem;
+    color: #64748b;
+    font-weight: 500;
+    padding: 8px 14px;
+    background-color: #f1f5f9;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.segment-meta strong {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+/* ===============================
+   CORRESPONDANCE
+   ======================================== */
+
+.timeline-connection {
+    position: relative;
+    display: flex;
+    margin: 8px 0;
+}
+
+.connection-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex-shrink: 0;
+    width: 16px;
+}
+
+.connection-line {
+    width: 4px;
+    height: 50px;
+    margin-left: 6px;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        #f59e0b 0px,
+        #f59e0b 5px,
+        transparent 5px,
+        transparent 10px
+    );
+    flex-shrink: 0;
+}
+
+.connection-content-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
+
+.connection-content {
+    font-size: 0.9rem;
+    color: #92400e;
+    font-weight: 600;
+    padding: 10px 16px;
+    background-color: #fef3c7;
+    border-radius: 8px;;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.connection-icon {
+    font-size: 1.1rem;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="trip-details-panel">
+
+    <div class="timeline">
+
+        <!-- SEGMENT 1 -->
+        <div class="timeline-segment">
+
+            <div class="timeline-column">
+                <div class="segment-vertical-line"></div>
+                <div class="timeline-point start"></div>
+                <div style="flex: 1;"></div>
+                <div class="timeline-point"></div>
+            </div>
+
+            <div class="timeline-content">
+
+                <div class="segment-card">
+                    <div class="segment-info">
+                        <span class="segment-time">08h12</span>
+                        <span class="segment-station">Paris Gare de Lyon</span>
+                    </div>
+                </div>
+
+                <div class="segment-trip">
+                    <div class="segment-meta">
+                        <strong>TGV 6601</strong> · 1h53
+                    </div>
+                </div>
+
+                <div class="segment-card">
+                    <div class="segment-info">
+                        <span class="segment-time">10h05</span>
+                        <span class="segment-station">Lyon Part-Dieu</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CORRESPONDANCE -->
+        <div class="timeline-connection">
+            <div class="connection-column">
+                <div class="connection-line"></div>
+            </div>
+            <div class="connection-content-wrapper">
+                <div class="connection-content">
+                    Correspondance à Lyon - <strong>15min</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEGMENT 2 -->
+        <div class="timeline-segment">
+            
+            <div class="timeline-column">
+                <div class="segment-vertical-line"></div>
+                <div class="timeline-point"></div>
+                <div style="flex: 1;"></div>
+                <div class="timeline-point"></div>
+            </div>
+
+            <div class="timeline-content">
+                
+                <div class="segment-card">
+                    <div class="segment-info">
+                        <span class="segment-time">10h20</span>
+                        <span class="segment-station">Lyon Part-Dieu</span>
+                    </div>
+                </div>
+
+                <div class="segment-trip">
+                    <div class="segment-meta">
+                        <strong>TGV 9753</strong> · 2h36
+                    </div>
+                </div>
+
+                <div class="segment-card">
+                    <div class="segment-info">
+                        <span class="segment-time">12h56</span>
+                        <span class="segment-station">Marseille Saint-Charles</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

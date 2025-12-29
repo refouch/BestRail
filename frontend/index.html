@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BestRail - Infrastructures & Systèmes Logiciels </title>
+    <link rel="stylesheet" href="CSS/variables.css">
+    <link rel="stylesheet" href="CSS/base.css">
+    <link rel="stylesheet" href="CSS/layout.css">
+    <link rel="stylesheet" href="CSS/components.css">
+    <link rel="stylesheet" href="CSS/index.css">
+
+
+    <!-- Librairie Font-Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+</head>
+
+<body>
+
+<!-- En-tête avec menu et titre -->
+<header class="header">
+    <h1 class="site-title">
+        <i class="site-title-name"></i>
+        BestRail - Comparateur d'itinéraires de train
+    </h1>
+</header>
+
+<!-- Contenu principal -->
+<main class="main-content">
+
+    <!-- Image en fond -->
+    <div class="hero-section">
+    </div>
+
+    <!-- Formulaire de recherche -->
+    <div class="search-container">
+
+    <form class="search-form" id="search-form" action="#" method="get" autocomplete="off">
+
+        <!-- Case pour la gare de départ -->
+        <div class="case-form">
+            
+            <label for="depart">Gare de départ</label>          
+            <input
+                type="text"
+                id="depart"
+                name="gare-depart"  
+                placeholder="Ex: Paris Gare de Lyon"
+                list="stations-list"
+                required
+            >
+         </div>
+
+        <!-- Case pour la gare d'arrivée -->
+        <div class="case-form">
+
+            <label for="arrivee">Gare d'arrivée</label>
+            <input
+                type="text"
+                id="arrivee"
+                name="gare-arrivee"
+                placeholder="Ex : Lyon Part-Dieu"
+                list="stations-list"
+                required
+            >
+        </div>
+
+        <!-- Case pour la date et l'heure -->
+        <div class="case-form">
+
+            <label for="datetime">Date et heure de départ</label>
+            <input
+                type="datetime-local"
+                id="datetime"
+                name="date-heure-depart"
+                required
+            >
+        </div>
+
+        <!-- Datalist pour les champs de gares -->
+        <datalist id="stations-list">
+            <!-- Remplissage dynamique par JavaScript-->
+        </datalist>
+
+        <!-- Bouton de soumission du formulaire -->
+         <button type="submit" class="search-button">
+            Rechercher
+         </button>
+        
+    </form>
+    </div>
+
+
+    <!-- Encart explication du projet -->
+    <div class="presentation-container">
+
+        <div class="presentation">
+            <h2>Présentation du projet</h2>
+            <p>
+                Ce projet a été réalisé par Thomas Chen, Félix De Champs De Saint Léger, Léo Dony, Rémi Foucherand et Camille Frouard.
+                Il s'agit d'un comparateur d'itinéraires de train basé sur les données de Navitia, l'API proposée par la SNCF.
+                Le comparateur, à l'aide d'un algorithme de type Raptor, recherche les trajets les plus rapides correspondants aux gares et dates souhaitées par l'utilisateur.
+                Les résultats sont ensuite affichés sur une carte.
+            </p>
+        </div>
+
+    </div>   
+
+</main>
+
+<!-- Pied de page -->
+<footer class="page-footer">
+    <div class="footer-content">
+
+        <!-- Contact -->
+        <div class="contact-footer">
+            <h4>Contact</h4>
+            <p><i class="fas fa-envelope"></i>thomas.chen@ensae.fr</p>
+            <p><i class="fas fa-envelope"></i>felix.dechampsdesaintleger@ensae.fr</p>
+            <p><i class="fas fa-envelope"></i>leo.dony@ensae.fr</p>
+            <p><i class="fas fa-envelope"></i>remi.foucherand@ensae.fr</p>
+            <p><i class="fas fa-envelope"></i>camille.frouard@ensae.fr</p>
+        </div>
+
+        <!-- Info complémentaires -->
+        <div class="info-footer">
+            <h4>À propos</h4>
+            <p>Projet pour le cours Infrastructures & Systèmes Logiciels</p>
+            <div class="link-footer">
+                <a href="https://github.com/refouch/Projet-infra-sncf.git" class="social-link"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+
+    </div>
+</footer>
+
+    <script type="module" src="JS/pages/index.js"></script> 
+    
+</body>
+</html>

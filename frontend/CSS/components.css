@@ -1,0 +1,458 @@
+
+/* ==================================================================
+   COMPONENTS - COMPOSANTS RÉUTILISABLES
+   Boutons, formulaires, cartes et autres éléments réutilisables
+   ================================================================== */
+
+/* ========================================
+   FORMULAIRES
+   ======================================== */
+
+.search-form {
+    display: flex;
+    flex-direction: column; /* Formulaire en colonne */
+    gap: var(--spacing-sm);
+}
+
+.case-form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels */
+.search-form label {
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+/* Inputs */
+.search-form input[type="text"],
+.search-form input[type="datetime-local"] {
+    padding: 12px;
+    border: 1px solid var(--secondary-color);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+.search-form input[type="text"]:focus,
+.search-form input[type="datetime-local"]:focus {
+    outline: none;
+    border-color: var(--primary-hover);
+}
+
+/* Inputs de la recherche depuis la page de résultats */
+.recap-input {
+    background-color: var(--bg-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    color: var(--secondary-color);
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    display: block;
+    font-family: inherit;
+}
+
+.recap-input:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: -2px;
+}
+
+/* ========================================
+   BOUTONS
+   ======================================== */
+
+/* Bouton "rechercher" */
+.search-button {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: var(--spacing-sm);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: var(--spacing-xs);
+}
+
+.search-button:hover {
+    background-color: var(--primary-hover);
+}
+
+
+/* Bouton "modifier la recherche" */
+.modify-search-btn {
+    margin-left: auto;
+    margin-right: 12px;
+    background-color: var(--bg-primary);
+    color: var(--primary-color);
+    padding: 12px 24px;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color var(--transition-normal), transform var(--transition-fast);
+    align-self: center;
+}
+
+.modify-search-btn:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+
+/* Bouton "modifier la recherche" mode validation */
+.modify-search-btn.validate-mode {
+    background-color: var(--bg-primary);
+    color: var(--primary-color);
+}
+
+.modify-search-btn.validate-mode:hover {
+    background-color: var(--success-color);
+    color: var(--bg-primary);
+}
+
+
+/* Bouton "voir les détails" */
+.details-btn {
+    background-color: var(--primary-color);
+    color: var(--bg-primary);
+    padding: 10px var(--spacing-md);
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.details-btn:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.02);
+}
+
+.details-btn.active {
+    background-color: var(--secondary-color);
+}
+
+
+/* ========================================
+   CARTES DE TRAJET
+   ======================================== */
+
+.trip-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--bg-secondary);
+    border-radius: var(--border-radius-sm);
+    border-color: var(--secondary-color);
+    padding: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    box-shadow: 0 2px 4px #0000001a;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.trip-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px #00000026;
+    border-color: var(--primary-color);
+}
+
+/* Infos principales (Horaires) */
+.trip-main-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.trip-time_station {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.trip-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.trip-line .card-time {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    min-width: 55px;
+}
+
+.trip-line .card-station {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--primary-color, #2c3e50);
+}
+
+.trip-duration {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    background-color: var(--bg-primary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.trip-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.trip-type {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: 500;
+}
+
+
+/* ========================================
+   PANNEAU DÉROULANT DES DÉTAILS
+   ======================================== */
+
+/* Panneau déroulant */
+.trip-details-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    margin-top: 5px;
+    border-top: 1px solid var(--bg-secondary);
+    padding-top: 0;
+    background-color: var(--bg-primary);
+    padding-left: 50px;
+    position: relative;
+}
+
+.trip-details-panel.open {
+    max-height: 800px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+/* Barre verticale à gauche de tout le panneau */
+.trip-details-panel::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 30px;
+    bottom: 30px;
+    width: 4px;
+    background-color: var(--text-muted); 
+    border-radius: 2px;
+}
+
+/* ===============================
+   TIMELINE
+   ======================================== */
+
+.timeline {
+    position: relative;
+}
+
+/* ===============================
+   SEGMENT DE TRAJET
+   ======================================== */
+
+.timeline-segment {
+    position: relative;
+    display: flex;
+}
+
+/* Colonne gauche : ligne verticale continue + points */
+.timeline-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* Ligne verticale derrière les points */
+.segment-vertical-line {
+    position: absolute;
+    width: 4px;
+    background-color: var(--primary-color);
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 0;
+}
+
+/* Point de timeline */
+.timeline-point {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
+    background-color: var(--bg-primary);
+    flex-shrink: 0;
+    z-index: 2;
+    position: relative;
+    margin: 0;
+}
+
+.timeline-point.start {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    width: 18px;
+    height: 18px;
+}
+
+.timeline-point.end {
+    background-color: var(--stop-color);
+    border-color: var(--stop-color);
+    width: 18px;
+    height: 18px;
+}
+
+/* Colonne droite : informations */
+.timeline-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+/* Carte de point (départ/arrivée) */
+.segment-card {
+    display: flex;
+    align-items: center;
+    /* min-height: 40px; */
+}
+
+/* Informations de gare (temps + station sur même ligne) */
+.segment-info {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.segment-time {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    min-width: 60px;
+}
+
+.segment-station {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Zone du trajet */
+.segment-trip {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.segment-meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 8px 14px;
+    background-color: var(--bg-secondary);
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.segment-meta strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* ===============================
+   CORRESPONDANCE
+   ======================================== */
+
+.timeline-connection {
+    position: relative;
+    display: flex;
+    margin: 8px 0;
+}
+
+.connection-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex-shrink: 0;
+    width: 16px;
+}
+
+.connection-line {
+    width: 4px;
+    height: 50px;
+    margin-left: 6px;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        var(--warning-color) 0px,
+        var(--warning-color) 5px,
+        transparent 5px,
+        transparent 10px
+    );
+    flex-shrink: 0;
+}
+
+.connection-content-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
+
+.connection-content {
+    font-size: 0.9rem;
+    color: #92400e;
+    font-weight: 600;
+    padding: 10px 16px;
+    background-color: #fef3c7;
+    border-radius: 8px;;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.connection-icon {
+    font-size: 1.1rem;
+}
+
+
+
+/* ========================================
+   STYLES LEAFLET (POPUPS)
+   ======================================== */
+
+.leaflet-popup-content-wrapper {
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 3px 14px #00000066;
+}
+
+.leaflet-popup-content {
+    margin: 13px 19px;
+    line-height: 1.4;
+    font-size: 13px;
+}
