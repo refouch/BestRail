@@ -1,6 +1,6 @@
 ##########################################################
 ### Small script to test the algorithm in backend only ###
-################### !! OBSOLETE !! #######################
+##################### !! OBSOLETE !! #####################
 ##########################################################
 
 from .raptor import RAPTOR, paths_in_time_range, get_unique_paths
