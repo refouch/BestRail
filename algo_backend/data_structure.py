@@ -8,7 +8,8 @@ from typing import List, Union
 
 @dataclass
 class Stop:
-    """Object representing a particular stop in a route or trip"""
+    """Object representing a particular stop in a route or trip
+        In our case it stores every train station in the SNCF network"""
     name: str
     id: str
     lat: float
@@ -21,10 +22,10 @@ class Stop:
 class Route:
     """Object representing a fixed route or itinerary"""
     id: str
-    stop_list: List[str] # all stops the route goes through. Represented the stop_id
-    stop_index_list: List[int] = None # TO BE CONSTRUCTED
+    stop_list: List[str] # all stops the route goes through
+    stop_index_list: List[int] = None # CAUTION : To be constructed before running the algorithm
     index_in_list: int = None
-    trips: List[Trip] = None # TO BE CONSTRUCTED / CAUTION: trips must be in chronological order!
+    trips: List[Trip] = None # CAUTION: trips must be in chronological order!
 
     def add_trip(self,trip: Trip):
         if self.trips is None:
@@ -33,7 +34,7 @@ class Route:
 
 @dataclass
 class Trip:
-    """A particular instance of a route, with specific arrival times"""
+    """A particular instance of a route, with specific departure and arrival times"""
     id: str
     arrival_times: List[float]
     departure_times: List[float]
@@ -41,7 +42,7 @@ class Trip:
 
 def map_index(object_list: List[Union[Route,Stop]]):
     """Simple function mapping a route/stop to its index in the global list"""
-    if object_list[0].index_in_list != None:
+    if object_list[0].index_in_list != None: # Avoid remapping if already done
         return None
     
     for (i, object) in enumerate(object_list):
@@ -54,7 +55,7 @@ def map_stop_to_routes(stop_list, route_list) -> List[List[int]]:
 
     stop_to_routes = [[] for _ in range(len(stop_list))]
 
-    # CAUTION: Construction of stop_index_list needs to be implemented !!
+    # CAUTION: Construction of stop_index_list needs to be implemented beforehand !!
 
     for route in route_list:
         for stop_index in route.stop_index_list:

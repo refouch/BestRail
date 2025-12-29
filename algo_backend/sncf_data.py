@@ -5,9 +5,9 @@ import os
 import shutil
 
 
-# requeter l'api SNCF pour avoir les datasets en GTFS
+# Module pour requeter l'api SNCF afin avoir les datasets en GTFS
 
-
+# On utilise l'Open Data
 url = "https://eu.ftp.opendatasoft.com/sncf/plandata/Export_OpenData_SNCF_GTFS_NewTripId.zip"
 dir = "gtfs_sncf"
 

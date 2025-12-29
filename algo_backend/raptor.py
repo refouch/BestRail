@@ -7,8 +7,9 @@ from algo_backend.data_structure import Stop, Route, Trip, map_stop_to_routes
 from typing import Dict, List, Optional, Tuple
 
 def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> Optional[Trip]:
-    """Function to determine the first trip that can be caught for a given stop and in the route and a given time
-    (define as 'et' in the paper)"""
+    """Helper to determine the first trip that can be caught for a given stop and in the route and a given time. (defined as 'et' in the paper)
+        As the trips are ordered by departure time, a simple linear scan is sufficient. 
+        Outputs None if no such trip is found."""
 
     for trip in route.trips:
         train_leave_time = trip.departure_times[stop_rank]
@@ -19,7 +20,7 @@ def earliest_trip_at_stop(route: Route, stop_rank: int, time_at_stop: float) -> 
     return None
 
 def check_earlier_stops(queue: List[Tuple[Route,Stop]], route: Route, stop: Stop) -> Optional[List[Tuple[Route,Stop]]]:
-    """Function to check if there is an earlier stop already in the queue"""
+    """Helper to check if there is an earlier stop already in the queue. Avoids scanning the same route two times."""
     for i, (route_in_Q, stop_in_Q) in enumerate(queue):
         if route_in_Q.id == route.id:
 
@@ -29,9 +30,23 @@ def check_earlier_stops(queue: List[Tuple[Route,Stop]], route: Route, stop: Stop
     
     return None
 
-def RAPTOR(source_stop: Stop, target_stop: Stop, 
+def RAPTOR(source_stop: Stop, 
            departure_time: float, 
-           stop_list: List[Stop], route_list: List[Route], max_rounds: int = 5) -> Dict:
+           stop_list: List[Stop], route_list: List[Route], max_rounds: int = 5) -> Tuple[List[List[int]], List[int], List[List[Dict]]]:
+    """Main function implementing the basic RAPTOR algorithm as defined in the paper
+        
+        Input:
+            - source_stop: The Stop object representing our departure point
+            - departure time: In minutes from midnight
+            - stop_list, route_list: list of every object built from the GTFS database
+                Construction of both lists is provided in the preprocessing.py script.
+            - max_rounds: Maximum number of tranfer between trains to consider. Default is 5 to allow long itineraries.
+        
+        Output:
+            - tau_matrix: A matrix storing the best time we can reach a specific stop (by its index) at a given round. 
+            - tau_star: A list of the absolute best time we can reach a specific stop across all rounds
+            - parent: a matrix containing dictionnaries storing useful info to bactrack where we came from for each stop and at each round
+            """
 
     ### First part: Initialization
     num_stops = len(stop_list)
@@ -58,6 +73,7 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
     marked_stops.add(source_stop.index_in_list)
 
+    ### Second part: round-based network scanning
     for k in range(1, max_rounds + 1):
 
         route_queue.clear()
@@ -65,7 +81,7 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
         current_marked = marked_stops.copy()
         marked_stops.clear()
 
-        for stop_index in current_marked:
+        for stop_index in current_marked: # For each marked stop (i.e stops we could reach at the previous round), store all routes traversing it in a queue
 
             stop = stop_list[stop_index]
 
@@ -79,7 +95,8 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                 
                 else:
                     route_queue.append((route,stop))
-            
+        
+        ### Third Part: propagation across all reachable routes
         for route, first_stop in route_queue:
                     current_trip = None
                     board_stop_index = None
@@ -89,15 +106,15 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                     for rank in range(start_rank, len(route.stop_index_list)):
                         stop_index = route.stop_index_list[rank]
                         
-                        if current_trip is not None:
+                        if current_trip is not None:    # Traversing the earlieast trip and storing the arrival times to every stop it allows us to reach
                             arrival_time = current_trip.arrival_times[rank]
 
-                            if arrival_time < tau_star[stop_index]: # MODFIED PRUNING TO CURRENT ROUND ONLY -> Goal = get more alternative paths
+                            if arrival_time < tau_star[stop_index]: # Did not include pruning suggested in the paper in order to potentially find more alternative paths.
                                 tau_matrix[stop_index][k] = arrival_time
                                 tau_star[stop_index] = arrival_time
                                 marked_stops.add(stop_index)
                                 
-                                parent[stop_index][k] = {
+                                parent[stop_index][k] = { # Storing info to backtrack the itinerary later
                                     "route_id": route.id,
                                     "trip_id": current_trip.id,
                                     "board_stop": board_stop_index,
@@ -108,7 +125,7 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                         transfer_time = stop_list[stop_index].min_transfer_time if k > 1 else 0
                         prev_time = tau_matrix[stop_index][k-1] + transfer_time
 
-                        if current_trip is None or prev_time <= current_trip.departure_times[rank]:
+                        if current_trip is None or prev_time <= current_trip.departure_times[rank]: # Checking if an earliest trip can be caught at the stops.
                             et = earliest_trip_at_stop(route, rank, prev_time)
                             if et is not None:
                                 if current_trip is None or et.arrival_times[rank] < current_trip.arrival_times[rank]:
@@ -116,7 +133,7 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
                                     board_stop_index = stop_index
                                     board_stop_rank = rank
 
-        # Stopping criterion
+        # Stopping criterion: If no stops could be reached, this is the end of the network.
         if not marked_stops:
             break
 
@@ -124,16 +141,17 @@ def RAPTOR(source_stop: Stop, target_stop: Stop,
 
 
 def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], target_idx: int, k_round: int) -> List[Dict]:
+    """Function tranforming the raw output from the 'parent' matrix constucted by RAPTOR into the actual sequence of trip taken to reach the target."""
     path = []
     current_stop = target_idx
     
     k = k_round
 
-    while k > 0:
+    while k > 0: # Travering the rounds backwards
 
         label = parent[current_stop][k]
         
-        if label is None:
+        if label is None: # If no parent this round, maybe the trip could have been caught one round earlier
             k = k - 1
             continue
             
@@ -141,21 +159,24 @@ def reconstruct_path(parent: List[List[Dict]], tau_matrix: List[List[int]], targ
             "stop": current_stop,
             "route_id": label["route_id"],
             "trip_id": label["trip_id"],
-            "board_stop": label["board_stop"],
+            "board_stop": label["board_stop"], # This is where the backtracking really happens.
             "board_time": label['board_time'],
             "arrival_time": tau_matrix[current_stop][k],
         })
 
-        current_stop = label["board_stop"]
-        k = k - 1
+        current_stop = label["board_stop"] # Updating the location backards
+        k = k - 1 # Since we did go back one trip ago, this FORCES changing to the earlier round.
 
     path.reverse()
     return path
 
 
 def get_unique_paths(parent, tau_matrix, target_idx, max_rounds):
+    """Helper to retrieve all unique paths found by RAPTOR by calling our reconstruction function sequentially for each round.
+        It allow us to find more complicated paths that can still be more optimal than a direct path."""
+    
     unique_paths = []
-    seen_trip_ids = set()
+    seen_trip_ids = set() # Avoids reconstructing the same path over and over. This is frequent whith direct TGV.
 
     for k in range(1, max_rounds + 1):
         path = reconstruct_path(parent, tau_matrix, target_idx, k)
@@ -172,19 +193,20 @@ def get_unique_paths(parent, tau_matrix, target_idx, max_rounds):
 def paths_in_time_range(departure_time: int, source_stop: Stop, target_stop: Stop, 
                         stop_list: List[Stop], route_list: List[Route], rounds: int = 5,
                         consecutive_paths: int  = 5): # By default 5 consecutive paths
+    """Helper to call the RAPTOR function sequentially in order to find similar paths in a time interval.
+        Each time, the algorithm is called 2 minutes later from the moment the last found path left the departure station."""
 
     paths = []
 
-    for i in range(consecutive_paths):
+    for _ in range(consecutive_paths):
 
-        print(f"Sequence {i} / departure_time = {departure_time}")
         new_paths = []
 
         tau, tau_star, parent = RAPTOR(source_stop,target_stop,departure_time,stop_list,route_list,max_rounds=rounds)
     
         new_paths = get_unique_paths(parent,tau,target_stop.index_in_list,rounds)
 
-        if not new_paths:
+        if not new_paths: # If no paths are found, that means we reached the end of the service for this specific day.
             break
        
         paths.extend(new_paths)

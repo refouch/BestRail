@@ -9,9 +9,10 @@ import os.path
 from collections import defaultdict
 
 def group_stop_times_by_trip(file_path: str) -> Dict:
-    # Dictionnaire pour stocker temporairement les données par trajet
-    # structure : { trip_id: [ {données_arrêt_1}, {données_arrêt_2} ] }
-    trips_builder = defaultdict(list)
+    """Creates a dictionary for grouping temporarily every stop times to the same trip in GTFS data.
+        Structure : { trip_id: [ {data for stop n°1}, {data for stop n°2}, ... ] }"""
+    
+    trips_builder = defaultdict(list) # Using defaultdict to handle missing values
 
     with open(file_path, mode='r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -19,10 +20,10 @@ def group_stop_times_by_trip(file_path: str) -> Dict:
             trip_id = row['trip_id']
             trips_builder[trip_id].append({
                 'stop_id': row['stop_id'],
-                'sequence': int(row['stop_sequence']),
+                'sequence': int(row['stop_sequence']), # The position of this particular stop in the global sequence
                 'arr': row['arrival_time'],
                 'dep': row['departure_time'],
-                'pickup': int(row.get('pickup_type', 0)),
+                'pickup': int(row.get('pickup_type', 0)), # By default, we allow pickup/dropoff 
                 'dropoff': int(row.get('drop_off_type', 0))
             })
         
@@ -41,9 +42,18 @@ def hms_to_minutes(hms_str: str) -> float:
 
 
 def load_gtfs_data(gtfs_dir: str) -> Tuple[List[Stop], List[Route], Dict[str, Stop]]:
-    """Function to tranform GTFS data into lists of custom objects"""
+    """Function to tranform GTFS data into lists of our RAPTOR custom objects
+    
+        Output:
+            - stop_list: A list of every stop in the dataset, initialized as Stop() objects. Every stop knows its index in the list
+            - route_list: A list of every predefined route in the Network. Every route knows its index
+                CAUTION 1: Here we have a more strict definition for a route than the SNCF data. A route = the exact same sequence of stops.
+                It means a same route in GTFS can generate multiple routes in the list due to it not marking every stop.
+                CAUTION 2: It is here that we create the crucial 'stop_index_list' for each route.
+            
+            - stop_dict: A useful dictionnary to map each stop_id to the full object in the list.
+                """
 
-    # Building stop list and mapping 
     stop_dict = {}
     parent_dict = {}
 
@@ -96,23 +106,23 @@ def load_gtfs_data(gtfs_dir: str) -> Tuple[List[Stop], List[Route], Dict[str, St
                     time = hms_to_minutes(seq['dep'])
                     dep_times.append(time)
                 else:
-                    dep_times.append(0)
+                    dep_times.append(0) # If pickup is not allowed, set board time to midnight = impossible to board
 
                 if seq['dropoff'] == 1:
                     arr_times.append(float('inf'))
                 else:
                     time = hms_to_minutes(seq['arr'])
-                    arr_times.append(time)
+                    arr_times.append(time) # if dropoff is not allowed, set arrival_time to infty = never arrives
             
             for stop_id in stop_id_list:
 
                 stop_index = stop_dict[stop_id].index_in_list
                 stop_index_list.append(stop_index)
             
-            route_signature = tuple(stop_id_list) # A route is ultimately defined by a specific sequence of stops
+            route_signature = tuple(stop_id_list) # A route = a specific sequence of stops. We check it using a tuple as a hashable signature.
             trip = Trip(trip_id,arr_times,dep_times)
 
-            if route_signature not in route_dict:
+            if route_signature not in route_dict: # Keep track of every created route to avoid duplicates
                 route = Route(route_id, stop_id_list,stop_index_list)
                 route.add_trip(trip)
                 route_dict[route_signature] = route
@@ -122,7 +132,8 @@ def load_gtfs_data(gtfs_dir: str) -> Tuple[List[Stop], List[Route], Dict[str, St
                 route.add_trip(trip)
 
     route_list = []
-    # Sort trips in a route by chronological order
+
+    # CAUTION: Sort trips in a route by chronological order. This is important for the algorithm.
     for route in route_dict.values():
         route.trips.sort(key=lambda x: x.departure_times[0])
         route_list.append(route)
@@ -138,3 +149,4 @@ if __name__ == "__main__":
 
     print(stop_list[0])
     print(route_list[0])
+    

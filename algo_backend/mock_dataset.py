@@ -3,9 +3,9 @@
 ################################################
 
 from algo_backend.data_structure import Route, Stop, Trip, map_index
-from typing import List
+from typing import List, Dict
 
-def build_mock_data():
+def build_mock_data() -> Dict[str,List]:
     """
     Generates a small network in order to test the following cases:
     - Direct path
