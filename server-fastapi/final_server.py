@@ -107,6 +107,7 @@ def get_stations() -> Dict[str, Any]:
 
 #------ Research ------#
 
+# Define Object Types to be able to check them 
 Segment = TypedDict("Segment", {
     "from": str,
     "to": str,
@@ -117,7 +118,6 @@ Segment = TypedDict("Segment", {
     "trip": str,
     "route": str
 })
-
 class Trajet(TypedDict):
     departure_stop: str
     arrival_stop: str
@@ -130,7 +130,19 @@ class ApiResponse(TypedDict):
 
 @app.post("/search")
 def recherche(data: dict) -> ApiResponse:
-    
+    """Apply the RAPTOR algorithm to find the best paths between
+    the departure point and the arrival point selected by the user
+    on the webpage.
+
+    Args:
+        data (dict): payload from the index.html page,
+                    eg. {'depart': Paris Gare de Lyon, 
+                         'arrivee': 'Lyon Part Dieu', 
+                         'date': '2025:27:12'}.
+
+    Returns:
+        ApiResponse: Object from the ApiResponse class defined above.
+    """
     print(f"Données reçues : {data} \n")
     
     source = data['depart']
@@ -139,44 +151,46 @@ def recherche(data: dict) -> ApiResponse:
     date = datetime.fromisoformat(date) # transform to datetime format
     departure_time = float(date.hour * 60 + date.minute + date.second / 60) # convert into minutes from 0:00
     
-
+    # Associate station name with its index in the list of stations
     source_index_in_list = stop_name_to_index_dict[source]
     target_index_in_list = stop_name_to_index_dict[target]
-
+    # Get the Stop objects
     source_stop = stop_list[source_index_in_list]
     target_stop = stop_list[target_index_in_list]
-    print(source_stop.name)
-    print(target_stop.name)
+    print(f"SOURCE STOP NAME : {source_stop.name}")
+    print(f"TARGET STOP NAME : {target_stop.name}")
     
-    max_round = 5
-
-    # tau, tau_star, parent = RAPTOR(source_stop, target_stop, departure_time, stop_list, route_list, max_round)
-
-    # paths = get_all_paths(parent, tau, target_index_in_list, max_round)
-
+    # Run the RAPTOR algorithm
     paths = paths_in_time_range(departure_time,source_stop,target_stop,stop_list,route_list)
+    # logs
     print("############------------------PATHS : \n", paths)
     print('\n')
+    
     paths = rank_by_time(paths)
+    # logs
     print("############------------------RANKED PATHS : \n", paths)
     print('\n')
-    print("############__________________jsonify_paths(paths, stop_list) : ", jsonify_paths(paths, stop_list))
+    
+    # format the results
     results = {"status": "success",
                "message": "Données bien reçues et traitées !",
                'trajets': jsonify_paths(paths, stop_list)}
-
+    # logs
+    print("############__________________JSONIFIED PATHS : \n", jsonify_paths(paths, stop_list))
+    print('\n')
     print(f"Données envoyées : {results}")
+    
     return results
 
 
-# On définit le chemin vers le dossier frontend qui est au même niveau 
-# que le dossier server-fastapi
-# ".." signifie "remonter d'un dossier"
+# We define the path to the frontend folder, which is at the same level
+# as the server-fastapi folder
+# “..” means “go up one directory”
 current_dir = os.path.dirname(__file__)
 frontend_path = os.path.join(current_dir, "..", "frontend")
 
-# On monte le dossier frontend à la racine
-# L'option html=True servira l'index.html automatiquement
+# We mount the frontend folder at the root
+# The html=True option will automatically serve index.html
 app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
 
 if __name__ == "__main__":
