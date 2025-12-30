@@ -201,4 +201,8 @@ app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("server-fastapi.final_server:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(
+        "server-fastapi.final_server:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=False)#True)

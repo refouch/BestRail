@@ -14,7 +14,7 @@
 
 Nous avons décidé de construire une application web permettant de calculer efficacement des trajets en train entre deux gares données. C'est un type de projet qui nous a permis de mettre en oeuvre la plupart des notions abordées en cours (logique algorithmique, contenairisation, mise en place d'un serveur...). 
 
-L'application ainsi devellopée permet pour l'instant de calculer à travers une interface graphique les différents trajets les plus courts sur une plage de temps donnée, en utilisant les horaires de train prévisionels fournies par l'API de la SNCF. 
+L'application ainsi développée permet pour l'instant de calculer à travers une interface graphique les différents trajets les plus courts sur une plage de temps donnée, en utilisant les horaires de train prévisionels fournies par l'API de la SNCF. 
 
 ## 3. Architecture du Système
 
@@ -31,7 +31,22 @@ Nous avons essayé d'implémenter ce module de la façon la plus optimisée poss
 
 * **Serveur :** Le troisième module qui permet de faire la liaison entre le backend et le frontend (Felix)
 
-* **Contenairisation :** Camille
+* **Contenairisation :** Voici comment utiliser le Dockerfile. 
+
+Se placer à la racine du projet
+
+Constuire l'image : 
+docker build -t sncf-app .
+
+Run le docker : 
+docker run -p 8080:8000 --name sncf-app sncf-app
+
+Stoper le container :
+docker stop sncf-app
+
+Arrêter le container :
+docker rm sncf-app
+
 
 ### Prérequis et installation
 
