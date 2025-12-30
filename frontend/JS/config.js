@@ -16,11 +16,12 @@
 export const API_CONFIG = {
     // 1. Si on est sur ton PC (localhost) -> adresse normale
     // 2. Si on est sur Onyxia -> on utilise le chemin relatif avec le proxy
-    BASE_URL: window.location.hostname === "localhost" 
-              ? "http://localhost:8000" 
-              : window.location.pathname.includes('/proxy/8000') 
-                ? "/proxy/8000" 
-                : "", 
+    // window.location.hostname === "localhost" 
+              //? "http://localhost:8000" 
+              //: window.location.pathname.includes('/proxy/8000') 
+            // ? "/proxy/8000" 
+            //:
+    BASE_URL: "", 
     ENDPOINTS: {
         STATIONS: "/stations",
         SEARCH: "/search"

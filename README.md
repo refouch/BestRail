@@ -40,6 +40,7 @@ docker build -t sncf-app .
 
 Run le docker : 
 docker run -p 8080:8000 --name sncf-app sncf-app
+docker run -p 8080:8000 --name sncf_test sncf_test
 
 Stoper le container :
 docker stop sncf-app
