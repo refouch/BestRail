@@ -33,20 +33,27 @@ Nous avons essayé d'implémenter ce module de la façon la plus optimisée poss
 
 * **Contenairisation :** Voici comment utiliser le Dockerfile. 
 
-Se placer à la racine du projet
+Se placer à la racine du projet avec Docker Desktop actif en fond.
 
 Constuire l'image : 
+```bash
 docker build -t sncf-app .
+```
 
 Run le docker : 
+```bash
 docker run -p 8080:8000 --name sncf-app sncf-app
-docker run -p 8080:8000 --name sncf_test sncf_test
+```
 
 Stoper le container :
+```bash
 docker stop sncf-app
+```
 
 Arrêter le container :
+```bash
 docker rm sncf-app
+```
 
 
 ### Prérequis et installation
