@@ -21,7 +21,7 @@ L'application ainsi développée permet de calculer à travers une interface uti
 Le projet est construit sur la base de plusieurs modules complémentaires
 
 * **Backend -** Un premier module écrit en Python qui permet séquentiellement :
-    - Le téléchargement des horaires théoriques de tous les trains d'une journée au format GTFS
+    - Le téléchargement des horaires théoriques de tous les trains d'une journée au format GTFS (disponibles [ici](https://ressources.data.sncf.com/explore/dataset/horaires-sncf/information/))
     - La conversion de ces mêmes données en plusieurs objets adaptés pour le calcul d'itinéraires
     - Le calcul des itinéraires en lui même par une implémentation from scratch de l'algorithme RAPTOR, très utilisé pour ce genre de cas d'usage (référence [ici](https://www.microsoft.com/en-us/research/wp-content/uploads/2012/01/raptor_alenex.pdf))
 
