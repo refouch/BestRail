@@ -31,34 +31,40 @@ Nous avons essayé d'implémenter ce module de la façon la plus optimisée poss
 
 * **Serveur :** Le troisième module qui permet de faire la liaison entre le backend et le frontend (Felix)
 
-* **Contenairisation :** Voici comment utiliser le Dockerfile. 
+* **Contenairisation :** Trois  fichiers permettant de créer une image Docker. Le container instancié expose le port 8000 et est mappé sur le port 8080 de la machine de l'hôte.
 
-Se placer à la racine du projet avec Docker Desktop actif en fond.
 
-Constuire l'image : 
-```bash
-docker build -t sncf-app .
-```
 
-Run le docker : 
-```bash
-docker run -p 8080:8000 --name sncf-app sncf-app
-```
 
-Stoper le container :
-```bash
-docker stop sncf-app
-```
 
-Arrêter le container :
-```bash
-docker rm sncf-app
-```
 
 
 ### Prérequis et installation
 
-Décrire ici comment installer et lancer le projet (notamment docker!)
+Décrire ici comment installer et lancer le projet (notamment docker!).
+- Installer et lancer Docker Desktop
+- Cloner le projet en local :
 ```bash
-git pull etc..
+git clone https://github.com/refouch/BestRail.git
+```
+- Se placer à la racine du projet : "Projet-infra-sncf"
+- Construire l'image : 
+```bash
+docker build -t sncf-app .
+```
+
+- Lancer le docker : 
+```bash
+docker run -p 8080:8000 --name sncf-app sncf-app
+```
+Le docker est mappé sur le port local http://localhost:8080/
+
+- Stoper le container :
+```bash
+docker stop sncf-app
+```
+
+- Arrêter le container :
+```bash
+docker rm sncf-app
 ```

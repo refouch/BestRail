@@ -1,7 +1,7 @@
 /** 
  * config.js
  * Fichier de configuration centralisé pour l'application
- * Contient toutes les constants et paramètres de configuratio
+ * Contient toutes les constants et paramètres de configuration
  */
 
 // Configuration de l'API

@@ -43,7 +43,7 @@ async function loadStations() {
 
 /**
  * Remplit le datalist avec la liste des gares
- * @param {Array<string>} stations - Liste des nomes de gares
+ * @param {Array<string>} stations - Liste des noms de gares
  */
 function populateDatalist(stations) {
     const datalist = document.getElementById("stations-list");
@@ -101,14 +101,14 @@ function setupInputFiltering() {
     });
 
     // Retirer l'attribut list au chargement
-    departInput.removeAttribute("list");
-    arriveeInput.removeAttribute("list");
+    // departInput.removeAttribute("list");
+    // arriveeInput.removeAttribute("list");
 
     console.log("Filtrage configuré : datalist visible à partir de 2 caractères")
 }
 
 /**
- * Initialise le formulaire de recherdhe
+ * Initialise le formulaire de recherche
  */
 function initSearchForm() {
     const formulaire = document.getElementById("search-form");
@@ -173,7 +173,7 @@ async function handleFormSubmit(event) {
 
     } catch (error) {
         // Gestion des erreurs
-        console.error("Erreur losr de la recherche:", error);
+        console.error("Erreur lors de la recherche:", error);
 
         // Restauration du bouton de recherche
         boutonRecherche.textContent = textOriginal;
