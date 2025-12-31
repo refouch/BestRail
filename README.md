@@ -55,12 +55,12 @@ L'application permet d'effectuer une recherche d'itinéraires en train à partir
 
 * La page des résultats permet de modifier et de relancer la recherche d'itinéraires
 
-* Nous avons négligé les liaisons non ferroviaires lors de l'implémentation, l'algorithme renvoie donc des trajets non optimaux lorsqu'une correspondance non ferroviaire entre deux gares serait optimale (par exemple prendre le métro entre deux gares parisiennes)
+* Nous avons négligé les liaisons non ferroviaires lors de l'implémentation, l'algorithme renvoie donc des trajets non optimaux lorsqu'une correspondance non ferroviaire entre deux gares serait optimale (par exemple prendre le métro entre deux gares parisiennes).
 
 ---
 
 
-### Prérequis et installation
+### Installation et containerisation
 
 - Installer et lancer Docker Desktop
 - Cloner le projet en local :
