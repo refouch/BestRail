@@ -68,3 +68,9 @@ docker stop sncf-app
 ```bash
 docker rm sncf-app
 ```
+
+### Pour tester manuellement le code avec le mock serveur
+
+* Lancer le mock serveur server.py via le terminal
+
+* Accéder aux pages HTML - Activation d'un protocole HTTP. Dans un terminal, se mettre dans le dossier frontend puis taper la commande suivante : "python -m http.server 8080" (ou un autre port que 8080 si voulu). Ensuite, dans un navigateur, taper "http://localhost:8080/" (remplacer le nom du port si besoin).
